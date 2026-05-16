@@ -1423,6 +1423,204 @@ footer{
   .filter-row{flex-wrap:wrap}
   .fBtn{padding:8px 16px 8px 0;margin-right:18px;font-size:10px}
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PATCH v5.1 — VISIBILIDADE GLOBAL (fundo claro)
+   Corrige todos os rgba(245,242,236) invisíveis no tema claro
+═══════════════════════════════════════════════════════════ */
+
+/* ── HERO TÍTULO — sem corte de descendentes ─────────────── */
+.hero-title .line{overflow:visible;white-space:normal}
+.hero-title{overflow:visible}
+/* padding extra para "g","y","p" não serem cortados */
+.hero-title .line span{padding-bottom:.1em}
+
+/* ── FILTROS PORTFÓLIO ────────────────────────────────────── */
+.fBtn{color:rgba(26,23,20,.42);border-bottom:1px solid transparent}
+.fBtn.on,.fBtn:hover{color:var(--O);border-bottom-color:var(--O)}
+.port-head .s-title{color:var(--INK)}
+
+/* ── SOBRE — placeholder visível ─────────────────────────── */
+.sobre-img-placeholder{
+  background:linear-gradient(160deg,#C8B99A 0%,#B0997A 50%,#9A8060 100%) !important;
+}
+.sobre-img-placeholder::before{
+  border-color:rgba(255,255,255,.2) !important;
+  background:rgba(255,255,255,.06) !important;
+}
+.sobre-img-placeholder::after{
+  border-color:rgba(255,255,255,.1) !important;
+}
+.sobre-img-svg{opacity:.6 !important}
+.sobre-img-label{color:rgba(255,255,255,.75) !important}
+.sobre-img-label::before{background:#fff !important}
+
+/* ── FLOATING CARDS no sobre-vis ────────────────────────── */
+.sobre-float{
+  position:absolute;background:rgba(244,240,232,.94);
+  backdrop-filter:blur(10px);border:1px solid rgba(26,23,20,.06);
+  border-radius:var(--r-md);padding:20px 24px;
+  box-shadow:0 12px 40px rgba(26,23,20,.1);
+  z-index:3;
+}
+.sobre-float .sf-n{
+  font-family:var(--serif);font-size:40px;font-weight:200;
+  color:var(--INK);line-height:1;letter-spacing:-.03em;display:block;
+}
+.sobre-float .sf-l{
+  font-size:9.5px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--O);font-weight:500;display:block;margin-top:6px;
+}
+.sobre-float-tl{top:-20px;left:-20px}
+.sobre-float-br{bottom:60px;right:-20px;padding:16px 20px}
+.sobre-float-br .sf-n{font-size:28px}
+.sobre-float-mid{bottom:-20px;left:28px;padding:14px 20px;
+  display:flex;align-items:center;gap:14px}
+.sobre-float-mid .sf-n{font-size:22px}
+.sf-icon{font-size:22px;opacity:.7}
+
+/* ── PROCESSO — texto em fundo claro ────────────────────── */
+.proc-step{border-bottom:1px solid rgba(26,23,20,.07)}
+.ps-num{color:rgba(232,64,0,.2)}
+.proc-step:hover .ps-num,.proc-step.active .ps-num{color:var(--O)}
+.ps-t{color:var(--INK)}
+.proc-step:hover .ps-t,.proc-step.active .ps-t{color:var(--INK)}
+.ps-d{color:var(--TX)}
+.proc-visual{background:#1E1814 !important}
+
+/* ── SERVIÇOS ────────────────────────────────────────────── */
+#srv{background:var(--BG2)}
+.srv-card{background:var(--BG)}
+.srv-card:hover{background:var(--BG2)}
+.srv-t{color:var(--INK)}
+.srv-d{color:var(--TX)}
+.srv-n{color:rgba(26,23,20,.07)}
+.srv-card:hover .srv-n{color:rgba(26,23,20,.13)}
+.srv-grid{background:rgba(26,23,20,.04)}
+.srv-card::after{background:var(--O)}
+
+/* ── LUPA ────────────────────────────────────────────────── */
+#lupa{background:var(--BG2)}
+.lupa-wrap{border:1px solid rgba(26,23,20,.08);cursor:crosshair}
+.lupa-base-ph span{color:rgba(26,23,20,.22)}
+.lupa-label{
+  background:rgba(26,23,20,.6) !important;
+  color:rgba(255,255,255,.75) !important;
+}
+.lupa-bullets li{color:var(--TX);font-size:14px}
+.lupa-bullets li::before{background:var(--O)}
+
+/* ── DEPOIMENTOS ─────────────────────────────────────────── */
+#dep{background:var(--BG2)}
+.dep-card{border-left:1px solid rgba(26,23,20,.08)}
+.dep-card:hover{border-left-color:var(--O)}
+.dep-q{color:rgba(232,64,0,.2)}
+.dep-txt{color:var(--TX);font-size:16px}
+.dep-nm{color:var(--INK);font-weight:500}
+.dep-co{color:var(--TX2);letter-spacing:.04em}
+.dep-av{border-color:rgba(232,64,0,.3);color:var(--O)}
+.dep-dot{background:rgba(26,23,20,.12)}
+.dep-dot.on{background:var(--O)}
+.dep-arr{border:1px solid rgba(26,23,20,.14);color:rgba(26,23,20,.45)}
+.dep-arr:hover{border-color:var(--O);color:var(--O)}
+
+/* ── ORÇAMENTO ───────────────────────────────────────────── */
+#orc{background:var(--BG2)}
+.orc-promise-item{color:var(--TX)}
+.orc-promise-item::before{background:var(--O) !important}
+.orc-steps-nav{border-bottom:1px solid rgba(26,23,20,.08)}
+.orc-sn{color:rgba(26,23,20,.35)}
+.orc-sn.on{color:var(--O);border-color:var(--O)}
+.orc-sn.done{color:rgba(26,23,20,.25)}
+.orc-q{color:var(--INK)}
+.orc-opt{
+  border:1px solid rgba(26,23,20,.15) !important;
+  color:rgba(26,23,20,.55) !important;
+}
+.orc-opt.sel,.orc-opt:hover{
+  border-color:var(--O) !important;color:var(--INK) !important;
+  background:rgba(232,64,0,.04) !important;
+}
+.orc-inp input,.orc-inp select,.orc-inp textarea{
+  border-bottom:1px solid rgba(26,23,20,.15) !important;
+  color:var(--INK) !important;
+}
+.orc-inp input::placeholder,.orc-inp textarea::placeholder{
+  color:rgba(26,23,20,.3) !important;
+}
+.orc-inp input:focus,.orc-inp textarea:focus,.orc-inp select:focus{
+  border-color:var(--O) !important;
+}
+.orc-inp label{color:rgba(26,23,20,.45) !important}
+.orc-inp select option{background:var(--BG);color:var(--INK)}
+.orc-prog{background:rgba(26,23,20,.06)}
+
+/* ── ANTES/DEPOIS ────────────────────────────────────────── */
+#ad{background:var(--BG2)}
+
+/* ── SCROLL HINT ─────────────────────────────────────────── */
+.h-scroll-hint{color:rgba(26,23,20,.3)}
+.h-scroll-hint::before,.h-scroll-hint::after{background:rgba(26,23,20,.08)}
+
+/* ── MARQUEE ─────────────────────────────────────────────── */
+.marquee-item{color:rgba(26,23,20,.42)}
+
+/* ── LOADER ──────────────────────────────────────────────── */
+.ld-pct{color:rgba(26,23,20,.3)}
+
+/* ── FULLSCREEN MENU ─────────────────────────────────────── */
+.fm-item a{color:rgba(26,23,20,.22)}
+.fm-item a:hover{color:var(--O);letter-spacing:6px}
+#fMenu{background:var(--BG)}
+.fm-social a{color:rgba(26,23,20,.38)}
+.fm-social a:hover{color:var(--O)}
+#fClose{color:rgba(26,23,20,.45)}
+#fClose:hover{color:var(--O)}
+
+/* ── INTERATIVIDADE VISUAL — todos os elementos clicáveis ── */
+.nav-links a{color:rgba(26,23,20,.5);font-weight:400}
+.nav-links a:hover{color:var(--O)}
+.pm-trigger{
+  border:1px solid rgba(26,23,20,.18) !important;
+  color:rgba(26,23,20,.55) !important;
+  background:transparent;
+}
+.pm-trigger:hover{
+  border-color:var(--O) !important;
+  color:var(--O) !important;
+  background:rgba(232,64,0,.04) !important;
+}
+.fBtn{transition:color .3s,border-color .3s,transform .2s}
+.fBtn:hover{transform:translateY(-1px)}
+.btn-ghost{
+  border:1.5px solid rgba(26,23,20,.22) !important;
+  color:rgba(26,23,20,.65) !important;
+}
+.btn-ghost:hover{
+  border-color:var(--O) !important;color:var(--O) !important;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+#footer{background:var(--INK)}
+.f-copy,.f-nav a,.f-contact a{color:rgba(245,242,236,.4)}
+.f-contact a:hover,.f-nav a:hover{color:rgba(245,242,236,.9)}
+.f-line{background:rgba(245,242,236,.06)}
+
+/* ── S-TITLE e S-EYE globais ─────────────────────────────── */
+.s-eye{color:var(--O)}
+.s-title{color:var(--INK)}
+.s-sub{color:var(--TX)}
+
+/* ── CLIENTES (logos) ────────────────────────────────────── */
+#cli .cli-logo{opacity:.45}
+#cli .cli-logo:hover{opacity:.85}
+
+/* ── PROCESSO — visual dark ──────────────────────────────── */
+.proc-visual-stage span{color:rgba(245,242,236,.55)}
+.proc-stage-num{color:rgba(201,168,124,.18)}
+
+/* ── ORAÇÃO — seção orc-left h2 ─────────────────────────── */
+#orc .s-title{color:var(--INK) !important}
 </style>
 </head>
 <body>
@@ -1597,9 +1795,28 @@ footer{
         <span class="sobre-img-label">Composição arquitetônica · estúdio</span>
       </div>
     </div>
+    <!-- Floating metric cards -->
+    <div class="sobre-float sobre-float-tl rv">
+      <span class="sf-n">+180</span>
+      <span class="sf-l">Projetos entregues</span>
+    </div>
+    <div class="sobre-float sobre-float-br rv">
+      <span class="sf-icon">🏆</span>
+      <div>
+        <span class="sf-n">98%</span>
+        <span class="sf-l">Satisfação</span>
+      </div>
+    </div>
     <div class="sobre-accent">
-      <span class="an" id="sobreN">180</span>
-      <span class="at" id="sobreAt">Projetos Realizados</span>
+      <span class="an" id="sobreN">6</span>
+      <span class="at" id="sobreAt">Anos de estúdio</span>
+    </div>
+    <div class="sobre-float sobre-float-mid rv">
+      <span class="sf-icon">⚡</span>
+      <div>
+        <span class="sf-n">48h</span>
+        <span class="sf-l">Prazo médio de resposta</span>
+      </div>
     </div>
   </div>
   <div class="sobre-content">
@@ -1907,7 +2124,7 @@ footer{
   <div class="orc-inner">
     <div class="orc-left">
       <div class="s-eye rv">Vamos conversar</div>
-      <h2 class="s-title rv rv-d1" style="color:var(--WH)">Solicite<br><em>uma proposta.</em></h2>
+      <h2 class="s-title rv rv-d1">Solicite<br><em>uma proposta.</em></h2>
       <p class="s-sub rv rv-d2">Recebemos seu projeto com a discrição que ele merece. Retorno em até 2 horas úteis.</p>
       <div class="orc-promise rv rv-d3">
         <div class="orc-promise-item">Análise prévia do projeto antes da proposta</div>
