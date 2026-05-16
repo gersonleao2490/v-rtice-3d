@@ -8,9 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300&family=Inter:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
-<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
-
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -1759,10 +1756,18 @@ footer{
 }
 
 /* ── FOOTER ──────────────────────────────────────────────── */
-#footer{background:var(--INK)}
-.f-copy,.f-nav a,.f-contact a{color:rgba(245,242,236,.4)}
-.f-contact a:hover,.f-nav a:hover{color:rgba(245,242,236,.9)}
-.f-line{background:rgba(245,242,236,.06)}
+footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !important}
+.foot-logo{color:#F4F0E8 !important}
+.foot-desc{color:rgba(245,242,236,.45) !important}
+.foot-coords{color:var(--champagne) !important}
+.foot-col h4{color:var(--champagne) !important}
+.foot-col ul li a{color:rgba(245,242,236,.45) !important}
+.foot-col ul li a:hover{color:var(--champagne) !important}
+.foot-col p{color:rgba(245,242,236,.45) !important}
+.foot-bottom{border-top-color:rgba(245,242,236,.06) !important}
+.foot-copy{color:rgba(245,242,236,.22) !important}
+.soc-btn{border-color:rgba(245,242,236,.1) !important;color:rgba(245,242,236,.35) !important}
+.soc-btn:hover{border-color:var(--champagne) !important;color:var(--champagne) !important}
 
 /* ── S-TITLE e S-EYE globais ─────────────────────────────── */
 .s-eye{color:var(--O)}
@@ -1779,6 +1784,19 @@ footer{
 
 /* ── ORAÇÃO — seção orc-left h2 ─────────────────────────── */
 #orc .s-title{color:var(--INK) !important}
+
+/* ── ORC-INFO — texto de rodapé do formulário ───────────── */
+.orc-info{color:rgba(26,23,20,.4) !important;border-top-color:rgba(26,23,20,.06) !important}
+
+/* ── PORTFÓLIO — placeholder card text ──────────────────── */
+.hPh span{color:rgba(26,23,20,.28) !important}
+
+/* ── PORTFÓLIO HOVER — nome do projeto no overlay ────────── */
+.hCard-name{color:#F4F0E8 !important}
+.gCard-name{color:#F4F0E8 !important}
+
+/* ── ANTES/DEPOIS — handle circle border ─────────────────── */
+.ad-handle{border-color:rgba(26,23,20,.18) !important}
 </style>
 </head>
 <body>
@@ -3401,38 +3419,47 @@ async function saveHero(){
 function initTour360(url){
   var wrap=document.getElementById('sobreImgWrap');
   if(!wrap)return;
-
-  // Ativar modo tour no wrapper do sobre
   wrap.classList.add('tour-active');
-
-  // Criar container interno para o Pannellum + badge + dica
-  wrap.innerHTML='<div class="tour360-inner" id="tour360Viewer"></div>'
+  wrap.innerHTML=
+    '<div id="t360Pan" style="position:absolute;inset:0;'
+    +'background-image:url(\''+url+'\');background-size:250% auto;'
+    +'background-position:50% 50%;cursor:grab;will-change:background-position"></div>'
     +'<div class="tour-badge">360°</div>'
     +'<div class="tour-hint">← Clique e arraste para navegar</div>';
-
-  if(window.pannellum){
-    pannellum.viewer('tour360Viewer',{
-      type:'equirectangular',
-      panorama:url,
-      autoLoad:true,
-      autoRotate:-2,
-      compass:false,
-      showZoomCtrl:true,
-      showFullscreenCtrl:true,
-      hfov:100,
-      minHfov:50,
-      maxHfov:150,
-      friction:0.15
-    });
-  } else {
-    // Fallback sem Pannellum — auto-pan via background
-    var inner=document.getElementById('tour360Viewer');
-    if(inner){
-      inner.style.cssText='position:absolute;inset:0;background:url('+url+') center/200% auto;animation:pan360 25s linear infinite alternate';
-    }
+  var el=document.getElementById('t360Pan');
+  if(!el)return;
+  var drag=false,sx=0,sy=0,bx=50,by=50,autoTimer=null;
+  function startAuto(){
+    autoTimer=setInterval(function(){bx=(bx+0.07)%100;el.style.backgroundPosition=bx+'% '+by+'%';},50);
   }
-
-  // Mostrar links "Tour 360°" na nav, menu mobile e card de servicos
+  function stopAuto(){clearInterval(autoTimer);autoTimer=null;}
+  el.addEventListener('mousedown',function(e){
+    drag=true;sx=e.clientX;sy=e.clientY;stopAuto();el.style.cursor='grabbing';e.preventDefault();
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!drag)return;
+    bx=Math.max(0,Math.min(100,bx-(e.clientX-sx)/el.offsetWidth*55));
+    by=Math.max(10,Math.min(90,by-(e.clientY-sy)/el.offsetHeight*25));
+    sx=e.clientX;sy=e.clientY;
+    el.style.backgroundPosition=bx+'% '+by+'%';
+  });
+  document.addEventListener('mouseup',function(){
+    if(!drag)return;drag=false;el.style.cursor='grab';setTimeout(startAuto,2500);
+  });
+  el.addEventListener('touchstart',function(e){
+    drag=true;sx=e.touches[0].clientX;sy=e.touches[0].clientY;stopAuto();e.preventDefault();
+  },{passive:false});
+  document.addEventListener('touchmove',function(e){
+    if(!drag)return;
+    bx=Math.max(0,Math.min(100,bx-(e.touches[0].clientX-sx)/el.offsetWidth*55));
+    by=Math.max(10,Math.min(90,by-(e.touches[0].clientY-sy)/el.offsetHeight*25));
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;
+    el.style.backgroundPosition=bx+'% '+by+'%';
+  },{passive:false});
+  document.addEventListener('touchend',function(){
+    if(!drag)return;drag=false;setTimeout(startAuto,2500);
+  });
+  startAuto();
   var nl=document.getElementById('navTour360');
   if(nl){nl.style.display='';nl.href='#sobre';}
   var ml=document.getElementById('menuTour360');
