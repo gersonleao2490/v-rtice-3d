@@ -46,6 +46,11 @@ async function loadSiteData(){
   if(d.heroLine3) document.getElementById('hl3').textContent=d.heroLine3;
   if(d.heroSub) document.getElementById('heroSub').textContent=d.heroSub;
   if(d.heroBg) document.getElementById('heroBg').style.backgroundImage=`url(${d.heroBg})`;
+  if(d.logoUrl){
+    var li=document.getElementById('navLogoImg');
+    var lt=document.getElementById('navLogoText');
+    if(li&&lt){li.src=d.logoUrl;li.classList.add('active');lt.classList.add('hidden');}
+  }
   if(d.whatsapp) document.querySelectorAll('.wa-href').forEach(el=>el.href=`https://wa.me/${d.whatsapp}`);
   if(d.sobreTexto) document.getElementById('sobreTexto').innerHTML=d.sobreTexto;
   if(d.stat1n) document.getElementById('s1n').dataset.target=d.stat1n;
@@ -1432,8 +1437,25 @@ footer{
 /* ── HERO TÍTULO — sem corte de descendentes ─────────────── */
 .hero-title .line{overflow:visible;white-space:normal}
 .hero-title{overflow:visible}
-/* padding extra para "g","y","p" não serem cortados */
 .hero-title .line span{padding-bottom:.1em}
+
+/* ── HERO MOBILE — sem sobreposição com a nav ────────────── */
+@media(max-width:900px){
+  #hero{padding-top:96px !important; align-items:flex-end !important}
+  .hero-content{padding-bottom:8px}
+}
+@media(max-width:600px){
+  #hero{padding-top:80px !important; align-items:flex-end !important; min-height:100svh}
+}
+
+/* ── OPÇÕES DO FORMULÁRIO — bordas arredondadas ──────────── */
+.orc-opt{border-radius:var(--r-pill) !important}
+
+/* ── LOGO — suporte a imagem customizada ────────────────── */
+#navLogoImg{height:36px;width:auto;object-fit:contain;display:none}
+#navLogoImg.active{display:block}
+#navLogoText.hidden{display:none}
+.nav-logo{gap:10px}
 
 /* ── FILTROS PORTFÓLIO ────────────────────────────────────── */
 .fBtn{color:rgba(26,23,20,.42);border-bottom:1px solid transparent}
@@ -1648,11 +1670,16 @@ footer{
 <!-- NAV -->
 <nav id="nav">
   <a class="nav-logo" href="#hero">
-    <svg viewBox="0 0 40 40" fill="none">
-      <polygon points="20,2 38,36 2,36" fill="none" stroke="#C9A87C" stroke-width="1.2"/>
-      <polygon points="20,10 31,30 9,30" fill="none" stroke="rgba(201,168,124,.5)" stroke-width=".8"/>
-    </svg>
-    VÉRTICE 3D
+    <!-- Logo padrão (SVG + texto) — substituível via admin -->
+    <span id="navLogoText" style="display:flex;align-items:center;gap:12px">
+      <svg viewBox="0 0 40 40" fill="none">
+        <polygon points="20,2 38,36 2,36" fill="none" stroke="#C9A87C" stroke-width="1.2"/>
+        <polygon points="20,10 31,30 9,30" fill="none" stroke="rgba(201,168,124,.5)" stroke-width=".8"/>
+      </svg>
+      VÉRTICE 3D
+    </span>
+    <!-- Logo customizada (imagem) — ativada quando admin envia -->
+    <img id="navLogoImg" src="" alt="Vértice 3D" />
   </a>
   <ul class="nav-links">
     <li><a href="#portSection">Portfólio</a></li>
@@ -2326,6 +2353,28 @@ footer{
           <div class="adm-f" style="grid-column:span 2"><label>Linha 3</label><input id="aHl3" value="GANHA VIDA"/></div>
           <div class="adm-f" style="grid-column:span 2"><label>Subtítulo</label><textarea id="aHSub">Transformamos plantas e projetos em imagens fotorrealistas que emocionam, convencem e fecham negócios — antes da obra existir.</textarea></div>
           <div class="adm-f" style="grid-column:span 2"><label>Imagem de fundo do hero (URL)</label><input id="aHBg" placeholder="https://... (deixe vazio para usar o canvas 3D)"/></div>
+        </div>
+        <!-- Logo upload -->
+        <p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin:20px 0 10px">Logo da Marca</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center">
+          <div>
+            <div class="up-zone" id="logoAdmZone" onclick="document.getElementById('logoAdmFile').click()" style="min-height:80px">
+              <input type="file" id="logoAdmFile" accept="image/*,.svg" onchange="uploadLogo(this)"/>
+              <div class="up-preview" id="logoAdmPrev" style="display:none;background-size:contain;background-repeat:no-repeat"></div>
+              <div class="up-info" id="logoAdmInfo">
+                <div class="up-ico">🏷</div>
+                <div class="up-lbl" id="logoAdmLbl">Clique para enviar logo</div>
+                <div class="up-sub2">PNG · SVG · WebP · até 2 MB</div>
+              </div>
+              <div class="up-prg2" id="logoAdmPrg" style="display:none"><div class="up-prg2-fill" id="logoAdmFill"></div></div>
+            </div>
+            <p style="font-size:10px;color:rgba(255,255,255,.25);margin-top:8px;letter-spacing:.5px">Recomendado: fundo transparente (PNG/SVG), altura ~80px</p>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:16px;text-align:center">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:10px">Preview</p>
+            <img id="logoAdmPreview" src="" style="max-height:50px;max-width:100%;display:none;margin:0 auto"/>
+            <p id="logoAdmPreviewText" style="font-size:11px;color:rgba(255,255,255,.2);font-style:italic">Sem logo personalizada</p>
+          </div>
         </div>
         <button class="adm-save" onclick="saveHero()">💾 Salvar Hero</button>
         <div class="adm-msg" id="mHero"></div>
@@ -3148,6 +3197,11 @@ async function saveHero(){
       heroSub:document.getElementById('aHSub').value,
       heroBg:document.getElementById('aHBg').value,
     };
+    // Preserva logoUrl se já foi salva
+    const logoPreview=document.getElementById('logoAdmPreview');
+    if(logoPreview&&logoPreview.src&&logoPreview.style.display!=='none'){
+      d.logoUrl=logoPreview.src;
+    }
     await setDoc(doc(db,'config','site'),d,{merge:true});
     document.getElementById('hl1').textContent=d.heroLine1;
     document.getElementById('hl2').textContent=d.heroLine2;
@@ -3156,6 +3210,47 @@ async function saveHero(){
     if(d.heroBg)document.getElementById('heroBg').style.backgroundImage=`url(${d.heroBg})`;
     showMsg('mHero','✓ Salvo!');
   }catch(e){showMsg('mHero','Erro: '+e.message,'#f44')}
+}
+
+async function uploadLogo(input){
+  var file=input.files[0];
+  if(!file)return;
+  var localUrl=URL.createObjectURL(file);
+  // Preview imediato
+  var prev=document.getElementById('logoAdmPrev');
+  var info=document.getElementById('logoAdmInfo');
+  var lbl=document.getElementById('logoAdmLbl');
+  var zone=document.getElementById('logoAdmZone');
+  var imgPrev=document.getElementById('logoAdmPreview');
+  var imgPrevTxt=document.getElementById('logoAdmPreviewText');
+  if(prev){prev.style.backgroundImage='url('+localUrl+')';prev.style.display='block';}
+  if(lbl){lbl.textContent='Logo carregada ✓';zone.classList.add('has-file');}
+  if(imgPrev){imgPrev.src=localUrl;imgPrev.style.display='block';}
+  if(imgPrevTxt){imgPrevTxt.style.display='none';}
+  // Aplica ao nav imediatamente
+  var navImg=document.getElementById('navLogoImg');
+  var navTxt=document.getElementById('navLogoText');
+  if(navImg&&navTxt){navImg.src=localUrl;navImg.classList.add('active');navTxt.classList.add('hidden');}
+  // Upload Firebase
+  try{
+    var prg=document.getElementById('logoAdmPrg');
+    var fill=document.getElementById('logoAdmFill');
+    if(prg)prg.style.display='block';
+    var {storage,ref,uploadBytes,getDownloadURL,db,doc,setDoc}=window._FB;
+    var sRef=ref(storage,'site/logo_'+Date.now()+'_'+file.name);
+    var snap=await uploadBytes(sRef,file);
+    var url=await getDownloadURL(snap.ref);
+    if(fill)fill.style.width='100%';
+    await setDoc(doc(db,'config','site'),{logoUrl:url},{merge:true});
+    if(navImg){navImg.src=url;}
+    if(imgPrev){imgPrev.src=url;}
+    if(lbl){lbl.textContent='Logo salva no Firebase ✓';}
+    setTimeout(function(){if(prg)prg.style.display='none';},1200);
+  }catch(e){
+    // Funciona em local mesmo sem Firebase
+    console.warn('Firebase upload (logo):', e.message);
+    if(document.getElementById('logoAdmPrg'))document.getElementById('logoAdmPrg').style.display='none';
+  }
 }
 
 async function saveStats(){
