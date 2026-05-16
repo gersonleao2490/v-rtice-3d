@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300&family=Inter:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 
 <!-- Firebase -->
 <script type="module">
@@ -66,6 +68,21 @@ async function loadSiteData(){
   if(d.instagram) document.getElementById('fIG').textContent=d.instagram;
   if(d.cidade) document.getElementById('fCidade').textContent=d.cidade;
   if(d.coords) document.getElementById('fCoords').textContent=d.coords;
+  // Imagem da seção Sobre
+  if(d.sobreImgUrl){
+    var wrap=document.getElementById('sobreImgWrap');
+    if(wrap)wrap.innerHTML=`<img class="sobre-img" src="${d.sobreImgUrl}" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>`;
+  }
+  // Tour 360°
+  if(d.tour360Url){
+    var ts=document.getElementById('tourSection');
+    if(ts)ts.style.display='block';
+    if(d.tourTitle){var tt=document.getElementById('tourSTitle');if(tt)tt.innerHTML=d.tourTitle+' <em>em 360°</em>';}
+    if(d.tourSub){var tst=document.getElementById('tourSSub');if(tst)tst.textContent=d.tourSub;}
+    initTour360(d.tour360Url);
+  }
+  // Hero background image
+  if(d.heroBgUrl){var hbg=document.getElementById('heroBg');if(hbg)hbg.style.backgroundImage=`url(${d.heroBgUrl})`;}
 }
 
 async function loadPortfolio(){
@@ -302,8 +319,8 @@ body::before{
 ══════════════════════════════════════════════ */
 #hero{
   height:100vh;min-height:720px;position:relative;
-  display:flex;align-items:flex-end;
-  padding:0 80px 110px;overflow:hidden;
+  display:flex;flex-direction:column;
+  padding:110px 80px 0;overflow:hidden;
 }
 #heroBg{
   position:absolute;inset:-3%;
@@ -329,16 +346,25 @@ body::before{
   will-change:transform;
 }
 .hero-depth-mid{display:none} /* removido — excesso visual */
-.hero-content{will-change:transform,opacity;max-width:1100px}
-.hero-content{position:relative;z-index:2;max-width:1000px}
+.hero-content{
+  position:relative;z-index:2;max-width:1000px;
+  margin-top:auto;       /* empurra para o fundo da coluna */
+  padding-bottom:110px;  /* espaço abaixo do conteúdo */
+  will-change:transform,opacity;
+}
 .hero-eyebrow{
-  display:flex;align-items:center;gap:16px;margin-bottom:38px;
+  /* Primeiro item dentro de .hero-content — sempre acima do título */
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:clamp(28px,5vh,52px);
   font-size:10px;letter-spacing:5px;text-transform:uppercase;
   color:var(--O);font-weight:500;
-  opacity:0;transform:translateY(20px);
-  animation:fadeUp 1.2s var(--ease) 2.4s forwards;
+  opacity:0;transform:translateY(-8px);
+  animation:fadeUp 1s var(--ease) 2.4s forwards;
+  pointer-events:none;
 }
 .hero-eyebrow::before{content:'';display:inline-block;width:42px;height:1px;background:var(--O);opacity:.7}
+@media(max-width:900px){.hero-eyebrow{font-size:9px;letter-spacing:3px;margin-bottom:clamp(20px,3vh,36px)}}
+@media(max-width:600px){.hero-eyebrow{font-size:8px;letter-spacing:2.5px;margin-bottom:20px}}
 .hero-title{
   font-family:var(--serif);
   font-size:clamp(58px,9.5vw,148px);
@@ -1179,87 +1205,173 @@ footer{
 /* ══════════════════════════════════════════════
    ADMIN PANEL
 ══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   ADMIN PANEL — design elegante editorial
+══════════════════════════════════════════════ */
 #adminPanel{
   position:fixed;inset:0;z-index:9991;
-  background:rgba(0,0,0,.85);backdrop-filter:blur(12px);
-  display:none;overflow-y:auto;align-items:flex-start;justify-content:center;padding:40px 20px;
+  background:rgba(8,7,5,.92);backdrop-filter:blur(18px);
+  display:none;overflow-y:auto;align-items:flex-start;justify-content:center;padding:36px 20px;
 }
 #adminPanel.open{display:flex}
 .adm-box{
-  background:#0F0F0F;border:1px solid #1E1E1E;
-  width:100%;max-width:960px;padding:44px;position:relative;
+  background:#111009;border:1px solid rgba(200,98,42,.15);
+  width:100%;max-width:1020px;padding:48px 52px;position:relative;
+  border-radius:4px;box-shadow:0 40px 100px rgba(0,0,0,.7);
 }
 .adm-hdr{
   display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid #1E1E1E;
+  margin-bottom:36px;padding-bottom:24px;
+  border-bottom:1px solid rgba(200,98,42,.12);
 }
 .adm-hdr h2{
-  font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--O);
+  font-family:var(--serif-it);font-style:italic;font-weight:300;
+  font-size:34px;letter-spacing:.02em;color:var(--O);
 }
-.adm-x{background:none;border:none;color:rgba(255,255,255,.3);font-size:22px;transition:color .2s}
-.adm-x:hover{color:var(--WH)}
-.adm-tabs{display:flex;gap:2px;margin-bottom:28px;flex-wrap:wrap}
+.adm-hdr-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--O);
+  animation:pulse 2s ease-in-out infinite;margin-left:16px;
+  display:inline-block;vertical-align:middle;
+}
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.adm-x{
+  background:none;border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.35);font-size:18px;
+  width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;transition:all .25s;
+}
+.adm-x:hover{border-color:var(--O);color:var(--O);transform:rotate(90deg)}
+
+/* TABS */
+.adm-tabs{
+  display:flex;gap:0;margin-bottom:36px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;
+}
+.adm-tabs::-webkit-scrollbar{display:none}
 .adm-tab{
-  background:none;border:1px solid #1E1E1E;color:rgba(255,255,255,.25);
-  padding:7px 16px;font-size:10px;letter-spacing:2px;text-transform:uppercase;
-  transition:all .2s;
+  background:none;border:none;border-bottom:2px solid transparent;
+  color:rgba(255,255,255,.28);padding:10px 18px 12px;
+  font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:400;
+  font-family:var(--sans);transition:all .25s;white-space:nowrap;margin-bottom:-1px;
 }
-.adm-tab.on{background:var(--O);border-color:var(--O);color:var(--WH)}
+.adm-tab:hover{color:rgba(255,255,255,.6)}
+.adm-tab.on{color:var(--O);border-bottom-color:var(--O)}
+
+/* SECTIONS */
 .adm-sec{display:none}
 .adm-sec.on{display:block}
-.adm-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.adm-f{display:flex;flex-direction:column;gap:5px}
-.adm-f label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.22)}
+.adm-sec-title{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,.2);margin:0 0 20px;display:flex;align-items:center;gap:12px;
+}
+.adm-sec-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.05)}
+
+/* GRID */
+.adm-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* FIELDS */
+.adm-f{display:flex;flex-direction:column;gap:6px}
+.adm-f label{
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.28);font-weight:400;
+}
 .adm-f input,.adm-f textarea,.adm-f select{
-  background:#161616;border:1px solid #2a2a2a;color:var(--WH);
-  padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;
-  transition:border-color .2s;
+  background:rgba(255,255,255,.03);
+  border:none;border-bottom:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.85);
+  padding:10px 0;font-size:13px;font-family:var(--sans);outline:none;
+  transition:border-color .25s;
 }
-.adm-f input:focus,.adm-f textarea:focus{border-color:var(--O)}
-.adm-f textarea{min-height:80px;resize:vertical}
+.adm-f input:focus,.adm-f textarea:focus,.adm-f select:focus{border-color:var(--O)}
+.adm-f input::placeholder,.adm-f textarea::placeholder{color:rgba(255,255,255,.15)}
+.adm-f textarea{min-height:88px;resize:vertical;padding:10px 0}
+.adm-f select{background:#111009;padding:10px 0}
+.adm-f select option{background:#111009}
+
+/* SAVE BTN */
 .adm-save{
-  background:var(--O);color:var(--WH);border:none;
-  padding:11px 26px;font-size:11px;letter-spacing:2px;text-transform:uppercase;
-  margin-top:18px;transition:background .3s;
+  border:1px solid var(--O);color:var(--O);background:transparent;
+  padding:10px 28px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  font-family:var(--sans);margin-top:22px;transition:all .3s;border-radius:var(--r-pill);
 }
-.adm-save:hover{background:var(--O2)}
-.adm-msg{margin-top:8px;font-size:12px;height:18px;color:#4CAF50}
-.adm-login{display:flex;flex-direction:column;gap:14px;max-width:300px;margin:48px auto;text-align:center}
-.adm-login h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--WH)}
-.adm-login p{font-size:12px;color:rgba(255,255,255,.2)}
+.adm-save:hover{background:var(--O);color:#fff}
+.adm-msg{margin-top:10px;font-size:12px;height:18px;color:#5fba7d;letter-spacing:.5px}
+
+/* LOGIN */
+.adm-login{display:flex;flex-direction:column;gap:16px;max-width:300px;margin:60px auto;text-align:center}
+.adm-login h3{
+  font-family:var(--serif-it);font-style:italic;font-weight:300;
+  font-size:26px;color:rgba(255,255,255,.7);
+}
+.adm-login p{font-size:11px;color:rgba(255,255,255,.22);letter-spacing:.5px}
 .adm-login input{
-  background:#161616;border:1px solid #2a2a2a;color:var(--WH);
-  padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;
-  transition:border-color .2s;text-align:center;
+  background:rgba(255,255,255,.04);border:none;border-bottom:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.8);padding:12px 0;font-size:14px;
+  font-family:var(--sans);outline:none;text-align:center;transition:border-color .25s;
 }
 .adm-login input:focus{border-color:var(--O)}
-.adm-err{font-size:12px;color:#ff4444;height:16px}
-.port-adm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.port-adm-item{background:#161616;border:1px solid #2a2a2a;padding:8px;position:relative}
-.port-adm-th{
-  width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
-  background:var(--BK3);
+.adm-err{font-size:11px;color:#ff5555;height:16px}
+
+/* UPLOAD ZONES */
+.up-zone{
+  border:1.5px dashed rgba(200,98,42,.22);border-radius:8px;
+  padding:28px 18px;text-align:center;cursor:pointer;
+  transition:all .3s;margin-top:8px;position:relative;min-height:96px;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;
+  overflow:hidden;background:rgba(255,255,255,.012);
 }
-.port-adm-nm{font-size:11px;color:rgba(255,255,255,.4);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.up-zone:hover{border-color:rgba(200,98,42,.55);background:rgba(200,98,42,.04)}
+.up-zone input[type=file]{display:none}
+.up-preview{
+  position:absolute;inset:0;background-size:cover;background-position:center;border-radius:7px;
+}
+.up-preview::after{content:'';position:absolute;inset:0;background:rgba(8,7,5,.5);border-radius:7px}
+.up-preview video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px}
+.up-info{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.up-ico{font-size:22px;opacity:.35;line-height:1}
+.up-lbl{font-size:11px;color:#C2BAA8;letter-spacing:.5px}
+.up-sub2{font-size:9px;color:#4A4238;letter-spacing:1.5px;text-transform:uppercase}
+.up-prg2{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.05);border-radius:0 0 7px 7px}
+.up-prg2-fill{height:100%;background:var(--O);width:0;transition:width .25s;border-radius:0 0 7px 7px}
+.up-zone.has-file .up-lbl{color:var(--O)}
+.up-zone.drag-over{border-color:var(--O);background:rgba(200,98,42,.07)}
+
+/* PORTFOLIO ADM */
+.port-adm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.port-adm-item{background:var(--BG2);border:1px solid var(--GY);padding:8px;position:relative;border-radius:var(--r-sm);transition:border-color .2s}
+.port-adm-item:hover{border-color:var(--champagne)}
+.port-adm-th{width:100%;aspect-ratio:4/3;display:block;background:var(--BG3);border-radius:4px;position:relative;overflow:hidden;background-size:cover!important;background-position:center!important}
+.port-adm-cat{position:absolute;bottom:6px;left:6px;background:rgba(26,23,20,.65);color:#fff;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 7px;border-radius:20px;backdrop-filter:blur(4px)}
+.port-adm-nm{font-size:11px;color:var(--INK);font-weight:400;margin-top:7px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.port-adm-acts{display:flex;gap:6px}
+.port-adm-edit{flex:1;background:transparent;border:1px solid var(--champagne);color:var(--INK);font-size:10px;letter-spacing:1px;padding:5px 8px;border-radius:var(--r-sm);cursor:pointer;transition:background .2s,color .2s}
+.port-adm-edit:hover{background:var(--champagne);color:#fff}
 .port-adm-del{
-  position:absolute;top:5px;right:5px;background:rgba(180,0,0,.85);
-  color:#fff;border:none;width:22px;height:22px;font-size:11px;cursor:pointer;border-radius:1px;
+  background:transparent;border:1px solid rgba(200,0,0,.35);
+  color:rgba(200,0,0,.7);width:28px;font-size:12px;border-radius:var(--r-sm);cursor:pointer;transition:background .2s,color .2s;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
 }
-.upload-zone{
-  border:1px dashed rgba(255,255,255,.12);padding:20px;text-align:center;
-  color:rgba(255,255,255,.25);font-size:12px;cursor:pointer;transition:border-color .3s;
+.port-adm-del:hover{background:rgba(200,0,0,.1);color:rgb(200,0,0)}
+
+/* LEADS */
+.leads-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.leads-tbl th{
+  text-align:left;padding:8px 10px;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.06);
 }
+.leads-tbl td{padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.48);vertical-align:top}
+.leads-tbl tr:hover td{background:rgba(255,255,255,.02)}
+.lead-badge{
+  display:inline-block;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  padding:3px 10px;border-radius:var(--r-pill);border:1px solid rgba(200,98,42,.3);color:var(--O);
+}
+
+/* UPLOAD zone — old class kept for portup */
+.upload-zone{border:1px dashed rgba(255,255,255,.1);padding:20px;text-align:center;color:rgba(255,255,255,.25);font-size:12px;cursor:pointer;transition:border-color .3s;border-radius:6px;margin-top:10px}
 .upload-zone:hover{border-color:var(--O)}
 .upload-zone input{display:none}
 #upSt{margin-top:6px;font-size:11px;color:var(--O);height:14px}
-.leads-tbl{width:100%;border-collapse:collapse;font-size:12px}
-.leads-tbl th{
-  text-align:left;padding:8px 10px;
-  font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(255,255,255,.2);border-bottom:1px solid #1E1E1E;
-}
-.leads-tbl td{padding:10px;border-bottom:1px solid #141414;color:rgba(255,255,255,.5)}
-.leads-tbl tr:hover td{background:#141414}
 
 /* ══════════════════════════════════════════════
    MODAL PROJETO — clip-path expansion (Awwwards style)
@@ -1351,8 +1463,8 @@ footer{
   .nav-links,.nav-cta{display:none}
   #ham{display:flex}
   section{padding:90px 24px}
-  #hero{padding:0 24px 80px;min-height:640px;align-items:center}
-  .hero-eyebrow{margin-bottom:28px}
+  #hero{padding:90px 24px 0;min-height:640px}
+  .hero-content{padding-bottom:80px}
   .hero-title{font-size:clamp(48px,11.5vw,86px);margin-bottom:32px}
   .hero-sub{font-size:14px;margin-bottom:40px;line-height:1.85}
   .hero-btns{gap:10px}
@@ -1439,13 +1551,16 @@ footer{
 .hero-title{overflow:visible}
 .hero-title .line span{padding-bottom:.1em}
 
-/* ── HERO MOBILE — sem sobreposição com a nav ────────────── */
+/* ── HERO — hero-year e hero-scroll não colidem com o conteúdo ── */
+.hero-year{z-index:1}
+.hero-scroll{z-index:1}
 @media(max-width:900px){
-  #hero{padding-top:96px !important; align-items:flex-end !important}
-  .hero-content{padding-bottom:8px}
+  .hero-year{display:none}
+  .hero-scroll{display:none}
 }
 @media(max-width:600px){
-  #hero{padding-top:80px !important; align-items:flex-end !important; min-height:100svh}
+  #hero{padding-top:76px;min-height:100svh}
+  .hero-content{padding-bottom:60px}
 }
 
 /* ── OPÇÕES DO FORMULÁRIO — bordas arredondadas ──────────── */
@@ -2146,6 +2261,24 @@ footer{
   </div>
 </section>
 
+<!-- ═══ TOUR 360° ═══ -->
+<section id="tourSection" style="display:none;padding:0;overflow:hidden">
+  <div style="text-align:center;padding:100px 80px 56px;position:relative;z-index:1">
+    <p class="s-over" style="color:var(--O);letter-spacing:6px;font-size:10px;text-transform:uppercase;font-weight:400;margin-bottom:14px">Imersão Total</p>
+    <h2 class="s-title" id="tourSTitle">Explore o projeto <em>em 360°</em></h2>
+    <p class="s-sub" id="tourSSub" style="max-width:480px;margin:0 auto">Navegue pelo projeto antes da obra. Clique e arraste para explorar cada ângulo em tempo real.</p>
+  </div>
+  <div id="tour360Viewer" style="width:100%;height:clamp(420px,62vh,760px);background:var(--BG3);position:relative">
+    <div id="tour360Placeholder" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--TX)">
+      <span style="font-size:48px;opacity:.3">🌐</span>
+      <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.4">Panorama em carregamento…</span>
+    </div>
+  </div>
+  <div style="text-align:center;padding:24px 24px 80px">
+    <span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--TX);opacity:.55">← Clique e arraste para navegar · Scroll para zoom →</span>
+  </div>
+</section>
+
 <!-- ═══ ORÇAMENTO ═══ -->
 <section id="orc">
   <div class="orc-inner">
@@ -2308,166 +2441,222 @@ footer{
 <div id="adminPanel">
   <div class="adm-box">
     <div class="adm-hdr">
-      <h2>⚙ PAINEL ADMIN — VÉRTICE 3D</h2>
+      <div style="display:flex;align-items:center;gap:0">
+        <h2>Painel Vértice 3D</h2>
+        <span class="adm-hdr-dot"></span>
+      </div>
       <button class="adm-x" onclick="closeAdmin()">✕</button>
     </div>
+
     <!-- LOGIN -->
     <div id="admLogin">
       <div class="adm-login">
-        <h3>ACESSO RESTRITO</h3>
-        <p>Senha de administrador</p>
+        <h3>Acesso restrito</h3>
+        <p>Insira a senha de administrador</p>
         <input type="password" id="admPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkAdmPass()"/>
         <button class="adm-save" onclick="checkAdmPass()">Entrar</button>
         <div class="adm-err" id="admErr"></div>
       </div>
     </div>
+
     <!-- CONTEÚDO -->
     <div id="admContent" style="display:none">
       <div class="adm-tabs">
-        <button class="adm-tab on" onclick="swTab('geral')">Geral</button>
-        <button class="adm-tab" onclick="swTab('hero')">Hero</button>
+        <button class="adm-tab on" onclick="swTab('hero')">Hero</button>
+        <button class="adm-tab" onclick="swTab('sobre')">Sobre</button>
         <button class="adm-tab" onclick="swTab('port')">Portfólio</button>
         <button class="adm-tab" onclick="swTab('dep')">Depoimentos</button>
-        <button class="adm-tab" onclick="swTab('sobre')">Sobre</button>
-        <button class="adm-tab" onclick="swTab('stats')">Stats</button>
+        <button class="adm-tab" onclick="swTab('stats')">Números</button>
         <button class="adm-tab" onclick="swTab('contato')">Contato</button>
         <button class="adm-tab" onclick="swTab('leads')">Leads</button>
+        <button class="adm-tab" onclick="swTab('tour')">Tour 360°</button>
       </div>
 
-      <!-- GERAL -->
-      <div class="adm-sec on" id="tab-geral">
-        <p style="font-size:12px;color:rgba(255,255,255,.3);margin-bottom:16px">Configurações gerais do site</p>
+      <!-- ═══ HERO ═══ -->
+      <div class="adm-sec on" id="tab-hero">
+        <div class="adm-sec-title">Textos do Hero</div>
         <div class="adm-grid">
+          <div class="adm-f"><label>Eyebrow / Kicker</label><input id="aHEye" placeholder="Estúdio de Visualização Arquitetônica" value="Estúdio de Visualização Arquitetônica"/></div>
+          <div class="adm-f"><label>Subtítulo Hero</label><input id="aHSub" placeholder="Narrativas visuais para arquitetura..."/></div>
+          <div class="adm-f"><label>Linha 1 do H1</label><input id="aHl1" value="Onde o"/></div>
+          <div class="adm-f"><label>Linha 2 do H1 (itálico laranja)</label><input id="aHl2" value="projeto"/></div>
+          <div class="adm-f"><label>Linha 3 do H1</label><input id="aHl3" value="ganha vida."/></div>
           <div class="adm-f"><label>WhatsApp (só números)</label><input id="aWa" placeholder="5544999999999"/></div>
-          <div class="adm-f"><label>Ano de fundação</label><input id="aAno" value="2018"/></div>
         </div>
-        <button class="adm-save" onclick="saveGeral()">💾 Salvar</button>
-        <div class="adm-msg" id="mGeral"></div>
-      </div>
-
-      <!-- HERO -->
-      <div class="adm-sec" id="tab-hero">
-        <div class="adm-grid">
-          <div class="adm-f"><label>Linha 1 do título</label><input id="aHl1" value="ONDE O"/></div>
-          <div class="adm-f"><label>Linha 2 (accent laranja)</label><input id="aHl2" value="PROJETO"/></div>
-          <div class="adm-f" style="grid-column:span 2"><label>Linha 3</label><input id="aHl3" value="GANHA VIDA"/></div>
-          <div class="adm-f" style="grid-column:span 2"><label>Subtítulo</label><textarea id="aHSub">Transformamos plantas e projetos em imagens fotorrealistas que emocionam, convencem e fecham negócios — antes da obra existir.</textarea></div>
-          <div class="adm-f" style="grid-column:span 2"><label>Imagem de fundo do hero (URL)</label><input id="aHBg" placeholder="https://... (deixe vazio para usar o canvas 3D)"/></div>
+        <div class="adm-sec-title" style="margin-top:28px">Vídeo de fundo do Hero</div>
+        <div class="up-zone" id="vidZone" onclick="document.getElementById('vidFile').click()">
+          <input type="file" id="vidFile" accept="video/mp4,video/webm,video/*" onchange="uploadMedia(this,'heroVideo')"/>
+          <div class="up-preview" id="vidPrev" style="display:none"></div>
+          <div class="up-info" id="vidInfo">
+            <div class="up-ico">▶</div>
+            <div class="up-lbl" id="vidLbl">Clique para enviar vídeo (.mp4)</div>
+            <div class="up-sub2">MP4 · WebM · até 500 MB</div>
+          </div>
+          <div class="up-prg2" id="vidPrg" style="display:none"><div class="up-prg2-fill" id="vidFill"></div></div>
         </div>
-        <!-- Logo upload -->
-        <p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin:20px 0 10px">Logo da Marca</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center">
-          <div>
-            <div class="up-zone" id="logoAdmZone" onclick="document.getElementById('logoAdmFile').click()" style="min-height:80px">
-              <input type="file" id="logoAdmFile" accept="image/*,.svg" onchange="uploadLogo(this)"/>
-              <div class="up-preview" id="logoAdmPrev" style="display:none;background-size:contain;background-repeat:no-repeat"></div>
-              <div class="up-info" id="logoAdmInfo">
-                <div class="up-ico">🏷</div>
-                <div class="up-lbl" id="logoAdmLbl">Clique para enviar logo</div>
-                <div class="up-sub2">PNG · SVG · WebP · até 2 MB</div>
-              </div>
-              <div class="up-prg2" id="logoAdmPrg" style="display:none"><div class="up-prg2-fill" id="logoAdmFill"></div></div>
+        <div class="adm-sec-title" style="margin-top:28px">Logo no Hero (sobre o título)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+          <div class="up-zone" id="logoAdmZone" onclick="document.getElementById('logoAdmFile').click()">
+            <input type="file" id="logoAdmFile" accept="image/*,.svg" onchange="uploadLogo(this)"/>
+            <div class="up-preview" id="logoAdmPrev" style="display:none;background-size:contain;background-repeat:no-repeat"></div>
+            <div class="up-info" id="logoAdmInfo">
+              <div class="up-ico">🏷</div>
+              <div class="up-lbl" id="logoAdmLbl">Clique para enviar logo (PNG/SVG/WebP)</div>
+              <div class="up-sub2">PNG · SVG · até 2 MB</div>
             </div>
-            <p style="font-size:10px;color:rgba(255,255,255,.25);margin-top:8px;letter-spacing:.5px">Recomendado: fundo transparente (PNG/SVG), altura ~80px</p>
+            <div class="up-prg2" id="logoAdmPrg" style="display:none"><div class="up-prg2-fill" id="logoAdmFill"></div></div>
           </div>
-          <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:16px;text-align:center">
-            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:10px">Preview</p>
-            <img id="logoAdmPreview" src="" style="max-height:50px;max-width:100%;display:none;margin:0 auto"/>
-            <p id="logoAdmPreviewText" style="font-size:11px;color:rgba(255,255,255,.2);font-style:italic">Sem logo personalizada</p>
+          <div style="background:rgba(255,255,255,.03);border-radius:8px;padding:20px;text-align:center;min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px">
+            <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2)">Preview da Logo</p>
+            <img id="logoAdmPreview" src="" style="max-height:48px;max-width:100%;display:none"/>
+            <p id="logoAdmPreviewText" style="font-size:11px;color:rgba(255,255,255,.18);font-style:italic">Nenhuma logo enviada</p>
           </div>
         </div>
-        <button class="adm-save" onclick="saveHero()">💾 Salvar Hero</button>
+        <button class="adm-save" onclick="saveHero()">Salvar textos do Hero</button>
         <div class="adm-msg" id="mHero"></div>
       </div>
 
-      <!-- PORTFÓLIO -->
-      <div class="adm-sec" id="tab-port">
-        <div class="port-adm-grid" id="portAdmGrid"><span style="font-size:12px;color:rgba(255,255,255,.3)">Carregando...</span></div>
-        <hr style="border:none;border-top:1px solid #1E1E1E;margin:20px 0"/>
-        <p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:14px">Adicionar Projeto</p>
-        <div class="adm-grid">
-          <div class="adm-f"><label>Nome</label><input id="pNome" placeholder="Residência Serra Verde"/></div>
-          <div class="adm-f"><label>Categoria</label>
-            <select id="pCat"><option value="residencial">Residencial</option><option value="comercial">Comercial</option><option value="interiores">Interiores</option><option value="video">Vídeo 3D</option></select>
+      <!-- ═══ SOBRE ═══ -->
+      <div class="adm-sec" id="tab-sobre">
+        <div class="adm-sec-title">Imagem da Seção Sobre</div>
+        <div class="up-zone" id="sobreZone" onclick="document.getElementById('sobreFile').click()">
+          <input type="file" id="sobreFile" accept="image/*" onchange="uploadMedia(this,'sobreImg')"/>
+          <div class="up-preview" id="sobrePrev" style="display:none"></div>
+          <div class="up-info" id="sobreInfo">
+            <div class="up-ico">🖼</div>
+            <div class="up-lbl" id="sobreLbl">Clique para enviar imagem</div>
+            <div class="up-sub2">JPG · PNG · WebP · Ideal 1200×1600px</div>
           </div>
-          <div class="adm-f" style="grid-column:span 2"><label>URL da Imagem</label><input id="pImg" placeholder="https://..."/></div>
-          <div class="adm-f" style="grid-column:span 2"><label>Descrição</label><textarea id="pDesc" placeholder="Breve descrição do projeto, técnicas utilizadas..."></textarea></div>
+          <div class="up-prg2" id="sobrePrg" style="display:none"><div class="up-prg2-fill" id="sobreFill"></div></div>
         </div>
-        <div class="upload-zone" onclick="document.getElementById('portUp').click()">
-          <input type="file" id="portUp" accept="image/*" onchange="uploadPortImg()"/>
-          📁 Ou clique para upload de imagem (Firebase Storage)
+        <div class="adm-sec-title" style="margin-top:28px">Textos da Seção Sobre</div>
+        <div class="adm-grid">
+          <div class="adm-f" style="grid-column:span 2"><label>Texto principal</label><textarea id="aSobreT" style="min-height:110px">A Vértice 3D é um estúdio dedicado à visualização arquitetônica de alto padrão. Traduzimos plantas, modelos e intenções em imagens que comunicam qualidade antes da obra existir.</textarea></div>
+          <div class="adm-f" style="grid-column:span 2"><label>Frase destaque (aspas itálico)</label><input id="aSobreQ" value="Cada pixel é uma decisão de design. Cada render, uma promessa visual."/></div>
+          <div class="adm-f"><label>Número do badge de anos</label><input id="aSobreN" value="6"/></div>
+          <div class="adm-f"><label>Texto do badge</label><input id="aSobreAt" value="Anos de estúdio"/></div>
+          <div class="adm-f"><label>Card métrica 1 — valor (ex: +180)</label><input id="aSobreM1n" value="+180"/></div>
+          <div class="adm-f"><label>Card métrica 1 — label</label><input id="aSobreM1l" value="Projetos entregues"/></div>
+          <div class="adm-f"><label>Card métrica 2 — valor (ex: 98%)</label><input id="aSobreM2n" value="98%"/></div>
+          <div class="adm-f"><label>Card métrica 2 — label</label><input id="aSobreM2l" value="Satisfação"/></div>
+        </div>
+        <button class="adm-save" onclick="saveSobre()">Salvar Sobre</button>
+        <div class="adm-msg" id="mSobre"></div>
+      </div>
+
+      <!-- ═══ PORTFÓLIO ═══ -->
+      <div class="adm-sec" id="tab-port">
+        <div class="adm-sec-title">Projetos cadastrados</div>
+        <div class="port-adm-grid" id="portAdmGrid">
+          <span style="font-size:12px;color:rgba(255,255,255,.25)">Carregando...</span>
+        </div>
+        <div class="adm-sec-title" style="margin-top:24px">Adicionar Projeto</div>
+        <div class="adm-grid">
+          <div class="adm-f"><label>Nome do projeto</label><input id="pNome" placeholder="Residência Serra Verde"/></div>
+          <div class="adm-f"><label>Categoria</label>
+            <select id="pCat">
+              <option value="residencial">Residencial</option>
+              <option value="comercial">Comercial</option>
+              <option value="interiores">Interiores</option>
+              <option value="video">Vídeo 3D</option>
+            </select>
+          </div>
+          <div class="adm-f" style="grid-column:span 2"><label>Descrição</label><textarea id="pDesc" placeholder="Técnicas utilizadas, software, destaque do projeto..."></textarea></div>
+        </div>
+        <div class="up-zone" id="paZone" onclick="document.getElementById('paFile').click()">
+          <input type="file" id="paFile" accept="image/*" onchange="uploadPortImg()"/>
+          <div class="up-info">
+            <div class="up-ico">📁</div>
+            <div class="up-lbl">Clique para enviar imagem do projeto</div>
+            <div class="up-sub2">JPG · PNG · WebP · Ideal 1600×1100px</div>
+          </div>
           <div id="upSt"></div>
         </div>
         <button class="adm-save" onclick="addPort()">+ Adicionar ao Portfólio</button>
         <div class="adm-msg" id="mPort"></div>
       </div>
 
-      <!-- DEPOIMENTOS -->
+      <!-- ═══ DEPOIMENTOS ═══ -->
       <div class="adm-sec" id="tab-dep">
-        <div id="depAdmList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"></div>
-        <hr style="border:none;border-top:1px solid #1E1E1E;margin:20px 0"/>
-        <p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:14px">Adicionar Depoimento</p>
+        <div class="adm-sec-title">Depoimentos cadastrados</div>
+        <div id="depAdmList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
+        <div class="adm-sec-title">Adicionar Depoimento</div>
         <div class="adm-grid">
-          <div class="adm-f"><label>Nome</label><input id="dNome" placeholder="João Silva"/></div>
-          <div class="adm-f"><label>Empresa</label><input id="dEmp" placeholder="Construtora XYZ"/></div>
-          <div class="adm-f" style="grid-column:span 2"><label>Depoimento</label><textarea id="dTxt" placeholder="O texto do depoimento..."></textarea></div>
+          <div class="adm-f"><label>Nome completo</label><input id="dNome" placeholder="João Silva"/></div>
+          <div class="adm-f"><label>Empresa / Cargo</label><input id="dEmp" placeholder="Construtora XYZ — Diretor"/></div>
+          <div class="adm-f" style="grid-column:span 2"><label>Depoimento (texto completo)</label><textarea id="dTxt" placeholder="Texto do depoimento..."></textarea></div>
         </div>
-        <button class="adm-save" onclick="addDep()">+ Adicionar</button>
+        <button class="adm-save" onclick="addDep()">+ Adicionar Depoimento</button>
         <div class="adm-msg" id="mDep"></div>
       </div>
 
-      <!-- SOBRE -->
-      <div class="adm-sec" id="tab-sobre">
-        <div class="adm-grid">
-          <div class="adm-f" style="grid-column:span 2"><label>Texto principal</label><textarea id="aSobreT" style="min-height:120px">A Vértice 3D é um estúdio especializado em renderização e visualização arquitetônica...</textarea></div>
-          <div class="adm-f" style="grid-column:span 2"><label>Imagem (URL)</label><input id="aSobreI" placeholder="https://..."/></div>
-          <div class="adm-f"><label>Número do badge (ex: +180)</label><input id="aSobreN" value="+180"/></div>
-          <div class="adm-f"><label>Texto do badge</label><input id="aSobreAt" value="Projetos Realizados"/></div>
-          <div class="adm-f" style="grid-column:span 2"><label>Frase destaque (itálico)</label><input id="aSobreQ" value="Cada pixel é uma decisão de design. Cada render é uma promessa visual."/></div>
-        </div>
-        <button class="adm-save" onclick="saveSobre()">💾 Salvar</button>
-        <div class="adm-msg" id="mSobre"></div>
-      </div>
-
-      <!-- STATS -->
+      <!-- ═══ NÚMEROS ═══ -->
       <div class="adm-sec" id="tab-stats">
+        <div class="adm-sec-title">Números / Estatísticas</div>
         <div class="adm-grid">
           <div class="adm-f"><label>Stat 1 — Número</label><input id="as1n" value="180"/></div>
           <div class="adm-f"><label>Stat 1 — Label</label><input id="as1l" value="Projetos entregues"/></div>
-          <div class="adm-f" style="grid-column:span 2"><label>Stat 1 — Descrição</label><input id="as1d" value="Projetos que fecharam vendas antes da obra começar"/></div>
+          <div class="adm-f" style="grid-column:span 2"><label>Stat 1 — Descrição</label><input id="as1d" value="Renderizações que anteciparam valor e fecharam negócios"/></div>
           <div class="adm-f"><label>Stat 2 — Número</label><input id="as2n" value="95"/></div>
-          <div class="adm-f"><label>Stat 2 — Label</label><input id="as2l" value="Clientes Satisfeitos"/></div>
+          <div class="adm-f"><label>Stat 2 — Label</label><input id="as2l" value="Clientes satisfeitos"/></div>
           <div class="adm-f" style="grid-column:span 2"><label>Stat 2 — Descrição</label><input id="as2d" value="Construtoras, arquitetos e incorporadoras que confiam"/></div>
-          <div class="adm-f"><label>Stat 3 — Número</label><input id="as3n" value="7"/></div>
-          <div class="adm-f"><label>Stat 3 — Label</label><input id="as3l" value="Anos de Experiência"/></div>
-          <div class="adm-f" style="grid-column:span 2"><label>Stat 3 — Descrição</label><input id="as3d" value="Construindo referência no mercado de visualização"/></div>
+          <div class="adm-f"><label>Stat 3 — Número</label><input id="as3n" value="6"/></div>
+          <div class="adm-f"><label>Stat 3 — Label</label><input id="as3l" value="Anos de experiência"/></div>
+          <div class="adm-f" style="grid-column:span 2"><label>Stat 3 — Descrição</label><input id="as3d" value="Construindo referência no mercado de visualização arquitetônica"/></div>
         </div>
-        <button class="adm-save" onclick="saveStats()">💾 Salvar Stats</button>
+        <button class="adm-save" onclick="saveStats()">Salvar Números</button>
         <div class="adm-msg" id="mStats"></div>
       </div>
 
-      <!-- CONTATO -->
+      <!-- ═══ CONTATO ═══ -->
       <div class="adm-sec" id="tab-contato">
+        <div class="adm-sec-title">Informações de contato</div>
         <div class="adm-grid">
+          <div class="adm-f"><label>WhatsApp (só números)</label><input id="aCWa" placeholder="5544999999999"/></div>
           <div class="adm-f"><label>E-mail</label><input id="aCEmail" placeholder="contato@vertice3d.com.br"/></div>
           <div class="adm-f"><label>Instagram</label><input id="aCIG" placeholder="@vertice3d"/></div>
           <div class="adm-f"><label>Cidade</label><input id="aCCid" placeholder="São Paulo, SP"/></div>
-          <div class="adm-f"><label>Coordenadas (rodapé)</label><input id="aCCoords" placeholder="23°33'S 46°38'O — Brasil"/></div>
+          <div class="adm-f" style="grid-column:span 2"><label>Coordenadas (exibidas no rodapé)</label><input id="aCCoords" placeholder="23°33'S 46°38'O — Brasil"/></div>
         </div>
-        <button class="adm-save" onclick="saveContato()">💾 Salvar</button>
+        <button class="adm-save" onclick="saveContato()">Salvar Contato</button>
         <div class="adm-msg" id="mContato"></div>
       </div>
 
-      <!-- LEADS -->
+      <!-- ═══ LEADS ═══ -->
       <div class="adm-sec" id="tab-leads">
-        <p style="font-size:12px;color:rgba(255,255,255,.3);margin-bottom:16px">Solicitações de orçamento recebidas pelo site:</p>
-        <div id="leadsArea"></div>
-        <button class="adm-save" onclick="loadLeads()" style="margin-top:16px">🔄 Atualizar</button>
+        <div class="adm-sec-title">Solicitações de orçamento recebidas</div>
+        <div id="leadsArea" style="overflow-x:auto"></div>
+        <button class="adm-save" onclick="loadLeads()" style="margin-top:12px">↻ Atualizar</button>
         <div class="adm-msg" id="mLeads"></div>
       </div>
-    </div>
-  </div>
-</div>
+
+      <!-- ═══ TOUR 360° ═══ -->
+      <div class="adm-sec" id="tab-tour">
+        <div class="adm-sec-title">Imagem de Tour Virtual 360°</div>
+        <p style="font-size:12px;color:rgba(255,255,255,.3);margin-bottom:16px;line-height:1.7">
+          Envie uma imagem equiretangular (panorâmica 360°). Recomendado: 8192×4096px, proporção 2:1, formato JPG.
+        </p>
+        <div class="up-zone" id="t360Zone" onclick="document.getElementById('t360File').click()">
+          <input type="file" id="t360File" accept="image/*" onchange="uploadMedia(this,'tour360')"/>
+          <div class="up-preview" id="t360Prev" style="display:none"></div>
+          <div class="up-info" id="t360Info">
+            <div class="up-ico">🌐</div>
+            <div class="up-lbl" id="t360Lbl">Clique para enviar panorama 360°</div>
+            <div class="up-sub2">JPG · PNG · Proporção 2:1 · até 20 MB</div>
+          </div>
+          <div class="up-prg2" id="t360Prg" style="display:none"><div class="up-prg2-fill" id="t360Fill"></div></div>
+        </div>
+        <div class="adm-grid" style="margin-top:20px">
+          <div class="adm-f"><label>Título do tour (opcional)</label><input id="aTourTitle" placeholder="Explore o projeto em 360°"/></div>
+          <div class="adm-f"><label>Subtítulo (opcional)</label><input id="aTourSub" placeholder="Clique e arraste para navegar"/></div>
+        </div>
+        <button class="adm-save" onclick="saveTour360()">Salvar Tour 360°</button>
+        <div class="adm-msg" id="mTour"></div>
+      </div>
+
+    </div><!-- /admContent -->
+  </div><!-- /adm-box -->
+</div><!-- /adminPanel -->
 
 <!-- MODAL PROJETO -->
 <div id="projModal" onclick="if(event.target===this)closeModal()">
@@ -3170,46 +3359,138 @@ async function checkAdmPass(){
 }
 
 function swTab(t){
-  document.querySelectorAll('.adm-tab').forEach((el,i)=>{
-    const ts=['geral','hero','port','dep','sobre','stats','contato','leads'];
-    el.classList.toggle('on',ts[i]===t);
-  });
+  const ts=['hero','sobre','port','dep','stats','contato','leads','tour'];
+  document.querySelectorAll('.adm-tab').forEach((el,i)=>el.classList.toggle('on',ts[i]===t));
   document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('on'));
-  document.getElementById('tab-'+t).classList.add('on');
+  var sec=document.getElementById('tab-'+t);
+  if(sec)sec.classList.add('on');
   if(t==='leads')loadLeads();
-}
-
-async function saveGeral(){
-  try{
-    const {db,doc,setDoc}=window._FB;
-    const d={whatsapp:document.getElementById('aWa').value};
-    await setDoc(doc(db,'config','site'),d,{merge:true});
-  }catch(e){showMsg('mGeral','Erro: '+e.message,'#f44')}
+  if(t==='port')loadAdmPort();
+  if(t==='dep')loadAdmDep();
 }
 
 async function saveHero(){
   try{
     const {db,doc,setDoc}=window._FB;
+    var eye=document.getElementById('aHEye');
+    var wa=document.getElementById('aWa');
     const d={
       heroLine1:document.getElementById('aHl1').value,
       heroLine2:document.getElementById('aHl2').value,
       heroLine3:document.getElementById('aHl3').value,
       heroSub:document.getElementById('aHSub').value,
-      heroBg:document.getElementById('aHBg').value,
+      heroEyebrow:eye?eye.value:'',
+      whatsapp:wa?wa.value:'',
     };
-    // Preserva logoUrl se já foi salva
     const logoPreview=document.getElementById('logoAdmPreview');
-    if(logoPreview&&logoPreview.src&&logoPreview.style.display!=='none'){
-      d.logoUrl=logoPreview.src;
-    }
+    if(logoPreview&&logoPreview.src&&logoPreview.style.display!=='none'){d.logoUrl=logoPreview.src;}
     await setDoc(doc(db,'config','site'),d,{merge:true});
-    document.getElementById('hl1').textContent=d.heroLine1;
-    document.getElementById('hl2').textContent=d.heroLine2;
-    document.getElementById('hl3').textContent=d.heroLine3;
-    document.getElementById('heroSub').textContent=d.heroSub;
-    if(d.heroBg)document.getElementById('heroBg').style.backgroundImage=`url(${d.heroBg})`;
-    showMsg('mHero','✓ Salvo!');
+    if(document.getElementById('hl1'))document.getElementById('hl1').textContent=d.heroLine1;
+    if(document.getElementById('hl2'))document.getElementById('hl2').textContent=d.heroLine2;
+    if(document.getElementById('hl3'))document.getElementById('hl3').textContent=d.heroLine3;
+    if(document.getElementById('heroSub'))document.getElementById('heroSub').textContent=d.heroSub;
+    if(d.whatsapp)document.querySelectorAll('.wa-href').forEach(el=>el.href='https://wa.me/'+d.whatsapp);
+    showMsg('mHero','✓ Salvo com sucesso!');
   }catch(e){showMsg('mHero','Erro: '+e.message,'#f44')}
+}
+
+function initTour360(url){
+  var container=document.getElementById('tour360Viewer');
+  if(!container)return;
+  var ph=document.getElementById('tour360Placeholder');
+  if(ph)ph.remove();
+  if(window.pannellum){
+    pannellum.viewer('tour360Viewer',{
+      type:'equirectangular',
+      panorama:url,
+      autoLoad:true,
+      autoRotate:-2,
+      compass:false,
+      showZoomCtrl:true,
+      showFullscreenCtrl:true,
+      hfov:110,
+      minHfov:50,
+      maxHfov:150,
+      friction:0.2
+    });
+  } else {
+    // Fallback sem Pannellum
+    container.style.backgroundImage=`url(${url})`;
+    container.style.backgroundSize='180% auto';
+    container.style.backgroundPosition='center';
+    container.style.animation='pan360 20s linear infinite alternate';
+    container.innerHTML='<div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(26,23,20,.65);color:#fff;padding:8px 18px;border-radius:20px;font-size:10px;letter-spacing:2px;backdrop-filter:blur(8px)">← Arraste para explorar →</div>';
+  }
+}
+
+async function saveTour360(){
+  try{
+    const {db,doc,setDoc}=window._FB;
+    const d={
+      tourTitle:document.getElementById('aTourTitle').value,
+      tourSub:document.getElementById('aTourSub').value,
+    };
+    // Se houve upload, a URL já foi salva pelo uploadMedia; só salva título/subtítulo
+    await setDoc(doc(db,'config','site'),d,{merge:true});
+    showMsg('mTour','✓ Tour 360° salvo!');
+  }catch(e){showMsg('mTour','Erro: '+e.message,'#f44')}
+}
+
+/* ═══ uploadMedia — handler genérico para todos os uploads do admin ═════ */
+async function uploadMedia(input, key){
+  var file=input.files[0];
+  if(!file)return;
+  // Mapeamento key → IDs dos elementos
+  var maps={
+    heroVideo:{zone:'vidZone',prev:'vidPrev',lbl:'vidLbl',info:'vidInfo'},
+    sobreImg:{zone:'sobreZone',prev:'sobrePrev',lbl:'sobreLbl',info:'sobreInfo'},
+    tour360:{zone:'t360Zone',prev:'t360Prev',lbl:'t360Lbl',info:'t360Info'},
+  };
+  var ids=maps[key]||{};
+  var lblEl=document.getElementById(ids.lbl);
+  var prevEl=document.getElementById(ids.prev);
+  var zoneEl=document.getElementById(ids.zone);
+  if(lblEl){lblEl.style.color='var(--TX)';lblEl.textContent='Enviando…';}
+  try{
+    var {storage,ref,uploadBytes,getDownloadURL,db,doc,setDoc}=window._FB;
+    var r=ref(storage,`${key}/${Date.now()}_${file.name}`);
+    var snap=await uploadBytes(r,file);
+    var url=await getDownloadURL(snap.ref);
+    // Preview
+    if(prevEl){
+      if(key==='heroVideo'){
+        prevEl.innerHTML=`<video src="${url}" style="width:100%;height:100%;object-fit:cover" muted loop autoplay playsinline></video>`;
+      } else {
+        prevEl.style.backgroundImage=`url(${url})`;
+      }
+      prevEl.style.display='block';
+    }
+    if(zoneEl)zoneEl.classList.add('has-file');
+    if(lblEl){lblEl.style.color='var(--O)';lblEl.textContent='✓ Upload concluído!';}
+    // Salvar URL no Firestore
+    var field={};
+    if(key==='sobreImg')field={sobreImgUrl:url};
+    else if(key==='heroVideo')field={heroVideoUrl:url};
+    else if(key==='tour360')field={tour360Url:url};
+    else field={[key+'Url']:url};
+    await setDoc(doc(db,'config','site'),field,{merge:true});
+    // Aplicar ao site imediatamente
+    if(key==='sobreImg'){
+      var wrap=document.getElementById('sobreImgWrap');
+      if(wrap)wrap.innerHTML=`<img class="sobre-img" src="${url}" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>`;
+    }
+    if(key==='tour360'){
+      var sec=document.getElementById('tourSection');
+      if(sec)sec.style.display='block';
+      initTour360(url);
+    }
+    if(key==='heroBg'){
+      var bg=document.getElementById('heroBg');
+      if(bg)bg.style.backgroundImage=`url(${url})`;
+    }
+  }catch(e){
+    if(lblEl){lblEl.style.color='#f44';lblEl.textContent='Erro: '+e.message;}
+  }
 }
 
 async function uploadLogo(input){
@@ -3278,12 +3559,17 @@ async function saveStats(){
 async function saveSobre(){
   try{
     const {db,doc,setDoc}=window._FB;
+    var m1n=document.getElementById('aSobreM1n');
+    var m1l=document.getElementById('aSobreM1l');
+    var m2n=document.getElementById('aSobreM2n');
+    var m2l=document.getElementById('aSobreM2l');
     const d={
       sobreTexto:document.getElementById('aSobreT').value,
-      sobreImg:document.getElementById('aSobreI').value,
       sobreN:document.getElementById('aSobreN').value,
       sobreAt:document.getElementById('aSobreAt').value,
       sobreQ:document.getElementById('aSobreQ').value,
+      sobreM1n:m1n?m1n.value:'',sobreM1l:m1l?m1l.value:'',
+      sobreM2n:m2n?m2n.value:'',sobreM2l:m2l?m2l.value:'',
     };
     await setDoc(doc(db,'config','site'),d,{merge:true});
     document.getElementById('sobreTexto').textContent=d.sobreTexto;
@@ -3299,11 +3585,13 @@ async function saveSobre(){
 async function saveContato(){
   try{
     const {db,doc,setDoc}=window._FB;
+    var wa2=document.getElementById('aCWa');
     const d={
       email:document.getElementById('aCEmail').value,
       instagram:document.getElementById('aCIG').value,
       cidade:document.getElementById('aCCid').value,
       coords:document.getElementById('aCCoords').value,
+      whatsapp:wa2?wa2.value:'',
     };
     await setDoc(doc(db,'config','site'),d,{merge:true});
     if(d.email)document.getElementById('fEmail').textContent=d.email;
@@ -3315,65 +3603,186 @@ async function saveContato(){
 }
 
 async function uploadPortImg(){
-  const file=document.getElementById('portUp').files[0];
+  const file=document.getElementById('paFile').files[0];
   if(!file)return;
   const st=document.getElementById('upSt');
-  st.textContent='Enviando...';
+  st.style.color='var(--TX)';st.textContent='Enviando…';
   try{
     const {storage,ref,uploadBytes,getDownloadURL}=window._FB;
     const r=ref(storage,`portfolio/${Date.now()}_${file.name}`);
     const snap=await uploadBytes(r,file);
     const url=await getDownloadURL(snap.ref);
-    document.getElementById('pImg').value=url;
-    st.textContent='✓ Upload concluído!';
+    window._portNewImg=url;
+    // Mostrar preview na zona de upload
+    const zone=document.getElementById('paZone');
+    let prev=zone.querySelector('.up-preview');
+    if(!prev){prev=document.createElement('div');prev.className='up-preview';zone.insertBefore(prev,zone.firstChild);}
+    prev.style.backgroundImage=`url(${url})`;
+    zone.classList.add('has-file');
+    st.style.color='var(--O)';st.textContent='✓ Imagem enviada!';
   }catch(e){st.style.color='#f44';st.textContent='Erro: '+e.message}
 }
 
 async function addPort(){
-  const nome=document.getElementById('pNome').value;
-  if(!nome){showMsg('mPort','Preencha o nome.','#f44');return}
+  const nome=document.getElementById('pNome').value.trim();
+  if(!nome){showMsg('mPort','Preencha o nome do projeto.','#f44');return}
   try{
     const {db,collection,addDoc}=window._FB;
     await addDoc(collection(db,'portfolio'),{
-      nome,categoria:document.getElementById('pCat').value,
-      imagem:document.getElementById('pImg').value,
+      nome,
+      categoria:document.getElementById('pCat').value,
+      imagem:window._portNewImg||'',
       descricao:document.getElementById('pDesc').value,
     });
-    showMsg('mPort','✓ Adicionado!');
+    showMsg('mPort','✓ Projeto adicionado ao portfólio!');
+    // Limpar formulário
     document.getElementById('pNome').value='';
-    document.getElementById('pImg').value='';
     document.getElementById('pDesc').value='';
+    window._portNewImg='';
+    const zone=document.getElementById('paZone');
+    const prev=zone.querySelector('.up-preview');
+    if(prev)prev.remove();
+    zone.classList.remove('has-file');
+    document.getElementById('upSt').textContent='';
     loadAdmPort();
     if(window._loadPortfolio)window._loadPortfolio();
   }catch(e){showMsg('mPort','Erro: '+e.message,'#f44')}
 }
 
+window._portItems=new Map();
+
 async function loadAdmPort(){
   const grid=document.getElementById('portAdmGrid');
-  grid.innerHTML='<span style="font-size:12px;color:rgba(255,255,255,.3)">Carregando...</span>';
+  // Remove painel de edição aberto, se houver
+  const ep=document.getElementById('portEditPanel');if(ep)ep.remove();
+  window._portItems=new Map();
+  grid.innerHTML='<span style="font-size:12px;color:var(--TX)">Carregando…</span>';
   try{
     const {db,collection,getDocs}=window._FB;
     const snap=await getDocs(collection(db,'portfolio'));
-    if(snap.empty){grid.innerHTML='<p style="font-size:12px;color:rgba(255,255,255,.3)">Nenhum projeto ainda.</p>';return}
+    if(snap.empty){grid.innerHTML='<p style="font-size:12px;color:var(--TX)">Nenhum projeto ainda.</p>';return}
     grid.innerHTML='';
     snap.forEach(d=>{
       const item=d.data();
-      grid.innerHTML+=`<div class="port-adm-item">
-        <div class="port-adm-th" style="${item.imagem?`background:url(${item.imagem}) center/cover`:'background:var(--BK3)'}"></div>
+      window._portItems.set(d.id,item);
+      const bg=item.imagem?`url(${item.imagem}) center/cover no-repeat`:`linear-gradient(135deg,var(--BG3),var(--BG4))`;
+      const catNames={'residencial':'Residencial','comercial':'Comercial','interiores':'Interiores','video':'Vídeo 3D'};
+      const catLabel=catNames[item.categoria]||item.categoria||'—';
+      grid.innerHTML+=`<div class="port-adm-item" id="pad-${d.id}">
+        <div class="port-adm-th" style="background:${bg}">
+          <div class="port-adm-cat">${catLabel}</div>
+        </div>
         <div class="port-adm-nm">${item.nome}</div>
-        <button class="port-adm-del" onclick="delPort('${d.id}')">✕</button>
+        <div class="port-adm-acts">
+          <button class="port-adm-edit" onclick="editPort('${d.id}')">✎ Editar</button>
+          <button class="port-adm-del" onclick="delPort('${d.id}')">✕</button>
+        </div>
       </div>`;
     });
-  }catch(e){grid.innerHTML='<p style="color:#f44;font-size:12px">Configure o Firebase.</p>'}
+  }catch(e){grid.innerHTML='<p style="color:#f44;font-size:12px">Configure o Firebase para ver os projetos.</p>'}
+}
+
+function editPort(id){
+  const item=window._portItems.get(id);
+  if(!item)return;
+  // Remove painel anterior
+  const old=document.getElementById('portEditPanel');if(old)old.remove();
+  // Remove imagem editada em memória
+  if(!window._editPortImg)window._editPortImg={};
+  delete window._editPortImg[id];
+  const catNames=['residencial','comercial','interiores','video'];
+  const catLabels={'residencial':'Residencial','comercial':'Comercial','interiores':'Interiores','video':'Vídeo 3D'};
+  const opts=catNames.map(c=>`<option value="${c}"${item.categoria===c?' selected':''}>${catLabels[c]}</option>`).join('');
+  const prevBg=item.imagem?`style="background-image:url(${item.imagem});display:block"`:'style="display:none"';
+  const panel=document.createElement('div');
+  panel.id='portEditPanel';
+  panel.style.cssText='grid-column:1/-1;margin-top:4px';
+  panel.innerHTML=`
+    <div style="background:var(--BG2);border:1px solid var(--champagne);border-radius:var(--r-md);padding:24px 24px 20px">
+      <div class="adm-sec-title" style="margin-bottom:16px;font-size:13px">✎ Editando: <em style="font-family:var(--serif-it);font-weight:300;font-style:italic">${item.nome}</em></div>
+      <div class="adm-grid">
+        <div class="adm-f"><label>Nome do projeto</label><input id="eNome" value="${(item.nome||'').replace(/"/g,'&quot;')}"/></div>
+        <div class="adm-f"><label>Categoria</label><select id="eCat">${opts}</select></div>
+        <div class="adm-f" style="grid-column:span 2"><label>Descrição</label><textarea id="eDesc" rows="3">${item.descricao||''}</textarea></div>
+      </div>
+      <div class="up-zone" id="peZone" onclick="document.getElementById('peFile').click()" style="margin-top:12px">
+        <input type="file" id="peFile" accept="image/*" style="display:none" onchange="uploadEditPortImg('${id}')"/>
+        <div class="up-preview" id="pePreview" ${prevBg}></div>
+        <div class="up-info">
+          <div class="up-ico">🖼</div>
+          <div class="up-lbl">${item.imagem?'Clique para substituir a imagem':'Clique para enviar imagem do projeto'}</div>
+          <div class="up-sub2">JPG · PNG · WebP · Ideal 1600×1100px</div>
+        </div>
+      </div>
+      <div id="peUpSt" style="font-size:11px;margin-top:6px;min-height:16px"></div>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center">
+        <button class="adm-save" onclick="saveEditPort('${id}')">✓ Salvar alterações</button>
+        <button class="adm-save" style="border-color:var(--GY2);color:var(--TX);background:transparent" onmouseover="this.style.background='var(--BG3)'" onmouseout="this.style.background='transparent'" onclick="document.getElementById('portEditPanel').remove()">Cancelar</button>
+      </div>
+      <div class="adm-msg" id="mPortEdit"></div>
+    </div>`;
+  const grid=document.getElementById('portAdmGrid');
+  grid.parentNode.insertBefore(panel,grid.nextSibling);
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  // Marcar card selecionado
+  document.querySelectorAll('.port-adm-item').forEach(el=>el.style.borderColor='');
+  const card=document.getElementById('pad-'+id);
+  if(card)card.style.borderColor='var(--O)';
+}
+
+async function uploadEditPortImg(id){
+  const file=document.getElementById('peFile').files[0];
+  if(!file)return;
+  const st=document.getElementById('peUpSt');
+  st.style.color='var(--TX)';st.textContent='Enviando…';
+  try{
+    const {storage,ref,uploadBytes,getDownloadURL}=window._FB;
+    const r=ref(storage,`portfolio/${Date.now()}_${file.name}`);
+    const snap=await uploadBytes(r,file);
+    const url=await getDownloadURL(snap.ref);
+    if(!window._editPortImg)window._editPortImg={};
+    window._editPortImg[id]=url;
+    // Mostrar preview
+    const prev=document.getElementById('pePreview');
+    if(prev){prev.style.backgroundImage=`url(${url})`;prev.style.display='block';}
+    const zone=document.getElementById('peZone');
+    if(zone)zone.classList.add('has-file');
+    st.style.color='var(--O)';st.textContent='✓ Imagem enviada com sucesso!';
+  }catch(e){st.style.color='#f44';st.textContent='Erro no upload: '+e.message}
+}
+
+async function saveEditPort(id){
+  const nome=(document.getElementById('eNome').value||'').trim();
+  if(!nome){showMsg('mPortEdit','Preencha o nome do projeto.','#f44');return}
+  try{
+    const {db,doc,updateDoc}=window._FB;
+    const data={
+      nome,
+      categoria:document.getElementById('eCat').value,
+      descricao:document.getElementById('eDesc').value,
+    };
+    if(window._editPortImg&&window._editPortImg[id]){
+      data.imagem=window._editPortImg[id];
+      delete window._editPortImg[id];
+    }
+    await updateDoc(doc(db,'portfolio',id),data);
+    showMsg('mPortEdit','✓ Projeto atualizado!');
+    setTimeout(()=>{
+      const panel=document.getElementById('portEditPanel');if(panel)panel.remove();
+    },1200);
+    loadAdmPort();
+    if(window._loadPortfolio)window._loadPortfolio();
+  }catch(e){showMsg('mPortEdit','Erro ao salvar: '+e.message,'#f44')}
 }
 
 async function delPort(id){
-  if(!confirm('Remover?'))return;
+  if(!confirm('Remover este projeto do portfólio?'))return;
   try{
     const {db,doc,deleteDoc}=window._FB;
     await deleteDoc(doc(db,'portfolio',id));
-    loadAdmPort();if(window._loadPortfolio)window._loadPortfolio();
-  }catch(e){alert('Erro: '+e.message)}
+    loadAdmPort();
+    if(window._loadPortfolio)window._loadPortfolio();
+  }catch(e){alert('Erro ao remover: '+e.message)}
 }
 
 async function addDep(){
