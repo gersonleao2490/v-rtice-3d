@@ -73,12 +73,8 @@ async function loadSiteData(){
     var wrap=document.getElementById('sobreImgWrap');
     if(wrap)wrap.innerHTML=`<img class="sobre-img" src="${d.sobreImgUrl}" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>`;
   }
-  // Tour 360°
+  // Tour 360° — injeta viewer no lado esquerdo da seção "Sobre"
   if(d.tour360Url){
-    var ts=document.getElementById('tourSection');
-    if(ts)ts.style.display='block';
-    if(d.tourTitle){var tt=document.getElementById('tourSTitle');if(tt)tt.innerHTML=d.tourTitle+' <em>em 360°</em>';}
-    if(d.tourSub){var tst=document.getElementById('tourSSub');if(tst)tst.textContent=d.tourSub;}
     initTour360(d.tour360Url);
   }
   // Hero background image
@@ -400,6 +396,7 @@ body::before{
 }
 @keyframes slideUp{to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+@keyframes pan360{from{background-position:0% center}to{background-position:100% center}}
 
 .btn-O{
   background:var(--O);color:#fff;
@@ -542,6 +539,29 @@ section{padding:160px 80px}
 .sobre-img-wrap{
   position:relative;overflow:hidden;
   aspect-ratio:4/5;border-radius:var(--r-lg);box-shadow:0 30px 80px rgba(26,23,20,.12);
+}
+/* Quando tour 360° está ativo — remove aspect-ratio fixo e adapta ao conteúdo */
+.sobre-img-wrap.tour-active{
+  aspect-ratio:unset;
+  height:580px;
+  border-radius:var(--r-lg);
+}
+.tour360-inner{width:100%;height:100%;position:absolute;inset:0}
+.tour-badge{
+  position:absolute;top:14px;right:14px;z-index:20;
+  background:rgba(26,23,20,.72);color:#fff;
+  padding:5px 12px;border-radius:20px;
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;
+  backdrop-filter:blur(8px);pointer-events:none;
+  display:flex;align-items:center;gap:6px;
+}
+.tour-badge::before{content:'🌐';font-size:11px}
+.tour-hint{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:20;
+  background:rgba(26,23,20,.55);color:rgba(255,255,255,.85);
+  padding:5px 14px;border-radius:20px;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;backdrop-filter:blur(6px);pointer-events:none;
+  white-space:nowrap;
 }
 .sobre-img{
   width:100%;height:100%;object-fit:cover;
@@ -1479,6 +1499,7 @@ footer{
   .stat-desc{margin:0 auto}
   #sobre{grid-template-columns:1fr;gap:56px;padding:100px 24px}
   .sobre-img-wrap{aspect-ratio:5/4}
+  .sobre-img-wrap.tour-active{aspect-ratio:unset;height:380px}
   .sobre-accent{right:0;bottom:-12px}
   .sobre-quote{font-size:20px}
   .proc-inner{grid-template-columns:1fr;gap:48px}
@@ -1799,8 +1820,8 @@ footer{
   <ul class="nav-links">
     <li><a href="#portSection">Portfólio</a></li>
     <li><a href="#srv">Serviços</a></li>
+    <li><a href="#tourSection" id="navTour360" style="display:none">Tour 360°</a></li>
     <li><a href="#sobre">Sobre</a></li>
-    <li><a href="#proc">Processo</a></li>
     <li><a href="#dep">Clientes</a></li>
   </ul>
   <a href="#orc" class="nav-cta">Orçamento</a>
@@ -1813,8 +1834,8 @@ footer{
   <ul class="fm-list">
     <li class="fm-item"><a href="#portSection" onclick="toggleMenu()">Portfólio</a></li>
     <li class="fm-item"><a href="#srv" onclick="toggleMenu()">Serviços</a></li>
+    <li class="fm-item" id="menuTour360" style="display:none"><a href="#tourSection" onclick="toggleMenu()">Tour 360°</a></li>
     <li class="fm-item"><a href="#sobre" onclick="toggleMenu()">Sobre</a></li>
-    <li class="fm-item"><a href="#proc" onclick="toggleMenu()">Processo</a></li>
     <li class="fm-item"><a href="#dep" onclick="toggleMenu()">Clientes</a></li>
     <li class="fm-item"><a href="#orc" onclick="toggleMenu()">Orçamento</a></li>
   </ul>
@@ -2118,6 +2139,7 @@ footer{
       <div class="srv-ico">03—</div>
       <div class="srv-t">Tour virtual<br>360°</div>
       <p class="srv-d">Experiência imersiva para navegar pelo projeto antes da obra. Compatível com VR e qualquer dispositivo — apresente em qualquer reunião, com a discrição que o cliente espera.</p>
+      <a id="srvTour360Btn" href="#tourSection" style="display:none;margin-top:24px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--O);border-bottom:1px solid var(--O);padding-bottom:2px;transition:opacity .3s">Explorar o tour →</a>
     </div>
     <div class="srv-card rv rv-d3">
       <div class="srv-n">IV</div>
@@ -2261,24 +2283,6 @@ footer{
   </div>
 </section>
 
-<!-- ═══ TOUR 360° ═══ -->
-<section id="tourSection" style="display:none;padding:0;overflow:hidden">
-  <div style="text-align:center;padding:100px 80px 56px;position:relative;z-index:1">
-    <p class="s-over" style="color:var(--O);letter-spacing:6px;font-size:10px;text-transform:uppercase;font-weight:400;margin-bottom:14px">Imersão Total</p>
-    <h2 class="s-title" id="tourSTitle">Explore o projeto <em>em 360°</em></h2>
-    <p class="s-sub" id="tourSSub" style="max-width:480px;margin:0 auto">Navegue pelo projeto antes da obra. Clique e arraste para explorar cada ângulo em tempo real.</p>
-  </div>
-  <div id="tour360Viewer" style="width:100%;height:clamp(420px,62vh,760px);background:var(--BG3);position:relative">
-    <div id="tour360Placeholder" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--TX)">
-      <span style="font-size:48px;opacity:.3">🌐</span>
-      <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.4">Panorama em carregamento…</span>
-    </div>
-  </div>
-  <div style="text-align:center;padding:24px 24px 80px">
-    <span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--TX);opacity:.55">← Clique e arraste para navegar · Scroll para zoom →</span>
-  </div>
-</section>
-
 <!-- ═══ ORÇAMENTO ═══ -->
 <section id="orc">
   <div class="orc-inner">
@@ -2399,7 +2403,7 @@ footer{
       <ul>
         <li><a href="#srv">Renderização fotorrealista</a></li>
         <li><a href="#srv">Vídeo 3D cinematográfico</a></li>
-        <li><a href="#srv">Tour virtual 360°</a></li>
+        <li><a href="#tourSection">Tour virtual 360°</a></li>
         <li><a href="#srv">Implantação animada</a></li>
       </ul>
     </div>
@@ -3395,10 +3399,17 @@ async function saveHero(){
 }
 
 function initTour360(url){
-  var container=document.getElementById('tour360Viewer');
-  if(!container)return;
-  var ph=document.getElementById('tour360Placeholder');
-  if(ph)ph.remove();
+  var wrap=document.getElementById('sobreImgWrap');
+  if(!wrap)return;
+
+  // Ativar modo tour no wrapper do sobre
+  wrap.classList.add('tour-active');
+
+  // Criar container interno para o Pannellum + badge + dica
+  wrap.innerHTML='<div class="tour360-inner" id="tour360Viewer"></div>'
+    +'<div class="tour-badge">360°</div>'
+    +'<div class="tour-hint">← Clique e arraste para navegar</div>';
+
   if(window.pannellum){
     pannellum.viewer('tour360Viewer',{
       type:'equirectangular',
@@ -3408,19 +3419,26 @@ function initTour360(url){
       compass:false,
       showZoomCtrl:true,
       showFullscreenCtrl:true,
-      hfov:110,
+      hfov:100,
       minHfov:50,
       maxHfov:150,
-      friction:0.2
+      friction:0.15
     });
   } else {
-    // Fallback sem Pannellum
-    container.style.backgroundImage=`url(${url})`;
-    container.style.backgroundSize='180% auto';
-    container.style.backgroundPosition='center';
-    container.style.animation='pan360 20s linear infinite alternate';
-    container.innerHTML='<div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(26,23,20,.65);color:#fff;padding:8px 18px;border-radius:20px;font-size:10px;letter-spacing:2px;backdrop-filter:blur(8px)">← Arraste para explorar →</div>';
+    // Fallback sem Pannellum — auto-pan via background
+    var inner=document.getElementById('tour360Viewer');
+    if(inner){
+      inner.style.cssText='position:absolute;inset:0;background:url('+url+') center/200% auto;animation:pan360 25s linear infinite alternate';
+    }
   }
+
+  // Mostrar links "Tour 360°" na nav, menu mobile e card de servicos
+  var nl=document.getElementById('navTour360');
+  if(nl){nl.style.display='';nl.href='#sobre';}
+  var ml=document.getElementById('menuTour360');
+  if(ml){ml.style.display='';var a=ml.querySelector('a');if(a)a.href='#sobre';}
+  var sb=document.getElementById('srvTour360Btn');
+  if(sb){sb.style.display='inline-block';sb.href='#sobre';}
 }
 
 async function saveTour360(){
@@ -3480,8 +3498,6 @@ async function uploadMedia(input, key){
       if(wrap)wrap.innerHTML=`<img class="sobre-img" src="${url}" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>`;
     }
     if(key==='tour360'){
-      var sec=document.getElementById('tourSection');
-      if(sec)sec.style.display='block';
       initTour360(url);
     }
     if(key==='heroBg'){
