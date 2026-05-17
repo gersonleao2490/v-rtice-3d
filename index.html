@@ -125,11 +125,13 @@ async function loadDepoimentos(){
 
 function renderPortfolio(items){
   window._portItemsArr=items;
+  // Improvement 15 — filter out inactive items for public view
+  const visible=items.filter(i=>i.ativo!==false);
   const hScroll=document.getElementById('hScrollTrack');
   const grid=document.getElementById('portfolioGrid');
   hScroll.innerHTML='';
   grid.innerHTML='';
-  items.forEach((item,idx)=>{
+  visible.forEach((item,idx)=>{
     hScroll.innerHTML+=buildHCard(item,idx);
     grid.innerHTML+=buildGCard(item,idx);
   });
@@ -1895,6 +1897,288 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 .gal-slot .gs-prev{position:absolute;inset:0;background-size:cover;background-position:center;display:none}
 .gal-slot .gs-rm{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2}
 .gal-slot:hover .gs-rm{display:flex}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 2 — Portfolio card hover enhanced
+══════════════════════════════════════════════ */
+.hCard{transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.hCard:hover{transform:translateY(-8px);box-shadow:0 32px 64px rgba(26,23,20,.18)}
+.gCard{transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.gCard:hover{transform:translateY(-8px);box-shadow:0 32px 64px rgba(26,23,20,.18)}
+.hCard-cta{
+  position:absolute;bottom:0;left:0;right:0;
+  background:var(--O);color:#fff;text-align:center;
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;font-weight:500;
+  padding:14px;transform:translateY(100%);transition:transform .4s var(--ease);
+  z-index:10;pointer-events:none;
+}
+.hCard:hover .hCard-cta{transform:translateY(0)}
+.gCard-cta{
+  position:absolute;bottom:0;left:0;right:0;
+  background:var(--O);color:#fff;text-align:center;
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;font-weight:500;
+  padding:14px;transform:translateY(100%);transition:transform .4s var(--ease);
+  z-index:10;pointer-events:none;
+}
+.gCard:hover .gCard-cta{transform:translateY(0)}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 3 — Depo dots (already exist as dep-dot but add layout)
+══════════════════════════════════════════════ */
+.depo-dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.depo-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(26,23,20,.15);cursor:pointer;
+  transition:background .3s,width .3s,border-radius .3s;border:none;padding:0;
+}
+.depo-dot.on{background:var(--O);width:28px;border-radius:4px}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 4 — Lupa fullscreen overlay
+══════════════════════════════════════════════ */
+#lupaFS{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(26,23,20,.96);display:none;
+  align-items:center;justify-content:center;flex-direction:column;
+  overflow:hidden;
+}
+#lupaFS.open{display:flex}
+#lupaFSImg{
+  position:absolute;inset:0;
+  transform-origin:center center;
+  cursor:grab;user-select:none;
+  background-size:contain;background-repeat:no-repeat;background-position:center;
+  width:100%;height:100%;
+}
+#lupaFSImg.dragging{cursor:grabbing}
+#lupaFSClose{
+  position:absolute;top:24px;right:32px;z-index:2;
+  background:rgba(244,240,232,.12);border:1px solid rgba(244,240,232,.2);
+  color:rgba(244,240,232,.8);width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;border-radius:50%;cursor:pointer;transition:all .3s;
+}
+#lupaFSClose:hover{border-color:var(--O);color:var(--O)}
+.lupa-hint{
+  text-align:center;margin-top:12px;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(26,23,20,.4);
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 5 — Antes/Depois handle melhorado
+══════════════════════════════════════════════ */
+.ad-handle-v2{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:48px;height:48px;
+  background:var(--O);border:2px solid #fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(232,64,0,.4);
+  transition:transform .3s var(--ease),box-shadow .3s;
+  cursor:ew-resize;
+}
+.ad-handle-v2:hover{transform:translate(-50%,-50%) scale(1.1);box-shadow:0 6px 24px rgba(232,64,0,.55)}
+.ad-handle-v2 svg{width:22px;height:22px}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 6 — Footer additions
+══════════════════════════════════════════════ */
+.foot-extra{
+  padding-top:20px;border-top:1px solid rgba(245,242,236,.05);
+  margin-top:20px;
+}
+.foot-extra-line{
+  font-size:11px;color:rgba(245,242,236,.3);
+  letter-spacing:.04em;font-weight:300;line-height:1.9;
+}
+#fCNPJ{opacity:.6}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 7 — Mobile CTA fixo
+══════════════════════════════════════════════ */
+#mobileCTA{
+  position:fixed;bottom:0;left:0;right:0;z-index:8800;
+  background:var(--O);color:#fff;
+  padding:16px 24px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
+  display:none;
+  align-items:center;justify-content:center;gap:12px;
+  text-decoration:none;
+  animation:slideInBottom .6s ease forwards 3s;
+  opacity:0;
+}
+@keyframes slideInBottom{
+  from{transform:translateY(100%);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+@media(max-width:768px){
+  #mobileCTA{display:flex}
+}
+#mobileCTA span{
+  font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;
+}
+#mobileCTA svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 8 — Portfolio scroll hint + dots
+══════════════════════════════════════════════ */
+.port-scroll-hint{
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  background:rgba(26,23,20,.7);color:#fff;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  padding:8px 14px;border-radius:var(--r-pill);
+  pointer-events:none;backdrop-filter:blur(6px);
+  animation:fadeOutHint 2.5s ease forwards;
+  z-index:20;white-space:nowrap;
+}
+@keyframes fadeOutHint{0%,60%{opacity:1}100%{opacity:0;pointer-events:none}}
+#portScrollDots{
+  display:none;
+  gap:4px;justify-content:center;margin-top:8px;
+}
+.psd-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(26,23,20,.2);transition:background .3s,width .3s,border-radius .3s;
+}
+.psd-dot.on{background:var(--O);width:16px;border-radius:3px}
+@media(max-width:768px){
+  #portScrollDots{display:flex}
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 10 — Tour 360° fullscreen btn mobile
+══════════════════════════════════════════════ */
+#tour360FSBtn{
+  display:none;
+  position:absolute;bottom:14px;right:14px;z-index:25;
+  background:var(--O);color:#fff;border:none;
+  padding:8px 14px;font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  border-radius:var(--r-pill);cursor:pointer;font-family:var(--sans);
+  align-items:center;gap:6px;box-shadow:0 4px 12px rgba(232,64,0,.35);
+  transition:background .2s;
+}
+#tour360FSBtn:hover{background:var(--O2)}
+@media(max-width:768px){
+  #tour360FSBtn{display:flex}
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 12 — Breakpoints intermediários tipografia
+══════════════════════════════════════════════ */
+@media(max-width:900px){
+  .hero-title{font-size:clamp(42px,8vw,96px)}
+  .s-title{font-size:clamp(32px,6vw,64px)}
+  section{padding:100px 48px}
+  #sobre{grid-template-columns:1fr;gap:64px}
+}
+@media(max-width:600px){
+  section{padding:64px 24px}
+  #stats{grid-template-columns:1fr}
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 9 — Hero mobile + contact form fixes
+══════════════════════════════════════════════ */
+.hero-mobile-optimized #heroBg{background-attachment:scroll !important}
+@media(max-width:768px){
+  #hero{min-height:100svh}
+  #orc input,#orc textarea,#orc select{font-size:16px !important}
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 13 — Admin dashboard
+══════════════════════════════════════════════ */
+#admDash{
+  padding:28px 32px;
+  background:rgba(232,64,0,.04);
+  border:1px solid rgba(232,64,0,.12);
+  border-radius:8px;margin-bottom:28px;
+}
+.adm-dash-title{
+  font-family:var(--serif-it);font-style:italic;font-weight:300;
+  font-size:20px;color:var(--O);margin-bottom:20px;
+}
+.adm-dash-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;
+}
+@media(max-width:600px){.adm-dash-grid{grid-template-columns:1fr}}
+.adm-dash-stat{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:6px;padding:16px 18px;
+}
+.adm-dash-stat .ds-n{
+  font-family:var(--serif);font-size:36px;font-weight:200;
+  color:var(--O);line-height:1;display:block;letter-spacing:-.03em;
+}
+.adm-dash-stat .ds-l{
+  font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.35);margin-top:6px;display:block;
+}
+.adm-dash-status{
+  display:flex;flex-direction:column;gap:8px;margin-bottom:20px;
+}
+.adm-dash-status-item{
+  font-size:12px;color:rgba(255,255,255,.5);
+  padding:8px 12px;background:rgba(255,255,255,.03);border-radius:4px;
+  display:flex;align-items:center;gap:8px;
+}
+.adm-dash-status-item.ok{color:rgba(95,186,125,.85)}
+.adm-dash-status-item.warn{color:rgba(255,170,0,.85)}
+.adm-dash-links{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.adm-dash-link{
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);
+  padding:7px 14px;border-radius:var(--r-pill);cursor:pointer;
+  background:none;font-family:var(--sans);transition:all .25s;
+}
+.adm-dash-link:hover{border-color:var(--O);color:var(--O)}
+.adm-dash-enter{
+  background:var(--O);color:#fff;border:none;
+  padding:10px 28px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  font-family:var(--sans);border-radius:var(--r-pill);cursor:pointer;
+  transition:background .25s;
+}
+.adm-dash-enter:hover{background:var(--O2)}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 14 — Portfolio drag-and-drop admin
+══════════════════════════════════════════════ */
+.port-adm-item[draggable=true]{cursor:grab}
+.port-adm-item[draggable=true]:active{cursor:grabbing}
+.port-adm-item.drag-over{border-top:2px solid var(--O)}
+.port-adm-item.dragging{opacity:.4}
+.port-drag-handle{
+  font-size:14px;color:rgba(255,255,255,.3);
+  cursor:grab;padding:2px 4px;flex-shrink:0;
+  user-select:none;
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 15 — Portfolio status toggle
+══════════════════════════════════════════════ */
+.port-ativo-wrap{
+  display:flex;align-items:center;gap:6px;margin-top:4px;margin-bottom:2px;
+}
+.port-ativo{accent-color:var(--O);cursor:pointer;width:14px;height:14px}
+.port-ativo-label{font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.port-inativo-badge{
+  position:absolute;top:6px;right:6px;
+  background:rgba(200,0,0,.7);color:#fff;
+  font-size:8px;letter-spacing:1.5px;text-transform:uppercase;
+  padding:2px 6px;border-radius:var(--r-pill);
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT 16 — Admin logout button
+══════════════════════════════════════════════ */
+.adm-logout-btn{
+  background:none;border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.35);padding:7px 18px;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  font-family:var(--sans);border-radius:var(--r-pill);cursor:pointer;
+  transition:all .25s;margin-left:12px;
+}
+.adm-logout-btn:hover{border-color:#f44;color:#f44}
 </style>
 </head>
 <body>
@@ -2160,7 +2444,8 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   </div>
 
   <!-- Horizontal scroll (desktop) -->
-  <div class="h-port-outer rv">
+  <div class="h-port-outer rv" style="position:relative">
+    <div id="portScrollHint" class="port-scroll-hint" style="display:none">Deslize para ver mais →</div>
     <div id="hScrollTrack">
       <!-- Placeholders padrão -->
       <div class="hCard" data-cat="residencial" onclick="openModal('Residência alto padrão','residencial','Projeto residencial com iluminação natural dramática e acabamentos nobres. V-Ray + 3ds Max.','')">
@@ -2193,6 +2478,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
     </div>
   </div>
   <div class="h-scroll-hint">Arraste para percorrer a curadoria</div>
+  <div id="portScrollDots"></div>
 
   <!-- Grid (mobile) -->
   <div id="portfolioGrid">
@@ -2245,8 +2531,11 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         </div>
       </div>
       <div class="ad-line" id="adLine">
-        <div class="ad-handle" id="adHandle">
-          <svg viewBox="0 0 24 24" fill="white" width="22"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <div class="ad-handle-v2" id="adHandle" title="Arraste para comparar">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5l-5 7 5 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 5l5 7-5 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
       </div>
       <div class="ad-tag b">ANTES</div>
@@ -2370,7 +2659,14 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
       <div class="lupa-label">Aproxime para ampliar</div>
     </div>
   </div>
+  <p class="lupa-hint rv rv-d4" style="text-align:right;margin-top:10px">Clique duas vezes para tela cheia</p>
 </section>
+
+<!-- LUPA FULLSCREEN -->
+<div id="lupaFS">
+  <div id="lupaFSImg"></div>
+  <button id="lupaFSClose" onclick="closeLupaFS()">✕</button>
+</div>
 
 <!-- ═══ DEPOIMENTOS ═══ -->
 <section id="dep">
@@ -2494,7 +2790,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         </div>
         <div class="orc-inp">
           <label>Observações adicionais</label>
-          <textarea id="oObs" placeholder="Referências, materiais específicos, ângulos preferidos, objetivo da renderização..."></textarea>
+          <textarea id="oObs" rows="4" placeholder="Referências, materiais específicos, ângulos preferidos, objetivo da renderização..." style="font-size:16px"></textarea>
         </div>
         <div class="orc-btns">
           <button class="btn-ghost" onclick="orcNext(1)">← Voltar</button>
@@ -2506,11 +2802,11 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
       <div class="orc-step-panel" id="sp3">
         <div class="orc-q">Seus dados de contato</div>
         <div class="orc-row">
-          <div class="orc-inp"><label>Nome completo</label><input type="text" id="oNome" placeholder="João Silva"/></div>
-          <div class="orc-inp"><label>WhatsApp</label><input type="tel" id="oPhone" placeholder="(00) 00000-0000"/></div>
+          <div class="orc-inp"><label>Nome completo</label><input type="text" id="oNome" name="name" autocomplete="name" inputmode="text" placeholder="João Silva" style="font-size:16px"/></div>
+          <div class="orc-inp"><label>WhatsApp</label><input type="tel" id="oPhone" name="tel" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" style="font-size:16px"/></div>
         </div>
-        <div class="orc-inp"><label>E-mail</label><input type="email" id="oEmail" placeholder="joao@empresa.com.br"/></div>
-        <div class="orc-inp"><label>Empresa / Escritório (opcional)</label><input type="text" id="oEmpresa" placeholder="Construtora XYZ"/></div>
+        <div class="orc-inp"><label>E-mail</label><input type="email" id="oEmail" name="email" autocomplete="email" inputmode="email" placeholder="joao@empresa.com.br" style="font-size:16px"/></div>
+        <div class="orc-inp"><label>Empresa / Escritório (opcional)</label><input type="text" id="oEmpresa" name="organization" autocomplete="organization" inputmode="text" placeholder="Construtora XYZ" style="font-size:16px"/></div>
         <div class="orc-btns">
           <button class="btn-ghost" onclick="orcNext(2)">← Voltar</button>
           <button class="btn-O" onclick="submitOrc()"><span>Enviar Solicitação ✓</span></button>
@@ -2569,12 +2865,25 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
       <a href="#" class="soc-btn soc-yt" target="_blank" rel="noopener">yt</a>
     </div>
   </div>
+  <div class="foot-extra">
+    <p class="foot-extra-line">© 2025 Vértice 3D — Narrativas visuais para arquitetura contemporânea</p>
+    <p class="foot-extra-line">Seg–Sex 09h–18h | Sob agendamento</p>
+    <p class="foot-extra-line"><span id="fCNPJ"></span></p>
+  </div>
 </footer>
 
 <!-- WHATSAPP -->
 <a href="https://wa.me/5500000000000" class="wa-float wa-href" target="_blank" rel="noopener">
   <svg viewBox="0 0 32 32" fill="white"><path d="M16 2C8.27 2 2 8.27 2 16c0 2.45.66 4.75 1.8 6.73L2 30l7.5-1.76A13.93 13.93 0 0016 30c7.73 0 14-6.27 14-14S23.73 2 16 2zm7.1 19.89c-.3.84-1.77 1.6-2.44 1.7-.63.09-1.43.13-2.31-.15-.53-.17-1.21-.4-2.08-.78-3.65-1.58-6.03-5.26-6.21-5.5-.18-.25-1.47-1.96-1.47-3.74 0-1.78.93-2.65 1.26-3.01.33-.36.72-.45.96-.45.24 0 .48.01.69.01.22 0 .52-.08.81.62.3.72 1.02 2.5 1.11 2.68.09.18.15.4.03.63-.12.24-.18.39-.36.6-.18.22-.38.49-.54.66-.18.18-.37.38-.16.74.21.36.94 1.55 2.02 2.51 1.39 1.24 2.56 1.62 2.92 1.8.36.18.57.15.78-.09.21-.24.9-1.05 1.14-1.41.24-.36.48-.3.81-.18.33.12 2.1.99 2.46 1.17.36.18.6.27.69.42.09.15.09.87-.21 1.71z"/></svg>
 </a>
+
+<!-- MOBILE CTA -->
+<div id="mobileCTA">
+  <a class="wa-href" href="#" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;width:100%;justify-content:center">
+    <span>Solicitar orçamento</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</div>
 
 <!-- ADMIN BTN -->
 <button id="aBtn" onclick="openAdmin()" title="Admin">⚙</button>
@@ -2587,7 +2896,10 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <h2>Painel Vértice 3D</h2>
         <span class="adm-hdr-dot"></span>
       </div>
-      <button class="adm-x" onclick="closeAdmin()">✕</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="adm-logout-btn" id="admLogoutBtn" style="display:none" onclick="if(confirm('Sair do painel admin?'))closeAdmin()">Sair</button>
+        <button class="adm-x" onclick="closeAdmin()">✕</button>
+      </div>
     </div>
 
     <!-- LOGIN -->
@@ -2603,6 +2915,42 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 
     <!-- CONTEÚDO -->
     <div id="admContent" style="display:none">
+
+      <!-- DASHBOARD -->
+      <div id="admDash">
+        <div class="adm-dash-title">Visão geral do painel</div>
+        <div class="adm-dash-grid">
+          <div class="adm-dash-stat">
+            <span class="ds-n" id="dashPortCount">—</span>
+            <span class="ds-l">Projetos no portfólio</span>
+          </div>
+          <div class="adm-dash-stat">
+            <span class="ds-n" id="dashLeadsCount">—</span>
+            <span class="ds-l">Leads recebidos</span>
+          </div>
+          <div class="adm-dash-stat">
+            <span class="ds-n" id="dashDepCount">—</span>
+            <span class="ds-l">Depoimentos</span>
+          </div>
+        </div>
+        <div class="adm-dash-status" id="dashStatus">
+          <div class="adm-dash-status-item" id="dashTourStatus">⏳ Verificando Tour 360°…</div>
+          <div class="adm-dash-status-item" id="dashFieldsStatus">⏳ Verificando campos críticos…</div>
+        </div>
+        <div class="adm-dash-links">
+          <button class="adm-dash-link" onclick="swTab('hero')">Hero</button>
+          <button class="adm-dash-link" onclick="swTab('sobre')">Sobre</button>
+          <button class="adm-dash-link" onclick="swTab('port')">Portfólio</button>
+          <button class="adm-dash-link" onclick="swTab('dep')">Depoimentos</button>
+          <button class="adm-dash-link" onclick="swTab('stats')">Números</button>
+          <button class="adm-dash-link" onclick="swTab('contato')">Contato</button>
+          <button class="adm-dash-link" onclick="swTab('leads')">Leads</button>
+          <button class="adm-dash-link" onclick="swTab('tour')">Tour 360°</button>
+          <button class="adm-dash-link" onclick="swTab('extras')">Extras</button>
+        </div>
+        <button class="adm-dash-enter" onclick="document.getElementById('admDash').style.display='none'">Entrar no admin →</button>
+      </div>
+
       <div class="adm-tabs">
         <button class="adm-tab on" onclick="swTab('hero')">Hero</button>
         <button class="adm-tab" onclick="swTab('sobre')">Sobre</button>
@@ -2696,7 +3044,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         </div>
         <div class="adm-sec-title" style="margin-top:24px">Adicionar Projeto</div>
         <div class="adm-grid">
-          <div class="adm-f"><label>Nome do projeto</label><input id="pNome" placeholder="Residência Serra Verde"/></div>
+          <div class="adm-f"><label>Nome do projeto</label><input id="pNome" placeholder="Residência Serra Verde" required/></div>
           <div class="adm-f"><label>Categoria</label>
             <select id="pCat">
               <option value="residencial">Residencial</option>
@@ -2943,8 +3291,11 @@ function initAll(){
   initPortFilter();
   initHScroll();
   initLupa();
+  initLupaFS();
   initProcSticky();
   initMagnetic();
+  initPortScrollHint();
+  initHeroMobileOpt();
 }
 
 /* ════════════════════════════════════════════════
@@ -3058,11 +3409,21 @@ function initCursor(){
   })();
 
   // Interações do cursor
-  document.querySelectorAll('.hCard,.gCard,.dep-card,.srv-card').forEach(el=>{
+  // Improvement 1 — enhanced cursor hover states
+  document.querySelectorAll('.hCard,.gCard').forEach(el=>{
     el.addEventListener('mouseenter',()=>{
       cur.style.width='14px';cur.style.height='14px';
       curR.style.width='70px';curR.style.height='70px';
       curL.style.opacity='1';curL.textContent='VER';
+    });
+    el.addEventListener('mouseleave',resetCursor);
+  });
+
+  document.querySelectorAll('.dep-card,.srv-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{
+      cur.style.width='14px';cur.style.height='14px';
+      curR.style.width='70px';curR.style.height='70px';
+      curL.style.opacity='0';
     });
     el.addEventListener('mouseleave',resetCursor);
   });
@@ -3072,6 +3433,14 @@ function initCursor(){
       cur.style.width='14px';cur.style.height='14px';
       curR.style.width='60px';curR.style.height='60px';
       curL.style.opacity='1';curL.textContent='CLICK';
+    });
+    el.addEventListener('mouseleave',resetCursor);
+  });
+
+  document.querySelectorAll('video').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{
+      curL.style.opacity='1';curL.textContent='PLAY';
+      curR.style.width='60px';curR.style.height='60px';
     });
     el.addEventListener('mouseleave',resetCursor);
   });
@@ -3346,8 +3715,6 @@ function initLupa(){
     const rect=wrap.getBoundingClientRect();
     const x=e.clientX-rect.left;
     const y=e.clientY-rect.top;
-    const px=x/rect.width*100;
-    const py=y/rect.height*100;
 
     glass.style.left=(x-r)+'px';
     glass.style.top=(y-r)+'px';
@@ -3357,6 +3724,61 @@ function initLupa(){
       gImg.style.left=(-x*2+r)+'px';
       gImg.style.top=(-y*2+r)+'px';
     }
+  });
+
+  // Improvement 4 — double-click opens fullscreen
+  wrap.addEventListener('dblclick',()=>{
+    const ph=document.getElementById('lupaBasePh');
+    const bg=ph?ph.style.backgroundImage:'';
+    openLupaFS(bg);
+  });
+}
+
+/* ════════════════════════════════════════════════
+   IMPROVEMENT 4 — LUPA FULLSCREEN
+════════════════════════════════════════════════ */
+function openLupaFS(bgImg){
+  const fs=document.getElementById('lupaFS');
+  const img=document.getElementById('lupaFSImg');
+  if(!fs||!img)return;
+  if(bgImg){img.style.backgroundImage=bgImg;}
+  img.style.transform='scale(1)';
+  img._scale=1;img._tx=0;img._ty=0;
+  fs.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLupaFS(){
+  const fs=document.getElementById('lupaFS');
+  if(fs)fs.classList.remove('open');
+  document.body.style.overflow='';
+}
+function initLupaFS(){
+  const img=document.getElementById('lupaFSImg');
+  if(!img)return;
+  let dragging=false,sx=0,sy=0;
+  img._scale=1;img._tx=0;img._ty=0;
+
+  img.addEventListener('mousedown',e=>{
+    dragging=true;sx=e.clientX;sy=e.clientY;
+    img.classList.add('dragging');e.preventDefault();
+  });
+  window.addEventListener('mousemove',e=>{
+    if(!dragging)return;
+    img._tx+=(e.clientX-sx);img._ty+=(e.clientY-sy);
+    sx=e.clientX;sy=e.clientY;
+    img.style.transform=`translate(${img._tx}px,${img._ty}px) scale(${img._scale})`;
+  });
+  window.addEventListener('mouseup',()=>{dragging=false;img.classList.remove('dragging');});
+  img.addEventListener('wheel',e=>{
+    e.preventDefault();
+    img._scale=Math.max(0.5,Math.min(5,img._scale-e.deltaY*0.001));
+    img.style.transform=`translate(${img._tx}px,${img._ty}px) scale(${img._scale})`;
+  },{passive:false});
+  document.getElementById('lupaFS').addEventListener('click',e=>{
+    if(e.target===document.getElementById('lupaFS'))closeLupaFS();
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&document.getElementById('lupaFS').classList.contains('open'))closeLupaFS();
   });
 }
 
@@ -3623,6 +4045,7 @@ function buildHCard(item,idx){
   return `<div class="hCard" data-cat="${item.categoria||'residencial'}" onclick="openModalIdx(${idx||0})">
     ${media}<div class="hCard-overlay"></div>
     <div class="hCard-info"><div class="hCard-cat">${item.categoria||''}</div><div class="hCard-name">${item.nome}</div>${hasGal?'<div style="font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.5);margin-top:4px">'+item.galeria.length+' fotos</div>':''}</div>
+    <div class="hCard-cta">Ver projeto →</div>
   </div>`;
 }
 function buildGCard(item,idx){
@@ -3639,6 +4062,7 @@ function buildGCard(item,idx){
   return `<div class="gCard" data-cat="${item.categoria||'residencial'}" onclick="openModalIdx(${idx||0})">
     ${media}<div class="gCard-overlay"></div>
     <div class="gCard-info"><div class="gCard-cat">${item.categoria||''}</div><div class="gCard-name">${item.nome}</div></div>
+    <div class="gCard-cta">Ver projeto →</div>
   </div>`;
 }
 
@@ -3786,6 +4210,11 @@ async function checkAdmPass(){
   if(v===ADMIN_PASS){
     document.getElementById('admLogin').style.display='none';
     document.getElementById('admContent').style.display='block';
+    // Improvement 16 — show logout button
+    var lb=document.getElementById('admLogoutBtn');
+    if(lb)lb.style.display='';
+    // Improvement 13 — load dashboard
+    loadAdmDashboard();
     loadAdmPort();loadAdmDep();loadAdmHero();
   }else{
     document.getElementById('admErr').textContent='Senha incorreta.';
@@ -3846,7 +4275,8 @@ function initTour360(url){
     +'background-image:url(\''+url+'\');background-size:250% auto;'
     +'background-position:50% 50%;cursor:grab;will-change:background-position"></div>'
     +'<div class="tour-badge">360°</div>'
-    +'<div class="tour-hint">← Clique e arraste para navegar</div>';
+    +'<div class="tour-hint">← Clique e arraste para navegar</div>'
+    +'<button id="tour360FSBtn" onclick="req360FS()" title="Tela cheia">⛶ Tela cheia</button>';
   var el=document.getElementById('t360Pan');
   if(!el)return;
   var drag=false,sx=0,sy=0,bx=50,by=50,autoTimer=null;
@@ -4258,7 +4688,7 @@ async function uploadPortImg(){
 
 async function addPort(){
   const nome=document.getElementById('pNome').value.trim();
-  if(!nome){showMsg('mPort','Preencha o nome do projeto.','#f44');return}
+  if(!nome){alert('Nome do projeto é obrigatório.');return}
   try{
     const {db,collection,addDoc}=window._FB;
     var galArr=(window._galAddUrls||[]).filter(Boolean);
@@ -4306,9 +4736,18 @@ async function loadAdmPort(){
       const bg=item.imagem?`url(${item.imagem}) center/cover no-repeat`:`linear-gradient(135deg,var(--BG3),var(--BG4))`;
       const catNames={'residencial':'Residencial','comercial':'Comercial','interiores':'Interiores','video':'Vídeo 3D'};
       const catLabel=catNames[item.categoria]||item.categoria||'—';
-      grid.innerHTML+=`<div class="port-adm-item" id="pad-${d.id}">
+      const isAtivo=item.ativo!==false;
+      grid.innerHTML+=`<div class="port-adm-item" id="pad-${d.id}" data-port-id="${d.id}" draggable="true">
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px">
+          <span class="port-drag-handle" title="Arraste para reordenar">⠿</span>
+          <div class="port-ativo-wrap">
+            <input type="checkbox" class="port-ativo" id="ativo-${d.id}" ${isAtivo?'checked':''} onchange="togglePortAtivo('${d.id}',this.checked)" title="Publicado"/>
+            <label class="port-ativo-label" for="ativo-${d.id}">Publicado</label>
+          </div>
+        </div>
         <div class="port-adm-th" style="background:${bg}">
           <div class="port-adm-cat">${catLabel}</div>
+          ${!isAtivo?'<div class="port-inativo-badge">Oculto</div>':''}
         </div>
         <div class="port-adm-nm">${item.nome}</div>
         <div class="port-adm-acts">
@@ -4317,6 +4756,8 @@ async function loadAdmPort(){
         </div>
       </div>`;
     });
+    // Improvement 14 — init drag-and-drop after rendering
+    setTimeout(initPortDragDrop,50);
   }catch(e){grid.innerHTML='<p style="color:#f44;font-size:12px">Configure o Firebase para ver os projetos.</p>'}
 }
 
@@ -4515,6 +4956,166 @@ function showMsg(id,txt,color='#4CAF50'){
   if(!el)return;
   el.textContent=txt;el.style.color=color;
   setTimeout(()=>el.textContent='',3500);
+}
+
+/* ════════════════════════════════════════════════
+   IMPROVEMENT 8 — Portfolio scroll hint + dots
+════════════════════════════════════════════════ */
+function initPortScrollHint(){
+  const outer=document.querySelector('.h-port-outer');
+  const hint=document.getElementById('portScrollHint');
+  const dotsEl=document.getElementById('portScrollDots');
+  if(!outer)return;
+
+  // Show hint on first visit (sessionStorage)
+  if(hint&&!sessionStorage.getItem('portHintSeen')&&window.innerWidth<=768){
+    hint.style.display='block';
+    sessionStorage.setItem('portHintSeen','1');
+    setTimeout(()=>{hint.style.display='none';},2600);
+  }
+
+  // Build scroll dots for mobile
+  if(dotsEl&&window.innerWidth<=768){
+    const track=document.getElementById('hScrollTrack');
+    const cards=track?track.querySelectorAll('.hCard'):[];
+    const n=Math.max(1,cards.length);
+    dotsEl.innerHTML='';
+    for(let i=0;i<Math.min(n,8);i++){
+      const d=document.createElement('div');
+      d.className='psd-dot'+(i===0?' on':'');
+      dotsEl.appendChild(d);
+    }
+    outer.addEventListener('scroll',()=>{
+      const pct=outer.scrollLeft/(outer.scrollWidth-outer.clientWidth)||0;
+      const idx=Math.round(pct*(dotsEl.children.length-1));
+      [...dotsEl.children].forEach((d,i)=>d.classList.toggle('on',i===idx));
+    },{passive:true});
+  }
+}
+
+/* ════════════════════════════════════════════════
+   IMPROVEMENT 9 — Hero mobile performance
+════════════════════════════════════════════════ */
+function initHeroMobileOpt(){
+  if(window.innerWidth>=768)return;
+  // Disable background-attachment:fixed on mobile for performance
+  const hero=document.getElementById('hero');
+  if(hero)hero.classList.add('hero-mobile-optimized');
+  // Lazy video
+  const heroBg=document.getElementById('heroBg');
+  if(heroBg){
+    const vid=heroBg.querySelector('video');
+    if(vid&&!vid.hasAttribute('preload'))vid.setAttribute('preload','none');
+  }
+}
+
+/* ════════════════════════════════════════════════
+   IMPROVEMENT 10 — Tour 360° fullscreen btn
+════════════════════════════════════════════════ */
+function req360FS(){
+  var wrap=document.getElementById('sobreImgWrap');
+  if(!wrap)return;
+  if(wrap.requestFullscreen)wrap.requestFullscreen();
+  else if(wrap.webkitRequestFullscreen)wrap.webkitRequestFullscreen();
+  else if(wrap.mozRequestFullScreen)wrap.mozRequestFullScreen();
+}
+
+/* ════════════════════════════════════════════════
+   IMPROVEMENT 13 — Admin dashboard loader
+════════════════════════════════════════════════ */
+async function loadAdmDashboard(){
+  try{
+    // Portfolio count
+    const arr=window._portItemsArr||[];
+    const portCount=arr.length;
+    const dashPortEl=document.getElementById('dashPortCount');
+    if(dashPortEl)dashPortEl.textContent=portCount;
+
+    // Load Firestore counts
+    const {db,collection,getDocs}=window._FB;
+    const [leadsSnap,depSnap]=await Promise.all([
+      getDocs(collection(db,'leads')),
+      getDocs(collection(db,'depoimentos'))
+    ]);
+    const dashLeadsEl=document.getElementById('dashLeadsCount');
+    const dashDepEl=document.getElementById('dashDepCount');
+    if(dashLeadsEl)dashLeadsEl.textContent=leadsSnap.size;
+    if(dashDepEl)dashDepEl.textContent=depSnap.size;
+
+    // Status checks
+    const d=await getAdmData();
+    const tourEl=document.getElementById('dashTourStatus');
+    const fieldsEl=document.getElementById('dashFieldsStatus');
+    if(tourEl){
+      if(d&&d.tour360Url){tourEl.textContent='Tour 360°: Configurado ✓';tourEl.className='adm-dash-status-item ok';}
+      else{tourEl.textContent='Tour 360°: Não configurado ⚠';tourEl.className='adm-dash-status-item warn';}
+    }
+    if(fieldsEl){
+      const missing=[];
+      if(!d||!d.email)missing.push('E-mail');
+      if(!d||!d.whatsapp)missing.push('WhatsApp');
+      if(!d||!d.heroLine1)missing.push('Título do hero');
+      if(missing.length===0){fieldsEl.textContent='Campos críticos: todos ok ✓';fieldsEl.className='adm-dash-status-item ok';}
+      else{fieldsEl.textContent='Campos ausentes: '+missing.join(', ');fieldsEl.className='adm-dash-status-item warn';}
+    }
+  }catch(e){console.warn('loadAdmDashboard:',e.message);}
+}
+
+/* ════════════════════════════════════════════════
+   IMPROVEMENT 14 — Portfolio drag-and-drop reorder
+════════════════════════════════════════════════ */
+var _dragSrcId=null;
+function initPortDragDrop(){
+  const grid=document.getElementById('portAdmGrid');
+  if(!grid)return;
+  grid.querySelectorAll('.port-adm-item[draggable]').forEach(item=>{
+    item.addEventListener('dragstart',e=>{
+      _dragSrcId=item.dataset.portId;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+    });
+    item.addEventListener('dragend',()=>{
+      item.classList.remove('dragging');
+      grid.querySelectorAll('.port-adm-item').forEach(i=>i.classList.remove('drag-over'));
+    });
+    item.addEventListener('dragover',e=>{
+      e.preventDefault();e.dataTransfer.dropEffect='move';
+      grid.querySelectorAll('.port-adm-item').forEach(i=>i.classList.remove('drag-over'));
+      item.classList.add('drag-over');
+    });
+    item.addEventListener('drop',async e=>{
+      e.preventDefault();
+      if(!_dragSrcId||_dragSrcId===item.dataset.portId)return;
+      // Reorder in DOM
+      const srcEl=grid.querySelector('[data-port-id="'+_dragSrcId+'"]');
+      const tgtEl=item;
+      if(!srcEl||!tgtEl)return;
+      // Swap visually
+      const allItems=[...grid.querySelectorAll('.port-adm-item[data-port-id]')];
+      const srcIdx=allItems.indexOf(srcEl);
+      const tgtIdx=allItems.indexOf(tgtEl);
+      if(srcIdx<tgtIdx)tgtEl.after(srcEl);
+      else tgtEl.before(srcEl);
+      // Update ordem in Firestore
+      const newOrder=[...grid.querySelectorAll('.port-adm-item[data-port-id]')].map(el=>el.dataset.portId);
+      try{
+        const {db,doc,updateDoc}=window._FB;
+        await Promise.all(newOrder.map((id,idx)=>updateDoc(doc(db,'portfolio',id),{ordem:idx})));
+      }catch(ex){console.warn('reorder error:',ex.message);}
+      grid.querySelectorAll('.port-adm-item').forEach(i=>i.classList.remove('drag-over'));
+    });
+  });
+}
+
+/* ════════════════════════════════════════════════
+   IMPROVEMENT 15 — Portfolio ativo toggle
+════════════════════════════════════════════════ */
+async function togglePortAtivo(id,checked){
+  try{
+    const {db,doc,updateDoc}=window._FB;
+    await updateDoc(doc(db,'portfolio',id),{ativo:checked});
+    if(window._loadPortfolio)window._loadPortfolio();
+  }catch(e){console.warn('togglePortAtivo:',e.message);}
 }
 </script>
 </body>
