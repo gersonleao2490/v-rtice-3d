@@ -2970,6 +2970,181 @@ body.dark-mode .cmp-info-title{color:var(--WH);}
   #cmpBtn{padding:9px 16px;font-size:9px;}
   #cmpClear{padding:7px 10px;font-size:9px;}
 }
+/* ═══════════════════════════════════════════════════════════════
+   FIX BATCH: HOVER OVERLAP + MODAL BG + DARK MODE + MOBILE
+═══════════════════════════════════════════════════════════════ */
+
+/* 1 ─ hCard-info/gCard-info sobem para não serem cobertas pelo CTA */
+.hCard-info{z-index:4;}
+.hCard-cta{z-index:3;}
+.hCard:hover .hCard-info{opacity:1;transform:translateY(-46px);}
+.gCard:hover .gCard-info{transform:translateY(-46px);}
+.gCard-cta{z-index:3;}
+
+/* 2 ─ Portfolio modal: fundo sempre escuro (--BK no tema claro = cream) */
+#projModal{background:#0A0806 !important;}
+.pm-inner{background:#0A0806 !important;}
+.pm-img-full{background-color:#0A0806;}
+/* Também: tour modal usa --BK */
+#tourModal{background:#0A0806 !important;}
+
+/* 3 ─ Dark mode: rodapé com fundo claro errado (var(--INK)=#F4F0E8 no dark) */
+body.dark-mode footer{background:#080706 !important;}
+
+/* 4 ─ Dark mode: elementos com contraste ruim */
+body.dark-mode .nav-links a{color:rgba(245,242,236,.5) !important;}
+body.dark-mode .btn-ghost{
+  border-color:rgba(245,242,236,.2) !important;
+  color:rgba(245,242,236,.55) !important;
+}
+body.dark-mode .btn-ghost:hover{
+  border-color:var(--O) !important;color:var(--O) !important;
+}
+body.dark-mode .orc-info{
+  color:rgba(245,242,236,.3) !important;
+  border-top-color:rgba(245,242,236,.06) !important;
+}
+body.dark-mode .pm-trigger{
+  border-color:rgba(245,242,236,.18) !important;
+  color:rgba(245,242,236,.55) !important;
+}
+body.dark-mode .pm-trigger:hover{
+  border-color:var(--O) !important;color:var(--O) !important;
+}
+body.dark-mode .nl-input{
+  background:rgba(255,255,255,.06) !important;
+  color:#f4f0e8 !important;
+  border-color:rgba(244,240,232,.12) !important;
+}
+body.dark-mode .nl-input::placeholder{color:rgba(245,242,236,.3);}
+body.dark-mode .fBtn{color:rgba(245,242,236,.55) !important;}
+body.dark-mode .fBtn.on{color:var(--O) !important;border-color:var(--O) !important;}
+body.dark-mode .fm-item a{color:rgba(245,242,236,.25) !important;}
+body.dark-mode .fm-social a{color:rgba(245,242,236,.38) !important;}
+body.dark-mode #fClose{color:rgba(245,242,236,.45) !important;}
+body.dark-mode #fMenu{background:var(--BG) !important;}
+body.dark-mode .srv-card{border-color:rgba(245,242,236,.06) !important;}
+body.dark-mode .proc-step-icon{
+  background:rgba(245,242,236,.06) !important;
+  border-color:rgba(245,242,236,.08) !important;
+}
+body.dark-mode .pqn-item{border-color:rgba(245,242,236,.06) !important;}
+body.dark-mode .sim-opt{
+  background:rgba(245,242,236,.06) !important;
+  border-color:rgba(245,242,236,.1) !important;
+  color:rgba(245,242,236,.65) !important;
+}
+body.dark-mode .sim-opt.on{background:var(--O) !important;border-color:var(--O) !important;color:#fff !important;}
+body.dark-mode .orc-step-panel{background:var(--BG2) !important;}
+body.dark-mode input,body.dark-mode textarea,body.dark-mode select{
+  background:rgba(255,255,255,.05) !important;
+  color:#f4f0e8 !important;
+  border-color:rgba(244,240,232,.1) !important;
+}
+body.dark-mode input::placeholder,body.dark-mode textarea::placeholder{
+  color:rgba(245,242,236,.3) !important;
+}
+
+/* 5 ─ LGPD + mobileCTA: offset correto no mobile */
+@media(max-width:600px){
+  body.lgpd-active #mobileCTA{bottom:148px !important;}
+  body.cmp-active.lgpd-active #mobileCTA{bottom:218px !important;}
+  body.cmp-active #mobileCTA{bottom:72px !important;}
+}
+
+/* 6 ─ Mobile: desativar cursor personalizado */
+@media(max-width:1024px){
+  body{cursor:auto !important;}
+  #cur,#curR,#curL{display:none !important;}
+}
+
+/* 7 ─ Dispositivos touch: info sempre visível, CTA oculto */
+@media(hover:none){
+  .hCard-info{opacity:1 !important;transform:translateY(0) !important;}
+  .hCard-cta{display:none !important;}
+  .gCard-info{transform:translateY(0) !important;}
+  .gCard-cta{display:none !important;}
+  .hCard-cmp,.gCard-cmp{opacity:1 !important;}
+}
+
+/* 8 ─ Mobile: seções com padding excessivo + grids de desktop */
+@media(max-width:768px){
+  /* Seções gerais */
+  #stats{padding:60px 24px !important;}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:28px 16px;}
+  .stat-num{font-size:clamp(40px,11vw,80px);}
+
+  #sobre{flex-direction:column;padding:80px 24px !important;gap:40px;}
+  .sobre-img-wrap{width:100% !important;min-height:260px;}
+  .sobre-floats{display:none;}
+
+  #servicos{padding:80px 24px !important;}
+  .srv-grid{grid-template-columns:1fr !important;}
+  #servicos .srv-grid{gap:1px;}
+  .srv-card{padding:28px 20px !important;}
+
+  #processo{padding:80px 24px !important;}
+  .proc-steps{grid-template-columns:1fr !important;gap:28px;}
+  .proc-steps::before{display:none !important;}
+
+  #porqueNos{padding:80px 24px !important;}
+  .pqn-grid{grid-template-columns:1fr !important;gap:28px;}
+  .pqn-software{padding:20px 16px !important;}
+
+  #dep{padding:80px 24px !important;}
+  .dep-card{padding:28px 20px !important;}
+
+  #simulador{padding:80px 24px !important;}
+  .sim-steps{padding:0 !important;}
+  .sim-opts{flex-wrap:wrap;gap:8px;}
+  .sim-opt{padding:10px 14px !important;font-size:11px;}
+
+  #journal{padding:80px 24px !important;}
+  .journal-grid{grid-template-columns:1fr !important;gap:20px;}
+
+  #orc{padding:80px 24px !important;flex-direction:column !important;gap:40px !important;}
+  .orc-left{max-width:100% !important;padding-right:0 !important;}
+  .orc-step-panel{padding:28px 18px !important;}
+
+  #cli{padding:40px 0 !important;}
+
+  #tourSection{padding:80px 24px !important;}
+
+  #adSection{padding:80px 24px !important;}
+  .ad-wrap{max-width:100% !important;}
+
+  #portSection{padding:80px 0 40px !important;}
+  .port-filter{padding:0 16px !important;gap:6px !important;flex-wrap:wrap;}
+  .fBtn{font-size:8px !important;padding:7px 12px !important;letter-spacing:2px !important;}
+
+  /* Footer */
+  footer{padding:60px 24px 40px !important;}
+  .foot-grid{grid-template-columns:1fr !important;gap:32px !important;}
+  .foot-bottom{flex-direction:column;gap:12px;align-items:flex-start;}
+  .nl-wrap{flex-direction:column !important;gap:20px !important;padding:32px 0 !important;}
+  .nl-form{flex-direction:column;gap:10px;}
+  .nl-input{border-radius:var(--r-sm) !important;font-size:16px !important;}
+  .nl-btn{border-radius:var(--r-sm) !important;justify-content:center;}
+
+  /* Comparador bar */
+  #cmpBar{gap:8px !important;}
+
+  /* Evitar overflow horizontal por seção */
+  section,footer{max-width:100vw;overflow-x:hidden;}
+
+  /* Article reader no mobile */
+  .art-body{padding:40px 20px 80px !important;}
+  .art-hero{height:40vh !important;}
+  .art-pull{margin:20px 0 !important;padding:16px !important;}
+}
+
+/* 9 ─ Tablet (769–1024): ajustes intermediários */
+@media(min-width:769px) and (max-width:1024px){
+  .srv-grid{grid-template-columns:repeat(2,1fr) !important;}
+  .proc-steps{grid-template-columns:repeat(2,1fr) !important;}
+  .journal-grid{grid-template-columns:repeat(2,1fr) !important;}
+  .foot-grid{grid-template-columns:repeat(2,1fr) !important;gap:40px 32px !important;}
+}
 </style>
 </head>
 <body>
