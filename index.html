@@ -52,6 +52,9 @@ async function loadSiteData(){
   }
   if(d.whatsapp) document.querySelectorAll('.wa-href').forEach(el=>el.href=`https://wa.me/${d.whatsapp}`);
   if(d.sobreTexto) document.getElementById('sobreTexto').innerHTML=d.sobreTexto;
+  if(d.sobreN){var el=document.getElementById('sobreN');if(el)el.textContent=d.sobreN;}
+  if(d.sobreAt){var el=document.getElementById('sobreAt');if(el)el.textContent=d.sobreAt;}
+  if(d.sobreQ){var el=document.querySelector('.sobre-quote');if(el)el.innerHTML='“'+d.sobreQ+'”';}
   if(d.stat1n) document.getElementById('s1n').dataset.target=d.stat1n;
   if(d.stat1l) document.getElementById('s1l').textContent=d.stat1l;
   if(d.stat1d) document.getElementById('s1d').textContent=d.stat1d;
@@ -1802,6 +1805,24 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 
 /* ── ANTES/DEPOIS — handle circle border ─────────────────── */
 .ad-handle{border-color:rgba(26,23,20,.18) !important}
+
+/* ── MOBILE: ocultar cards flutuantes sobre a imagem ──────── */
+@media(max-width:900px){
+  .sobre-float,.sobre-accent{display:none !important}
+  .sobre-img-wrap.tour-active{height:340px !important}
+}
+@media(max-width:600px){
+  .sobre-img-wrap.tour-active{height:260px !important}
+  .pm-close-btn{
+    width:60px !important;height:60px !important;
+    top:14px !important;right:14px !important;
+    font-size:22px !important;border-radius:50% !important;
+    background:rgba(0,0,0,.85) !important;
+    border:2px solid rgba(255,255,255,.25) !important;
+  }
+  .pm-body{padding:36px 18px 80px !important}
+  .pm-img-full{height:42vh !important;min-height:220px !important}
+}
 </style>
 </head>
 <body>
@@ -1939,7 +1960,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 <!-- ═══ SOBRE ═══ -->
 <section id="sobre">
   <div class="sobre-vis">
-    <div class="sobre-img-wrap rv-clip" id="sobreImgWrap">
+    <div class="sobre-img-wrap" id="sobreImgWrap">
       <div class="sobre-img-placeholder">
         <!-- Composição editorial abstrata — três camadas arquitetônicas -->
         <svg class="sobre-img-svg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -3379,7 +3400,7 @@ async function checkAdmPass(){
   if(v===ADMIN_PASS){
     document.getElementById('admLogin').style.display='none';
     document.getElementById('admContent').style.display='block';
-    loadAdmPort();loadAdmDep();
+    loadAdmPort();loadAdmDep();loadAdmHero();
   }else{
     document.getElementById('admErr').textContent='Senha incorreta.';
   }
@@ -3395,6 +3416,10 @@ function swTab(t){
   if(t==='port')loadAdmPort();
   if(t==='dep')loadAdmDep();
   if(t==='tour')loadAdmTour360();
+  if(t==='sobre')loadAdmSobre();
+  if(t==='hero')loadAdmHero();
+  if(t==='contato')loadAdmContato();
+  if(t==='stats')loadAdmStats();
 }
 
 async function saveHero(){
@@ -3472,6 +3497,92 @@ function initTour360(url){
   if(ml){ml.style.display='';var a=ml.querySelector('a');if(a)a.href='#sobre';}
   var sb=document.getElementById('srvTour360Btn');
   if(sb){sb.style.display='inline-block';sb.href='#sobre';}
+}
+
+async function loadAdmHero(){
+  try{
+    const {db,doc,getDoc}=window._FB;
+    const snap=await getDoc(doc(db,'config','site'));
+    if(!snap.exists())return;
+    const d=snap.data();
+    if(d.heroLine1){var el=document.getElementById('aHl1');if(el)el.value=d.heroLine1;}
+    if(d.heroLine2){var el=document.getElementById('aHl2');if(el)el.value=d.heroLine2;}
+    if(d.heroLine3){var el=document.getElementById('aHl3');if(el)el.value=d.heroLine3;}
+    if(d.heroSub){var el=document.getElementById('aHSub');if(el)el.value=d.heroSub;}
+    if(d.heroEyebrow){var el=document.getElementById('aHEye');if(el)el.value=d.heroEyebrow;}
+    if(d.whatsapp){var el=document.getElementById('aWa');if(el)el.value=d.whatsapp;}
+    if(d.logoUrl){
+      var img=document.getElementById('logoAdmPreview');
+      var txt=document.getElementById('logoAdmPreviewText');
+      var lbl=document.getElementById('logoAdmLbl');
+      if(img){img.src=d.logoUrl;img.style.display='block';}
+      if(txt)txt.style.display='none';
+      if(lbl){lbl.style.color='var(--O)';lbl.textContent='✓ Logo carregada';}
+    }
+    if(d.heroVideoUrl){
+      var lbl=document.getElementById('vidLbl');
+      var zone=document.getElementById('vidZone');
+      if(lbl){lbl.style.color='var(--O)';lbl.textContent='✓ Vídeo carregado';}
+      if(zone)zone.classList.add('has-file');
+    }
+  }catch(e){console.error('loadAdmHero:',e);}
+}
+
+async function loadAdmSobre(){
+  try{
+    const {db,doc,getDoc}=window._FB;
+    const snap=await getDoc(doc(db,'config','site'));
+    if(!snap.exists())return;
+    const d=snap.data();
+    if(d.sobreTexto){var el=document.getElementById('aSobreT');if(el)el.value=d.sobreTexto;}
+    if(d.sobreQ){var el=document.getElementById('aSobreQ');if(el)el.value=d.sobreQ;}
+    if(d.sobreN){var el=document.getElementById('aSobreN');if(el)el.value=d.sobreN;}
+    if(d.sobreAt){var el=document.getElementById('aSobreAt');if(el)el.value=d.sobreAt;}
+    if(d.sobreM1n){var el=document.getElementById('aSobreM1n');if(el)el.value=d.sobreM1n;}
+    if(d.sobreM1l){var el=document.getElementById('aSobreM1l');if(el)el.value=d.sobreM1l;}
+    if(d.sobreM2n){var el=document.getElementById('aSobreM2n');if(el)el.value=d.sobreM2n;}
+    if(d.sobreM2l){var el=document.getElementById('aSobreM2l');if(el)el.value=d.sobreM2l;}
+    if(d.sobreImgUrl){
+      var prev=document.getElementById('sobrePrev');
+      var zone=document.getElementById('sobreZone');
+      var lbl=document.getElementById('sobreLbl');
+      if(prev){prev.style.backgroundImage='url('+d.sobreImgUrl+')';prev.style.display='block';}
+      if(zone)zone.classList.add('has-file');
+      if(lbl){lbl.style.color='var(--O)';lbl.textContent='✓ Imagem carregada';}
+    }
+  }catch(e){console.error('loadAdmSobre:',e);}
+}
+
+async function loadAdmStats(){
+  try{
+    const {db,doc,getDoc}=window._FB;
+    const snap=await getDoc(doc(db,'config','site'));
+    if(!snap.exists())return;
+    const d=snap.data();
+    if(d.stat1n){var el=document.getElementById('as1n');if(el)el.value=d.stat1n;}
+    if(d.stat1l){var el=document.getElementById('as1l');if(el)el.value=d.stat1l;}
+    if(d.stat1d){var el=document.getElementById('as1d');if(el)el.value=d.stat1d;}
+    if(d.stat2n){var el=document.getElementById('as2n');if(el)el.value=d.stat2n;}
+    if(d.stat2l){var el=document.getElementById('as2l');if(el)el.value=d.stat2l;}
+    if(d.stat2d){var el=document.getElementById('as2d');if(el)el.value=d.stat2d;}
+    if(d.stat3n){var el=document.getElementById('as3n');if(el)el.value=d.stat3n;}
+    if(d.stat3l){var el=document.getElementById('as3l');if(el)el.value=d.stat3l;}
+    if(d.stat3d){var el=document.getElementById('as3d');if(el)el.value=d.stat3d;}
+  }catch(e){console.error('loadAdmStats:',e);}
+}
+
+async function loadAdmContato(){
+  try{
+    const {db,doc,getDoc}=window._FB;
+    const snap=await getDoc(doc(db,'config','site'));
+    if(!snap.exists())return;
+    const d=snap.data();
+    if(d.whatsapp){var el=document.getElementById('aCWa');if(el)el.value=d.whatsapp;}
+    if(d.email){var el=document.getElementById('aCEmail');if(el)el.value=d.email;}
+    if(d.instagram){var el=document.getElementById('aCIG');if(el)el.value=d.instagram;}
+    if(d.cidade){var el=document.getElementById('aCCid');if(el)el.value=d.cidade;}
+    if(d.coords){var el=document.getElementById('aCCoords');if(el)el.value=d.coords;}
+  }catch(e){console.error('loadAdmContato:',e);}
 }
 
 async function loadAdmTour360(){
