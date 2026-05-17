@@ -76,6 +76,14 @@ async function loadSiteData(){
   }
   // Hero background image
   if(d.heroBgUrl){var hbg=document.getElementById('heroBg');if(hbg)hbg.style.backgroundImage=`url(${d.heroBgUrl})`;}
+  // Hero video — sobrepõe a imagem de fundo quando enviado
+  if(d.heroVideoUrl){
+    var hbg=document.getElementById('heroBg');
+    if(hbg){
+      hbg.style.background='none';
+      hbg.innerHTML='<video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0"><source src="'+d.heroVideoUrl+'"/></video>';
+    }
+  }
 }
 
 async function loadPortfolio(){
@@ -3547,6 +3555,13 @@ async function uploadMedia(input, key){
     if(key==='heroBg'){
       var bg=document.getElementById('heroBg');
       if(bg)bg.style.backgroundImage=`url(${url})`;
+    }
+    if(key==='heroVideo'){
+      var hbg=document.getElementById('heroBg');
+      if(hbg){
+        hbg.style.background='none';
+        hbg.innerHTML='<video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0"><source src="'+url+'"/></video>';
+      }
     }
   }catch(e){
     if(lblEl){lblEl.style.color='#f44';lblEl.textContent='Erro: '+e.message;}
