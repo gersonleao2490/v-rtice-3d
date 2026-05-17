@@ -1788,9 +1788,6 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 /* ── ORC-INFO — texto de rodapé do formulário ───────────── */
 .orc-info{color:rgba(26,23,20,.4) !important;border-top-color:rgba(26,23,20,.06) !important}
 
-/* ── PORTFÓLIO — placeholder card text ──────────────────── */
-.hPh span{color:rgba(26,23,20,.28) !important}
-
 /* ── PORTFÓLIO HOVER — nome do projeto no overlay ────────── */
 .hCard-name{color:#F4F0E8 !important}
 .gCard-name{color:#F4F0E8 !important}
@@ -3389,6 +3386,7 @@ function swTab(t){
   if(t==='leads')loadLeads();
   if(t==='port')loadAdmPort();
   if(t==='dep')loadAdmDep();
+  if(t==='tour')loadAdmTour360();
 }
 
 async function saveHero(){
@@ -3466,6 +3464,25 @@ function initTour360(url){
   if(ml){ml.style.display='';var a=ml.querySelector('a');if(a)a.href='#sobre';}
   var sb=document.getElementById('srvTour360Btn');
   if(sb){sb.style.display='inline-block';sb.href='#sobre';}
+}
+
+async function loadAdmTour360(){
+  try{
+    const {db,doc,getDoc}=window._FB;
+    const snap=await getDoc(doc(db,'config','site'));
+    if(!snap.exists())return;
+    const d=snap.data();
+    if(d.tourTitle){var el=document.getElementById('aTourTitle');if(el)el.value=d.tourTitle;}
+    if(d.tourSub){var el=document.getElementById('aTourSub');if(el)el.value=d.tourSub;}
+    if(d.tour360Url){
+      var prev=document.getElementById('t360Prev');
+      var zone=document.getElementById('t360Zone');
+      var lbl=document.getElementById('t360Lbl');
+      if(prev){prev.style.backgroundImage='url('+d.tour360Url+')';prev.style.backgroundSize='cover';prev.style.backgroundPosition='center';prev.style.display='block';}
+      if(zone)zone.classList.add('has-file');
+      if(lbl){lbl.style.color='var(--O)';lbl.textContent='✓ Panorama carregado';}
+    }
+  }catch(e){console.error('loadAdmTour360:',e);}
 }
 
 async function saveTour360(){
