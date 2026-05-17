@@ -1471,6 +1471,90 @@ footer{
 .pm-close-btn:hover{border-color:var(--O);color:var(--O);transform:rotate(90deg)}
 
 /* ══════════════════════════════════════════════
+   TOUR 360° MODAL IMERSIVO
+══════════════════════════════════════════════ */
+#tourModal{
+  position:fixed;inset:0;z-index:6000;
+  background:#0a0907;
+  display:none;flex-direction:column;
+  opacity:0;clip-path:inset(50% 50% 50% 50%);
+  transition:clip-path .8s var(--ease),opacity .4s var(--ease);
+}
+#tourModal.open{display:flex;opacity:1;clip-path:inset(0 0 0 0)}
+#tourModalPan{
+  width:100%;flex:1;
+  background-size:280% auto;background-position:50% 50%;
+  cursor:grab;will-change:background-position;
+  position:relative;overflow:hidden;
+}
+#tourModalPan.dragging{cursor:grabbing}
+#tourModal-top{
+  position:absolute;top:0;left:0;right:0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 32px;
+  background:linear-gradient(to bottom,rgba(10,9,7,.85) 0%,transparent 100%);
+  pointer-events:none;
+}
+.tm-badge{
+  display:flex;align-items:center;gap:10px;
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(255,255,255,.75);font-weight:400;
+}
+.tm-badge::before{
+  content:'';width:8px;height:8px;border-radius:50%;background:var(--O);
+  animation:tmPulse 2s ease-in-out infinite;
+}
+@keyframes tmPulse{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+#tourModalClose{
+  pointer-events:all;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  color:rgba(255,255,255,.7);width:42px;height:42px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;
+}
+#tourModalClose:hover{background:var(--O);border-color:var(--O);color:#fff;transform:rotate(90deg)}
+#tourModal-bottom{
+  position:absolute;bottom:0;left:0;right:0;z-index:10;
+  padding:20px 32px;
+  background:linear-gradient(to top,rgba(10,9,7,.85) 0%,transparent 100%);
+  display:flex;align-items:center;justify-content:center;gap:32px;
+}
+.tm-hint{
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,.4);display:flex;align-items:center;gap:8px;
+}
+.tm-hint svg{width:16px;height:16px;opacity:.5}
+#tourModalCompass{
+  position:absolute;bottom:28px;right:32px;z-index:10;
+  width:48px;height:48px;opacity:.55;
+  transition:transform .1s ease;pointer-events:none;
+}
+/* Inline preview — cursor e overlay de convite */
+.sobre-img-wrap.tour-active #t360Pan{cursor:pointer!important}
+.tour-open-hint{
+  position:absolute;inset:0;z-index:25;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  background:rgba(10,9,7,0);transition:background .4s;pointer-events:none;
+}
+.sobre-img-wrap.tour-active:hover .tour-open-hint{background:rgba(10,9,7,.38)}
+.tour-open-hint-icon{
+  width:56px;height:56px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.6);
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(232,64,0,.18);backdrop-filter:blur(6px);
+  transform:scale(.7);opacity:0;
+  transition:transform .4s var(--ease),opacity .4s;
+}
+.sobre-img-wrap.tour-active:hover .tour-open-hint-icon{transform:scale(1);opacity:1}
+.tour-open-hint-icon svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:1.5}
+.tour-open-hint-label{
+  font-size:9px;letter-spacing:3.5px;text-transform:uppercase;color:#fff;
+  font-weight:400;opacity:0;transform:translateY(6px);
+  transition:opacity .4s .06s,transform .4s .06s;
+}
+.sobre-img-wrap.tour-active:hover .tour-open-hint-label{opacity:.8;transform:translateY(0)}
+
+/* ══════════════════════════════════════════════
    REVEAL — editorial clip-path
 ══════════════════════════════════════════════ */
 .rv{opacity:0;transform:translateY(24px);transition:opacity 1.2s var(--ease),transform 1.2s var(--ease)}
@@ -3213,6 +3297,33 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   </div>
 </div>
 
+<!-- TOUR 360° MODAL IMERSIVO -->
+<div id="tourModal" onclick="if(event.target===this||event.target===document.getElementById('tourModalPan')){}">
+  <div id="tourModal-top">
+    <div class="tm-badge">Tour Virtual 360°</div>
+    <button id="tourModalClose" onclick="closeTourModal()">✕</button>
+  </div>
+  <div id="tourModalPan"></div>
+  <div id="tourModal-bottom">
+    <span class="tm-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M5 12l4-4M5 12l4 4"/></svg>
+      Arraste para explorar
+    </span>
+    <span class="tm-hint" style="opacity:.25">|</span>
+    <span class="tm-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M19 12l-4-4M19 12l-4 4"/></svg>
+      Deslize horizontalmente
+    </span>
+  </div>
+  <svg id="tourModalCompass" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="24" cy="24" r="22" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+    <polygon points="24,6 27,24 24,22 21,24" fill="var(--O)" opacity=".9"/>
+    <polygon points="24,42 27,24 24,26 21,24" fill="rgba(255,255,255,.3)"/>
+    <circle cx="24" cy="24" r="2.5" fill="rgba(255,255,255,.5)"/>
+    <text x="24" y="4" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="5" font-family="sans-serif">N</text>
+  </svg>
+</div>
+
 <!-- MODO APRESENTAÇÃO -->
 <div id="pMode">
   <div class="pm-img-ph"></div>
@@ -4238,6 +4349,7 @@ async function saveHero(){
 }
 
 function initTour360(url){
+  window._tour360Url=url;
   var wrap=document.getElementById('sobreImgWrap');
   if(!wrap)return;
   wrap.classList.add('tour-active');
@@ -4284,6 +4396,21 @@ function initTour360(url){
     if(!drag)return;drag=false;setTimeout(startAuto,2500);
   });
   startAuto();
+
+  // Overlay de convite — "Clique para explorar"
+  var hint=document.createElement('div');
+  hint.className='tour-open-hint';
+  hint.innerHTML='<div class="tour-open-hint-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.328l5.603 3.113z"/></svg></div><span class="tour-open-hint-label">Explorar em tela cheia</span>';
+  hint.style.pointerEvents='none';
+  wrap.appendChild(hint);
+
+  // Clique em qualquer parte do preview abre o modal
+  wrap.style.cursor='pointer';
+  wrap.addEventListener('click',function(e){
+    if(e.target.id==='tour360FSBtn')return;
+    openTourModal();
+  });
+
   var nl=document.getElementById('navTour360');
   if(nl){nl.style.display='';nl.href='#sobre';}
   var ml=document.getElementById('menuTour360');
@@ -4291,6 +4418,97 @@ function initTour360(url){
   var sb=document.getElementById('srvTour360Btn');
   if(sb){sb.style.display='inline-block';sb.href='#sobre';}
 }
+
+/* ── Tour 360° Modal imersivo ──────────────────────────────── */
+var _tourModalDrag=false,_tourMSX=0,_tourMSY=0,_tourMBX=50,_tourMBY=50,_tourMAuto=null;
+
+function openTourModal(){
+  var url=window._tour360Url;
+  if(!url)return;
+  var modal=document.getElementById('tourModal');
+  var pan=document.getElementById('tourModalPan');
+  if(!modal||!pan)return;
+  pan.style.backgroundImage='url(\''+url+'\')';
+  pan.style.backgroundSize='280% auto';
+  pan.style.backgroundPosition='50% 50%';
+  _tourMBX=50;_tourMBY=50;
+  modal.style.display='flex';
+  requestAnimationFrame(function(){requestAnimationFrame(function(){modal.classList.add('open');});});
+  document.body.style.overflow='hidden';
+  _startTourModalAuto();
+
+  // Drag — mouse
+  pan.onmousedown=function(e){
+    _tourModalDrag=true;_tourMSX=e.clientX;_tourMSY=e.clientY;
+    _stopTourModalAuto();pan.classList.add('dragging');e.preventDefault();
+  };
+  document.onmousemove=function(e){
+    if(!_tourModalDrag)return;
+    _tourMBX=Math.max(0,Math.min(100,_tourMBX-(e.clientX-_tourMSX)/pan.offsetWidth*65));
+    _tourMBY=Math.max(5,Math.min(95,_tourMBY-(e.clientY-_tourMSY)/pan.offsetHeight*30));
+    _tourMSX=e.clientX;_tourMSY=e.clientY;
+    pan.style.backgroundPosition=_tourMBX+'% '+_tourMBY+'%';
+    _updateTourCompass(_tourMBX);
+  };
+  document.onmouseup=function(){
+    if(!_tourModalDrag)return;
+    _tourModalDrag=false;pan.classList.remove('dragging');
+    setTimeout(_startTourModalAuto,3000);
+  };
+
+  // Drag — touch
+  pan.ontouchstart=function(e){
+    _tourModalDrag=true;_tourMSX=e.touches[0].clientX;_tourMSY=e.touches[0].clientY;
+    _stopTourModalAuto();e.preventDefault();
+  };
+  pan.ontouchmove=function(e){
+    if(!_tourModalDrag)return;
+    _tourMBX=Math.max(0,Math.min(100,_tourMBX-(e.touches[0].clientX-_tourMSX)/pan.offsetWidth*65));
+    _tourMBY=Math.max(5,Math.min(95,_tourMBY-(e.touches[0].clientY-_tourMSY)/pan.offsetHeight*30));
+    _tourMSX=e.touches[0].clientX;_tourMSY=e.touches[0].clientY;
+    pan.style.backgroundPosition=_tourMBX+'% '+_tourMBY+'%';
+    _updateTourCompass(_tourMBX);
+    e.preventDefault();
+  };
+  pan.ontouchend=function(){
+    if(!_tourModalDrag)return;
+    _tourModalDrag=false;setTimeout(_startTourModalAuto,3000);
+  };
+}
+
+function closeTourModal(){
+  var modal=document.getElementById('tourModal');
+  if(!modal)return;
+  modal.classList.remove('open');
+  _stopTourModalAuto();
+  document.onmousemove=null;document.onmouseup=null;
+  setTimeout(function(){modal.style.display='none';},800);
+  document.body.style.overflow='';
+}
+
+function _startTourModalAuto(){
+  _stopTourModalAuto();
+  var pan=document.getElementById('tourModalPan');
+  if(!pan)return;
+  _tourMAuto=setInterval(function(){
+    _tourMBX=(_tourMBX+0.05)%100;
+    pan.style.backgroundPosition=_tourMBX+'% '+_tourMBY+'%';
+    _updateTourCompass(_tourMBX);
+  },50);
+}
+function _stopTourModalAuto(){clearInterval(_tourMAuto);_tourMAuto=null;}
+function _updateTourCompass(bx){
+  var c=document.getElementById('tourModalCompass');
+  if(c)c.style.transform='rotate('+Math.round(bx*3.6)+'deg)';
+}
+
+// Fechar com Escape
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    var tm=document.getElementById('tourModal');
+    if(tm&&tm.classList.contains('open'))closeTourModal();
+  }
+});
 
 async function loadAdmHero(){
   try{
