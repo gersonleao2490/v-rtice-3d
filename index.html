@@ -12,7 +12,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore,doc,getDoc,setDoc,collection,getDocs,addDoc,deleteDoc,updateDoc,query,orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getStorage,ref,uploadBytes,getDownloadURL,deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+import { getStorage,ref,uploadBytes,uploadBytesResumable,getDownloadURL,deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 // ══ CONFIGURE AQUI ═══════════════════════════════════════════
 const firebaseConfig = {
@@ -28,7 +28,7 @@ const firebaseConfig = {
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 const storage=getStorage(app);
-window._FB={db,storage,doc,getDoc,setDoc,collection,getDocs,addDoc,deleteDoc,updateDoc,query,orderBy,ref,uploadBytes,getDownloadURL,deleteObject};
+window._FB={db,storage,doc,getDoc,setDoc,collection,getDocs,addDoc,deleteDoc,updateDoc,query,orderBy,ref,uploadBytes,uploadBytesResumable,getDownloadURL,deleteObject};
 
 window.addEventListener('DOMContentLoaded',async()=>{
   try{ await loadSiteData(); await loadPortfolio(); await loadDepoimentos(); }
@@ -77,6 +77,16 @@ async function loadSiteData(){
   if(d.tour360Url){
     initTour360(d.tour360Url);
   }
+  // Lupa — imagem de qualidade em detalhe
+  if(d.lupaImg){
+    var ph=document.getElementById('lupaBasePh');
+    var gi=document.getElementById('lupaGlassImg');
+    if(ph){ph.style.backgroundImage='url('+d.lupaImg+')';ph.style.backgroundSize='cover';ph.style.backgroundPosition='center';}
+    if(gi){gi.style.backgroundImage='url('+d.lupaImg+')';gi.style.backgroundSize='200%';gi.style.backgroundPosition='50% 50%';}
+  }
+  // Antes/Depois images
+  if(d.adBeforeImg){var ab=document.querySelector('.ad-before');if(ab){ab.style.backgroundImage='url('+d.adBeforeImg+')';ab.style.backgroundSize='cover';ab.style.backgroundPosition='center';}}
+  if(d.adAfterImg){var aa=document.getElementById('adAfter');if(aa){aa.style.backgroundImage='url('+d.adAfterImg+')';aa.style.backgroundSize='cover';aa.style.backgroundPosition='center';}}
   // Hero background image
   if(d.heroBgUrl){var hbg=document.getElementById('heroBg');if(hbg)hbg.style.backgroundImage=`url(${d.heroBgUrl})`;}
   // Hero video — sobrepõe a imagem de fundo quando enviado
@@ -1823,6 +1833,22 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   .pm-body{padding:36px 18px 80px !important}
   .pm-img-full{height:42vh !important;min-height:220px !important}
 }
+/* ── Tour ativo: esconder floats no desktop também ──────────── */
+.sobre-img-wrap.tour-active ~ .sobre-float,
+.sobre-img-wrap.tour-active ~ .sobre-accent{display:none !important}
+/* ── Painel edição portfólio: texto escuro sobre fundo claro ── */
+#portEditPanel .adm-f label{color:rgba(26,23,20,.55)!important}
+#portEditPanel .adm-f input,
+#portEditPanel .adm-f textarea,
+#portEditPanel .adm-f select{color:var(--INK)!important;border-bottom-color:rgba(26,23,20,.2)!important}
+#portEditPanel .adm-f input::placeholder,
+#portEditPanel .adm-f textarea::placeholder{color:rgba(26,23,20,.3)!important}
+#portEditPanel .adm-f select,
+#portEditPanel .adm-f select option{background:var(--BG2)!important;color:var(--INK)!important}
+#portEditPanel .adm-sec-title,#portEditPanel em{color:var(--O)!important}
+/* ── Modal projeto: interação zoom ──────────────────────────── */
+.pm-img-full{cursor:zoom-in;transition:transform .3s}
+.pm-img-full.zoomed{cursor:zoom-out;transform:scale(1.35);transform-origin:center}
 </style>
 </head>
 <body>
@@ -2518,6 +2544,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <button class="adm-tab" onclick="swTab('contato')">Contato</button>
         <button class="adm-tab" onclick="swTab('leads')">Leads</button>
         <button class="adm-tab" onclick="swTab('tour')">Tour 360°</button>
+        <button class="adm-tab" onclick="swTab('extras')">Extras</button>
       </div>
 
       <!-- ═══ HERO ═══ -->
@@ -2611,6 +2638,11 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
           </div>
           <div class="adm-f" style="grid-column:span 2"><label>Descrição</label><textarea id="pDesc" placeholder="Técnicas utilizadas, software, destaque do projeto..."></textarea></div>
         </div>
+        <div style="display:flex;gap:16px;margin-bottom:10px;align-items:center">
+          <span style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3)">Mídia:</span>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:rgba(255,255,255,.5)"><input type="radio" name="pMediaType" value="imagem" checked onchange="togglePortMedia(this.value)"> Imagem</label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:rgba(255,255,255,.5)"><input type="radio" name="pMediaType" value="video" onchange="togglePortMedia(this.value)"> Vídeo</label>
+        </div>
         <div class="up-zone" id="paZone" onclick="document.getElementById('paFile').click()">
           <input type="file" id="paFile" accept="image/*" onchange="uploadPortImg()"/>
           <div class="up-info">
@@ -2619,6 +2651,15 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
             <div class="up-sub2">JPG · PNG · WebP · Ideal 1600×1100px</div>
           </div>
           <div id="upSt"></div>
+        </div>
+        <div class="up-zone" id="paVideoZone" onclick="document.getElementById('paVideoFile').click()" style="display:none">
+          <input type="file" id="paVideoFile" accept="video/*" onchange="uploadPortVideo()"/>
+          <div class="up-info">
+            <div class="up-ico">▶</div>
+            <div class="up-lbl" id="paVideoLbl">Clique para enviar vídeo do projeto</div>
+            <div class="up-sub2">MP4 · WebM · qualquer tamanho (upload com progresso)</div>
+          </div>
+          <div id="upVideoSt"></div>
         </div>
         <button class="adm-save" onclick="addPort()">+ Adicionar ao Portfólio</button>
         <div class="adm-msg" id="mPort"></div>
@@ -2700,6 +2741,50 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         </div>
         <button class="adm-save" onclick="saveTour360()">Salvar Tour 360°</button>
         <div class="adm-msg" id="mTour"></div>
+      </div>
+
+      <!-- ═══ EXTRAS ═══ -->
+      <div class="adm-sec" id="tab-extras">
+        <div class="adm-sec-title">Seção "Qualidade em Detalhe" — Lupa</div>
+        <p style="font-size:12px;color:rgba(255,255,255,.3);margin-bottom:14px;line-height:1.7">Imagem de alta qualidade exibida na seção interativa de lupa (zoom ao passar o cursor).</p>
+        <div class="up-zone" id="lupaAdmZone" onclick="document.getElementById('lupaAdmFile').click()">
+          <input type="file" id="lupaAdmFile" accept="image/*" onchange="uploadMedia(this,'lupaImg')"/>
+          <div class="up-preview" id="lupaAdmPrev" style="display:none"></div>
+          <div class="up-info" id="lupaAdmInfo">
+            <div class="up-ico">🔍</div>
+            <div class="up-lbl" id="lupaAdmLbl">Clique para enviar imagem 4K</div>
+            <div class="up-sub2">JPG · PNG · WebP · Ideal 3840×2160px</div>
+          </div>
+        </div>
+        <div class="adm-sec-title" style="margin-top:28px">Seção "Antes e Depois" — Imagens</div>
+        <p style="font-size:12px;color:rgba(255,255,255,.3);margin-bottom:14px;line-height:1.7">Imagens do slider de transformação visual (planta vs render).</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:8px">Imagem ANTES</p>
+            <div class="up-zone" id="adBeforeZone" onclick="document.getElementById('adBeforeFile').click()">
+              <input type="file" id="adBeforeFile" accept="image/*" onchange="uploadMedia(this,'adBefore')"/>
+              <div class="up-preview" id="adBeforePrev" style="display:none"></div>
+              <div class="up-info" id="adBeforeInfo">
+                <div class="up-ico">◧</div>
+                <div class="up-lbl" id="adBeforeLbl">Clique para enviar imagem ANTES</div>
+                <div class="up-sub2">Planta, esboço ou wireframe</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:8px">Imagem DEPOIS</p>
+            <div class="up-zone" id="adAfterZone" onclick="document.getElementById('adAfterFile').click()">
+              <input type="file" id="adAfterFile" accept="image/*" onchange="uploadMedia(this,'adAfter')"/>
+              <div class="up-preview" id="adAfterPrev" style="display:none"></div>
+              <div class="up-info" id="adAfterInfo">
+                <div class="up-ico">◨</div>
+                <div class="up-lbl" id="adAfterLbl">Clique para enviar imagem DEPOIS</div>
+                <div class="up-sub2">Renderização final fotorrealista</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="adm-msg" id="mExtras"></div>
       </div>
 
     </div><!-- /admContent -->
@@ -3293,15 +3378,24 @@ async function submitOrc(){
 /* ════════════════════════════════════════════════
    MODAL PROJETO
 ════════════════════════════════════════════════ */
-function openModal(nome,cat,desc,img){
+function openModal(nome,cat,desc,img,video){
   document.getElementById('mTitle').textContent=nome;
   document.getElementById('mTag').textContent=cat.toUpperCase();
   document.getElementById('mDesc').textContent=desc||'Projeto de visualização arquitetônica fotorrealista de alto padrão.';
   const imgEl=document.getElementById('mImgEl');
-  imgEl.style.background=img?`url(${img}) center/cover no-repeat`:'var(--BK3)';
+  imgEl.classList.remove('zoomed');
+  if(video){
+    imgEl.innerHTML=`<video src="${video}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" autoplay muted loop playsinline></video>`;
+    imgEl.style.background='none';
+    imgEl.style.cursor='default';
+  } else {
+    imgEl.innerHTML='';
+    imgEl.style.background=img?`url(${img}) center/cover no-repeat`:'var(--BK3)';
+    imgEl.style.cursor='zoom-in';
+    imgEl.onclick=function(e){e.stopPropagation();imgEl.classList.toggle('zoomed');};
+  }
   const modal=document.getElementById('projModal');
   modal.style.display='flex';
-  // Force reflow para garantir a transição clip-path do estado inicial
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>modal.classList.add('open'));
   });
@@ -3320,7 +3414,8 @@ function closeModal(){
 ════════════════════════════════════════════════ */
 let pmIdx=0,pmAuto,pmIsPlaying=true;
 function getPmSlides(){
-  return [...document.querySelectorAll('.hCard,.gCard')];
+  const h=[...document.querySelectorAll('#hScrollTrack .hCard')];
+  return h.length ? h : [...document.querySelectorAll('#portfolioGrid .gCard')];
 }
 function openPMode(){
   document.getElementById('pMode').classList.add('open');
@@ -3340,6 +3435,23 @@ function pmShowSlide(i){
   const s=slides[pmIdx];
   const name=s.querySelector('.hCard-name,.gCard-name')?.textContent||'Projeto';
   const cat=s.querySelector('.hCard-cat,.gCard-cat')?.textContent||'';
+  const imgEl=s.querySelector('img');
+  const vidEl=s.querySelector('video');
+  const ph=document.querySelector('#pMode .pm-img-ph');
+  if(ph){
+    if(imgEl&&imgEl.src){
+      ph.style.backgroundImage='url('+imgEl.src+')';
+      ph.style.backgroundSize='cover';
+      ph.style.backgroundPosition='center';
+      ph.innerHTML='';
+    } else if(vidEl&&vidEl.src){
+      ph.style.backgroundImage='none';
+      ph.innerHTML='<video src="'+vidEl.src+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" autoplay muted loop playsinline></video>';
+    } else {
+      ph.style.backgroundImage='';
+      ph.innerHTML='';
+    }
+  }
   document.getElementById('pmName').textContent=name;
   document.getElementById('pmCat').textContent=cat;
   document.getElementById('pmCounter').textContent=(pmIdx+1)+' / '+slides.length;
@@ -3370,20 +3482,137 @@ document.addEventListener('keydown',e=>{
    BUILDERS
 ════════════════════════════════════════════════ */
 function buildHCard(item){
-  const img=item.imagem?`<img class="hCard-img" src="${item.imagem}" alt="${item.nome}" loading="lazy"/>`:
-    `<div class="hPh" style="background:linear-gradient(160deg,#1a0800,#2d1200)"><span>${item.categoria||''}</span></div>`;
-  return `<div class="hCard" data-cat="${item.categoria||'residencial'}" onclick="openModal('${item.nome}','${item.categoria||''}','${(item.descricao||'').replace(/'/g,"\\'")}','${item.imagem||''}')">
-    ${img}<div class="hCard-overlay"></div>
+  const v=item.video||'';
+  var media;
+  if(item.imagem){
+    media=`<img class="hCard-img" src="${item.imagem}" alt="${item.nome}" loading="lazy"/>`;
+  } else if(v){
+    media=`<video class="hCard-img" src="${v}" muted loop playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>`;
+  } else {
+    media=`<div class="hPh" style="background:linear-gradient(160deg,#1a0800,#2d1200)"><span>${item.categoria||''}</span></div>`;
+  }
+  return `<div class="hCard" data-cat="${item.categoria||'residencial'}" onclick="openModal('${item.nome}','${item.categoria||''}','${(item.descricao||'').replace(/'/g,"\\'")}','${item.imagem||''}','${v}')">
+    ${media}<div class="hCard-overlay"></div>
     <div class="hCard-info"><div class="hCard-cat">${item.categoria||''}</div><div class="hCard-name">${item.nome}</div></div>
   </div>`;
 }
 function buildGCard(item){
-  const img=item.imagem?`<img src="${item.imagem}" alt="${item.nome}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`:
-    `<div class="gPh" style="background:linear-gradient(160deg,#1a0800,#2d1200)"></div>`;
-  return `<div class="gCard" data-cat="${item.categoria||'residencial'}" onclick="openModal('${item.nome}','${item.categoria||''}','${(item.descricao||'').replace(/'/g,"\\'")}','${item.imagem||''}')">
-    ${img}<div class="gCard-overlay"></div>
+  const v=item.video||'';
+  var media;
+  if(item.imagem){
+    media=`<img src="${item.imagem}" alt="${item.nome}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`;
+  } else if(v){
+    media=`<video src="${v}" muted loop playsinline autoplay style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"></video>`;
+  } else {
+    media=`<div class="gPh" style="background:linear-gradient(160deg,#1a0800,#2d1200)"></div>`;
+  }
+  return `<div class="gCard" data-cat="${item.categoria||'residencial'}" onclick="openModal('${item.nome}','${item.categoria||''}','${(item.descricao||'').replace(/'/g,"\\'")}','${item.imagem||''}','${v}')">
+    ${media}<div class="gCard-overlay"></div>
     <div class="gCard-info"><div class="gCard-cat">${item.categoria||''}</div><div class="gCard-name">${item.nome}</div></div>
   </div>`;
+}
+
+/* ════════════════════════════════════════════════
+   PORTFOLIO MEDIA HELPERS
+════════════════════════════════════════════════ */
+function togglePortMedia(type){
+  document.getElementById('paZone').style.display=type==='imagem'?'':'none';
+  document.getElementById('paVideoZone').style.display=type==='video'?'':'none';
+}
+
+async function uploadPortVideo(){
+  const file=document.getElementById('paVideoFile').files[0];
+  if(!file)return;
+  const st=document.getElementById('upVideoSt');
+  const lbl=document.getElementById('paVideoLbl');
+  st.style.color='var(--TX)';st.textContent='Enviando 0%…';
+  try{
+    const {storage,ref,uploadBytesResumable,getDownloadURL}=window._FB;
+    const r=ref(storage,'portfolio/'+Date.now()+'_'+file.name);
+    const url=await new Promise(function(resolve,reject){
+      const task=uploadBytesResumable(r,file);
+      task.on('state_changed',function(sn){
+        const pct=Math.round(sn.bytesTransferred/sn.totalBytes*100);
+        st.textContent='Enviando '+pct+'%…';
+      },reject,async function(){resolve(await getDownloadURL(task.snapshot.ref));});
+    });
+    window._portNewVideo=url;
+    const zone=document.getElementById('paVideoZone');
+    let prev=zone.querySelector('.up-preview');
+    if(!prev){prev=document.createElement('div');prev.className='up-preview';zone.insertBefore(prev,zone.firstChild);}
+    prev.innerHTML='<video src="'+url+'" style="width:100%;height:100%;object-fit:cover" muted loop autoplay playsinline></video>';
+    prev.style.display='block';
+    zone.classList.add('has-file');
+    if(lbl){lbl.style.color='var(--O)';lbl.textContent='✓ Vídeo enviado!';}
+    st.style.color='var(--O)';st.textContent='✓ Vídeo salvo com sucesso!';
+  }catch(e){st.style.color='#f44';st.textContent='Erro: '+e.message}
+}
+
+function toggleEditPortMedia(id,type){
+  var iz=document.getElementById('peZone');
+  var vz=document.getElementById('peVideoZone');
+  if(iz)iz.style.display=type==='imagem'?'':'none';
+  if(vz)vz.style.display=type==='video'?'':'none';
+}
+
+async function uploadEditPortVideo(id){
+  const file=document.getElementById('peVideoFile').files[0];
+  if(!file)return;
+  const st=document.getElementById('peUpSt');
+  const lbl=document.getElementById('peVideoLbl');
+  st.style.color='var(--TX)';st.textContent='Enviando 0%…';
+  try{
+    const {storage,ref,uploadBytesResumable,getDownloadURL}=window._FB;
+    const r=ref(storage,'portfolio/'+Date.now()+'_'+file.name);
+    const url=await new Promise(function(resolve,reject){
+      const task=uploadBytesResumable(r,file);
+      task.on('state_changed',function(sn){
+        const pct=Math.round(sn.bytesTransferred/sn.totalBytes*100);
+        st.textContent='Enviando '+pct+'%…';
+      },reject,async function(){resolve(await getDownloadURL(task.snapshot.ref));});
+    });
+    if(!window._editPortVideo)window._editPortVideo={};
+    window._editPortVideo[id]=url;
+    const prev=document.getElementById('peVideoPrev');
+    if(prev){prev.innerHTML='<video src="'+url+'" style="width:100%;height:100%;object-fit:cover" muted loop autoplay playsinline></video>';prev.style.display='block';}
+    const zone=document.getElementById('peVideoZone');
+    if(zone)zone.classList.add('has-file');
+    if(lbl){lbl.style.color='var(--O)';lbl.textContent='✓ Vídeo enviado!';}
+    st.style.color='var(--O)';st.textContent='✓ Vídeo pronto!';
+  }catch(e){st.style.color='#f44';st.textContent='Erro: '+e.message}
+}
+
+async function loadAdmExtras(){
+  try{
+    const {db,doc,getDoc}=window._FB;
+    const snap=await getDoc(doc(db,'config','site'));
+    if(!snap.exists())return;
+    const d=snap.data();
+    if(d.lupaImg){
+      var prev=document.getElementById('lupaAdmPrev');
+      var zone=document.getElementById('lupaAdmZone');
+      var lbl=document.getElementById('lupaAdmLbl');
+      if(prev){prev.style.backgroundImage='url('+d.lupaImg+')';prev.style.display='block';}
+      if(zone)zone.classList.add('has-file');
+      if(lbl){lbl.style.color='var(--O)';lbl.textContent='✓ Imagem carregada';}
+    }
+    if(d.adBeforeImg){
+      var prev=document.getElementById('adBeforePrev');
+      var zone=document.getElementById('adBeforeZone');
+      var lbl=document.getElementById('adBeforeLbl');
+      if(prev){prev.style.backgroundImage='url('+d.adBeforeImg+')';prev.style.display='block';}
+      if(zone)zone.classList.add('has-file');
+      if(lbl){lbl.style.color='var(--O)';lbl.textContent='✓ Imagem ANTES carregada';}
+    }
+    if(d.adAfterImg){
+      var prev=document.getElementById('adAfterPrev');
+      var zone=document.getElementById('adAfterZone');
+      var lbl=document.getElementById('adAfterLbl');
+      if(prev){prev.style.backgroundImage='url('+d.adAfterImg+')';prev.style.display='block';}
+      if(zone)zone.classList.add('has-file');
+      if(lbl){lbl.style.color='var(--O)';lbl.textContent='✓ Imagem DEPOIS carregada';}
+    }
+  }catch(e){console.error('loadAdmExtras:',e);}
 }
 
 /* ════════════════════════════════════════════════
@@ -3407,7 +3636,7 @@ async function checkAdmPass(){
 }
 
 function swTab(t){
-  const ts=['hero','sobre','port','dep','stats','contato','leads','tour'];
+  const ts=['hero','sobre','port','dep','stats','contato','leads','tour','extras'];
   document.querySelectorAll('.adm-tab').forEach((el,i)=>el.classList.toggle('on',ts[i]===t));
   document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('on'));
   var sec=document.getElementById('tab-'+t);
@@ -3420,6 +3649,7 @@ function swTab(t){
   if(t==='hero')loadAdmHero();
   if(t==='contato')loadAdmContato();
   if(t==='stats')loadAdmStats();
+  if(t==='extras')loadAdmExtras();
 }
 
 async function saveHero(){
@@ -3621,11 +3851,13 @@ async function saveTour360(){
 async function uploadMedia(input, key){
   var file=input.files[0];
   if(!file)return;
-  // Mapeamento key → IDs dos elementos
   var maps={
     heroVideo:{zone:'vidZone',prev:'vidPrev',lbl:'vidLbl',info:'vidInfo'},
     sobreImg:{zone:'sobreZone',prev:'sobrePrev',lbl:'sobreLbl',info:'sobreInfo'},
     tour360:{zone:'t360Zone',prev:'t360Prev',lbl:'t360Lbl',info:'t360Info'},
+    lupaImg:{zone:'lupaAdmZone',prev:'lupaAdmPrev',lbl:'lupaAdmLbl',info:'lupaAdmInfo'},
+    adBefore:{zone:'adBeforeZone',prev:'adBeforePrev',lbl:'adBeforeLbl',info:'adBeforeInfo'},
+    adAfter:{zone:'adAfterZone',prev:'adAfterPrev',lbl:'adAfterLbl',info:'adAfterInfo'},
   };
   var ids=maps[key]||{};
   var lblEl=document.getElementById(ids.lbl);
@@ -3633,47 +3865,60 @@ async function uploadMedia(input, key){
   var zoneEl=document.getElementById(ids.zone);
   if(lblEl){lblEl.style.color='var(--TX)';lblEl.textContent='Enviando…';}
   try{
-    var {storage,ref,uploadBytes,getDownloadURL,db,doc,setDoc}=window._FB;
-    var r=ref(storage,`${key}/${Date.now()}_${file.name}`);
-    var snap=await uploadBytes(r,file);
-    var url=await getDownloadURL(snap.ref);
-    // Preview
+    var {storage,ref,uploadBytes,uploadBytesResumable,getDownloadURL,db,doc,setDoc}=window._FB;
+    var r=ref(storage,key+'/'+Date.now()+'_'+file.name);
+    var url;
+    var isVideo=file.type.startsWith('video/');
+    if(isVideo&&uploadBytesResumable){
+      url=await new Promise(function(resolve,reject){
+        var task=uploadBytesResumable(r,file);
+        task.on('state_changed',function(sn){
+          var pct=Math.round(sn.bytesTransferred/sn.totalBytes*100);
+          if(lblEl)lblEl.textContent='Enviando '+pct+'%…';
+        },reject,async function(){
+          resolve(await getDownloadURL(task.snapshot.ref));
+        });
+      });
+    } else {
+      var snap=await uploadBytes(r,file);
+      url=await getDownloadURL(snap.ref);
+    }
     if(prevEl){
-      if(key==='heroVideo'){
-        prevEl.innerHTML=`<video src="${url}" style="width:100%;height:100%;object-fit:cover" muted loop autoplay playsinline></video>`;
+      if(isVideo){
+        prevEl.innerHTML='<video src="'+url+'" style="width:100%;height:100%;object-fit:cover" muted loop autoplay playsinline></video>';
       } else {
-        prevEl.style.backgroundImage=`url(${url})`;
+        prevEl.style.backgroundImage='url('+url+')';
       }
       prevEl.style.display='block';
     }
     if(zoneEl)zoneEl.classList.add('has-file');
     if(lblEl){lblEl.style.color='var(--O)';lblEl.textContent='✓ Upload concluído!';}
-    // Salvar URL no Firestore
     var field={};
     if(key==='sobreImg')field={sobreImgUrl:url};
     else if(key==='heroVideo')field={heroVideoUrl:url};
     else if(key==='tour360')field={tour360Url:url};
+    else if(key==='lupaImg')field={lupaImg:url};
+    else if(key==='adBefore')field={adBeforeImg:url};
+    else if(key==='adAfter')field={adAfterImg:url};
     else field={[key+'Url']:url};
     await setDoc(doc(db,'config','site'),field,{merge:true});
-    // Aplicar ao site imediatamente
     if(key==='sobreImg'){
       var wrap=document.getElementById('sobreImgWrap');
-      if(wrap)wrap.innerHTML=`<img class="sobre-img" src="${url}" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>`;
+      if(wrap)wrap.innerHTML='<img class="sobre-img" src="'+url+'" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>';
     }
-    if(key==='tour360'){
-      initTour360(url);
-    }
-    if(key==='heroBg'){
-      var bg=document.getElementById('heroBg');
-      if(bg)bg.style.backgroundImage=`url(${url})`;
-    }
+    if(key==='tour360')initTour360(url);
+    if(key==='heroBg'){var bg=document.getElementById('heroBg');if(bg)bg.style.backgroundImage='url('+url+')';}
     if(key==='heroVideo'){
       var hbg=document.getElementById('heroBg');
-      if(hbg){
-        hbg.style.background='none';
-        hbg.innerHTML='<video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0"><source src="'+url+'"/></video>';
-      }
+      if(hbg){hbg.style.background='none';hbg.innerHTML='<video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0"><source src="'+url+'"/></video>';}
     }
+    if(key==='lupaImg'){
+      var ph=document.getElementById('lupaBasePh');var gi=document.getElementById('lupaGlassImg');
+      if(ph){ph.style.backgroundImage='url('+url+')';ph.style.backgroundSize='cover';ph.style.backgroundPosition='center';}
+      if(gi){gi.style.backgroundImage='url('+url+')';gi.style.backgroundSize='200%';}
+    }
+    if(key==='adBefore'){var ab=document.querySelector('.ad-before');if(ab){ab.style.backgroundImage='url('+url+')';ab.style.backgroundSize='cover';ab.style.backgroundPosition='center';}}
+    if(key==='adAfter'){var aa=document.getElementById('adAfter');if(aa){aa.style.backgroundImage='url('+url+')';aa.style.backgroundSize='cover';aa.style.backgroundPosition='center';}}
   }catch(e){
     if(lblEl){lblEl.style.color='#f44';lblEl.textContent='Erro: '+e.message;}
   }
@@ -3818,13 +4063,14 @@ async function addPort(){
       nome,
       categoria:document.getElementById('pCat').value,
       imagem:window._portNewImg||'',
+      video:window._portNewVideo||'',
       descricao:document.getElementById('pDesc').value,
     });
     showMsg('mPort','✓ Projeto adicionado ao portfólio!');
     // Limpar formulário
     document.getElementById('pNome').value='';
     document.getElementById('pDesc').value='';
-    window._portNewImg='';
+    window._portNewImg='';window._portNewVideo='';
     const zone=document.getElementById('paZone');
     const prev=zone.querySelector('.up-preview');
     if(prev)prev.remove();
@@ -3891,13 +4137,27 @@ function editPort(id){
         <div class="adm-f"><label>Categoria</label><select id="eCat">${opts}</select></div>
         <div class="adm-f" style="grid-column:span 2"><label>Descrição</label><textarea id="eDesc" rows="3">${item.descricao||''}</textarea></div>
       </div>
-      <div class="up-zone" id="peZone" onclick="document.getElementById('peFile').click()" style="margin-top:12px">
+      <div style="display:flex;gap:14px;margin:12px 0 8px;align-items:center">
+        <span style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(26,23,20,.4)">Mídia:</span>
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:11px;color:rgba(26,23,20,.6)"><input type="radio" name="eMediaType_${id}" value="imagem" ${!item.video?'checked':''} onchange="toggleEditPortMedia('${id}',this.value)"> Imagem</label>
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:11px;color:rgba(26,23,20,.6)"><input type="radio" name="eMediaType_${id}" value="video" ${item.video?'checked':''} onchange="toggleEditPortMedia('${id}',this.value)"> Vídeo</label>
+      </div>
+      <div class="up-zone" id="peZone" onclick="document.getElementById('peFile').click()" style="margin-top:0;${item.video?'display:none':''}">
         <input type="file" id="peFile" accept="image/*" style="display:none" onchange="uploadEditPortImg('${id}')"/>
         <div class="up-preview" id="pePreview" ${prevBg}></div>
         <div class="up-info">
           <div class="up-ico">🖼</div>
           <div class="up-lbl">${item.imagem?'Clique para substituir a imagem':'Clique para enviar imagem do projeto'}</div>
           <div class="up-sub2">JPG · PNG · WebP · Ideal 1600×1100px</div>
+        </div>
+      </div>
+      <div class="up-zone" id="peVideoZone" onclick="document.getElementById('peVideoFile').click()" style="margin-top:0;${item.video?'':'display:none'}">
+        <input type="file" id="peVideoFile" accept="video/*" style="display:none" onchange="uploadEditPortVideo('${id}')"/>
+        ${item.video?'<div class="up-preview" id="peVideoPrev" style="display:block"><video src="'+item.video+'" style=\\"width:100%;height:100%;object-fit:cover\\" muted loop autoplay playsinline></video></div>':'<div id="peVideoPrev" style="display:none"></div>'}
+        <div class="up-info">
+          <div class="up-ico">▶</div>
+          <div class="up-lbl" id="peVideoLbl">${item.video?'Clique para substituir vídeo':'Clique para enviar vídeo do projeto'}</div>
+          <div class="up-sub2">MP4 · WebM · qualquer tamanho</div>
         </div>
       </div>
       <div id="peUpSt" style="font-size:11px;margin-top:6px;min-height:16px"></div>
@@ -3950,6 +4210,11 @@ async function saveEditPort(id){
     if(window._editPortImg&&window._editPortImg[id]){
       data.imagem=window._editPortImg[id];
       delete window._editPortImg[id];
+    }
+    if(window._editPortVideo&&window._editPortVideo[id]){
+      data.video=window._editPortVideo[id];
+      data.imagem='';
+      delete window._editPortVideo[id];
     }
     await updateDoc(doc(db,'portfolio',id),data);
     showMsg('mPortEdit','✓ Projeto atualizado!');
