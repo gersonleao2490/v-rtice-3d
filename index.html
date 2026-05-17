@@ -111,6 +111,36 @@ async function loadSiteData(){
       hbg.innerHTML='<video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0"><source src="'+d.heroVideoUrl+'"/></video>';
     }
   }
+  // Clientes marquee
+  if(d.clientesNomes&&d.clientesNomes.length){
+    var track=document.querySelector('#clientesLogos .cl-track');
+    if(track){
+      var items=d.clientesNomes.map(function(n){return '<span class="cl-item">'+n+'</span>';}).join('');
+      track.innerHTML=items+items;
+    }
+  }
+  // Processo steps
+  var procTitles=document.querySelectorAll('.proc-step-title');
+  var procDescs=document.querySelectorAll('.proc-step-desc');
+  if(d.proc1t&&procTitles[0])procTitles[0].textContent=d.proc1t;
+  if(d.proc1d&&procDescs[0])procDescs[0].textContent=d.proc1d;
+  if(d.proc2t&&procTitles[1])procTitles[1].textContent=d.proc2t;
+  if(d.proc2d&&procDescs[1])procDescs[1].textContent=d.proc2d;
+  if(d.proc3t&&procTitles[2])procTitles[2].textContent=d.proc3t;
+  if(d.proc3d&&procDescs[2])procDescs[2].textContent=d.proc3d;
+  if(d.proc4t&&procTitles[3])procTitles[3].textContent=d.proc4t;
+  if(d.proc4d&&procDescs[3])procDescs[3].textContent=d.proc4d;
+  // Simulador prices from Firestore
+  if(d.sp_res_1&&window._simRanges){
+    if(d.sp_res_1)_simRanges['Residencial unifamiliar']['1 a 3 imagens'].range=d.sp_res_1;
+    if(d.sp_res_2)_simRanges['Residencial unifamiliar']['4 a 8 imagens'].range=d.sp_res_2;
+    if(d.sp_res_3)_simRanges['Residencial unifamiliar']['9 ou mais imagens'].range=d.sp_res_3;
+    if(d.sp_res_v)_simRanges['Residencial unifamiliar']['Vídeo ou Tour 360°'].range=d.sp_res_v;
+    if(d.sp_emp_1)_simRanges['Empreendimento vertical']['1 a 3 imagens'].range=d.sp_emp_1;
+    if(d.sp_emp_2)_simRanges['Empreendimento vertical']['4 a 8 imagens'].range=d.sp_emp_2;
+    if(d.sp_emp_3)_simRanges['Empreendimento vertical']['9 ou mais imagens'].range=d.sp_emp_3;
+    if(d.sp_emp_v)_simRanges['Empreendimento vertical']['Vídeo ou Tour 360°'].range=d.sp_emp_v;
+  }
 }
 
 async function loadPortfolio(){
@@ -1352,6 +1382,7 @@ footer{
 }
 .adm-save:hover{background:var(--O);color:#fff}
 .adm-msg{margin-top:10px;font-size:12px;height:18px;color:#5fba7d;letter-spacing:.5px}
+.adm-info{font-size:12px;color:rgba(255,255,255,.35);margin-bottom:20px;line-height:1.7}
 
 /* LOGIN */
 .adm-login{display:flex;flex-direction:column;gap:16px;max-width:300px;margin:60px auto;text-align:center}
@@ -2323,7 +2354,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 #clientesLogos{padding:80px;background:var(--BG2);border-top:1px solid rgba(26,23,20,.06);border-bottom:1px solid rgba(26,23,20,.06);}
 .cl-head{text-align:center;margin-bottom:48px;}
 .cl-head p{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--TX2);font-weight:400;}
-.cl-track-wrap{overflow:hidden;mask-image:linear-gradient(to right,transparent 0%,black 12%,black 88%,transparent 100%);}
+.cl-track-wrap{overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent 0%,black 12%,black 88%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,black 12%,black 88%,transparent 100%);}
 .cl-track{display:flex;gap:0;white-space:nowrap;animation:clScroll 30s linear infinite;}
 .cl-track:hover{animation-play-state:paused;}
 @keyframes clScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -2349,8 +2380,9 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 .journal-card:hover{transform:translateY(-6px);box-shadow:0 24px 56px rgba(26,23,20,.1);}
 .journal-card-img{
   height:200px;background:var(--BG3) center/cover no-repeat;
-  position:relative;overflow:hidden;
+  position:relative;overflow:hidden;transition:transform .45s var(--ease);
 }
+.journal-card:hover .journal-card-img{transform:scale(1.03);}
 .journal-card-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,20,.3),transparent);}
 .journal-card-cat{
   position:absolute;bottom:14px;left:16px;z-index:1;
@@ -2390,7 +2422,8 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 .sim-opt{
   padding:14px 24px;border:1px solid rgba(255,255,255,.12);border-radius:var(--r-pill);
   font-size:13px;color:rgba(255,255,255,.65);cursor:pointer;
-  transition:all .3s var(--ease);background:rgba(255,255,255,.03);
+  transition:all .3s var(--ease);background:none;
+  font-family:inherit;font-size:13px;
 }
 .sim-opt:hover,.sim-opt.sel{border-color:var(--O);color:#fff;background:rgba(232,64,0,.12);}
 .sim-opt.sel{background:var(--O);border-color:var(--O);color:#fff;}
@@ -2409,10 +2442,296 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   .sim-opts{flex-direction:column;}
   .sim-opt{text-align:center;}
 }
+
+/* ══ LGPD BANNER ══════════════════════════════ */
+#lgpdBanner{
+  position:fixed;bottom:0;left:0;right:0;z-index:8500;
+  background:var(--INK);color:rgba(255,255,255,.85);
+  padding:16px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;
+  transform:translateY(100%);transition:transform .5s var(--ease);
+  border-top:1px solid rgba(255,255,255,.06);
+}
+#lgpdBanner.show{transform:translateY(0);}
+.lgpd-text{font-size:12px;line-height:1.6;max-width:700px;color:rgba(255,255,255,.65);}
+.lgpd-text a{color:var(--O);text-decoration:underline;}
+.lgpd-btns{display:flex;gap:12px;flex-shrink:0;}
+.lgpd-ok{background:var(--O);color:#fff;border:none;padding:10px 22px;border-radius:var(--r-pill);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:500;cursor:pointer;transition:background .3s;white-space:nowrap;}
+.lgpd-ok:hover{background:var(--O2);}
+.lgpd-skip{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);padding:10px 18px;border-radius:var(--r-pill);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;white-space:nowrap;}
+.lgpd-skip:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8);}
+@media(max-width:600px){
+  #lgpdBanner{flex-direction:column;align-items:flex-start;padding:20px 24px;}
+  .lgpd-btns{width:100%;justify-content:flex-end;}
+}
+
+/* ══ DARK MODE ════════════════════════════════ */
+body.dark-mode{
+  --BG:#0E0C0A;--BG2:#161310;--BG3:#1E1A16;--BG4:#252018;
+  --GY:#2A2520;--GY2:#3A342E;
+  --TX:#9A9080;--TX2:#7A7060;
+  --INK:#F4F0E8;--INK2:#E8E2D8;
+  --BK:#0E0C0A;--BK2:#161310;--BK3:#1E1A16;
+  --WH:#F4F0E8;
+}
+body.dark-mode #nav.scrolled{background:rgba(14,12,10,.9);}
+body.dark-mode #lgpdBanner{background:#1A1612;}
+body.dark-mode .journal-card,
+body.dark-mode .pqn-software{background:var(--BG2);border-color:rgba(244,240,232,.06);}
+body.dark-mode #simulador{background:#060504;}
+#dmToggle{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(26,23,20,.06);border:1px solid rgba(26,23,20,.1);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .3s;flex-shrink:0;
+}
+#dmToggle:hover{background:rgba(232,64,0,.08);border-color:var(--O);}
+#dmToggle svg{width:16px;height:16px;transition:opacity .3s;}
+.dm-sun{opacity:1;}.dm-moon{opacity:0;position:absolute;}
+body.dark-mode .dm-sun{opacity:0;}
+body.dark-mode .dm-moon{opacity:1;}
+
+/* ══ SOCIAL COUNTER ═══════════════════════════ */
+#socialCounter{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(232,64,0,.08);border:1px solid rgba(232,64,0,.15);
+  border-radius:var(--r-pill);padding:7px 16px;margin-bottom:32px;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--O);
+  opacity:0;transform:translateY(-8px);
+  animation:fadeUp 1s var(--ease) 2.2s forwards;
+}
+#socialCounter::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--O);animation:tmPulse 2s ease-in-out infinite;}
+
+/* ══ EXIT INTENT ══════════════════════════════ */
+#exitPopup{
+  position:fixed;inset:0;z-index:9200;
+  background:rgba(26,23,20,.7);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .4s;
+}
+#exitPopup.show{display:flex;opacity:1;}
+.exit-box{
+  background:var(--BG);max-width:520px;width:90%;
+  border-radius:var(--r-xl);padding:56px 48px;text-align:center;
+  position:relative;box-shadow:0 40px 100px rgba(26,23,20,.2);
+  transform:translateY(20px);transition:transform .4s var(--ease);
+}
+#exitPopup.show .exit-box{transform:translateY(0);}
+.exit-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:20px;color:var(--TX2);cursor:pointer;transition:color .3s;}
+.exit-close:hover{color:var(--O);}
+.exit-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--O);margin-bottom:16px;font-weight:500;}
+.exit-title{font-family:var(--serif);font-size:clamp(26px,4vw,38px);font-weight:300;color:var(--INK);line-height:1.15;margin-bottom:16px;letter-spacing:-.02em;}
+.exit-sub{font-size:14px;color:var(--TX);line-height:1.7;margin-bottom:32px;}
+.exit-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.exit-dismiss{font-size:11px;color:var(--TX2);margin-top:16px;background:none;border:none;cursor:pointer;letter-spacing:1px;transition:color .3s;}
+.exit-dismiss:hover{color:var(--O);}
+
+/* ══ NEWSLETTER ═══════════════════════════════ */
+.nl-wrap{
+  border-top:1px solid rgba(26,23,20,.08);margin-top:48px;padding-top:48px;
+  display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;
+}
+.nl-text h4{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--INK);margin-bottom:6px;letter-spacing:-.01em;}
+.nl-text p{font-size:13px;color:var(--TX);line-height:1.6;}
+.nl-form{display:flex;gap:10px;flex-wrap:wrap;}
+.nl-input{
+  padding:13px 20px;border:1px solid rgba(26,23,20,.15);border-radius:var(--r-pill);
+  font-family:var(--sans);font-size:13px;color:var(--INK);background:var(--BG);
+  outline:none;min-width:240px;transition:border-color .3s;
+}
+.nl-input:focus{border-color:var(--O);}
+.nl-input::placeholder{color:var(--TX2);}
+.nl-btn{
+  background:var(--O);color:#fff;border:none;padding:13px 24px;
+  border-radius:var(--r-pill);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+  font-weight:500;cursor:pointer;transition:background .3s;white-space:nowrap;
+}
+.nl-btn:hover{background:var(--O2);}
+.nl-ok{font-size:12px;color:var(--O);display:none;font-style:italic;}
+@media(max-width:600px){.nl-wrap{flex-direction:column;align-items:flex-start;}.nl-form{width:100%;}.nl-input{min-width:unset;flex:1;}}
+
+/* ══ ARTICLE READER MODAL ═════════════════════ */
+#articleModal{
+  position:fixed;inset:0;z-index:7000;
+  background:var(--BG);
+  display:none;flex-direction:column;overflow-y:auto;
+  opacity:0;transform:translateY(40px);
+  transition:opacity .5s var(--ease),transform .5s var(--ease);
+}
+#articleModal.open{display:flex;opacity:1;transform:translateY(0);}
+.art-header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(244,240,232,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(26,23,20,.06);
+  padding:16px 80px;display:flex;align-items:center;justify-content:space-between;
+}
+.art-header-cat{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--O);font-weight:500;}
+.art-header-close{
+  background:none;border:1px solid rgba(26,23,20,.12);color:var(--INK);
+  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:all .3s;
+}
+.art-header-close:hover{border-color:var(--O);color:var(--O);transform:rotate(90deg);}
+.art-hero{
+  height:55vh;min-height:320px;
+  background:var(--BG3) center/cover no-repeat;
+  position:relative;display:flex;align-items:flex-end;
+  padding:0 80px 64px;
+}
+.art-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,20,.55) 0%,transparent 60%);}
+.art-hero-content{position:relative;z-index:1;max-width:800px;}
+.art-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:12px;}
+.art-title{font-family:var(--serif);font-size:clamp(32px,5vw,64px);font-weight:300;color:#fff;line-height:1.05;letter-spacing:-.025em;}
+.art-meta{
+  display:flex;align-items:center;gap:24px;margin-top:16px;
+  font-size:12px;color:rgba(255,255,255,.6);letter-spacing:.02em;
+}
+.art-meta span{display:flex;align-items:center;gap:6px;}
+.art-body{max-width:740px;margin:0 auto;padding:80px 80px 120px;}
+.art-lead{
+  font-family:var(--serif-it);font-style:italic;font-size:22px;line-height:1.65;
+  color:var(--INK);margin-bottom:48px;font-weight:300;letter-spacing:-.01em;
+  border-left:3px solid var(--O);padding-left:28px;
+}
+.art-body h2{
+  font-family:var(--serif);font-size:clamp(24px,3vw,36px);font-weight:300;
+  color:var(--INK);margin:56px 0 20px;letter-spacing:-.015em;line-height:1.1;
+}
+.art-body h3{
+  font-family:var(--serif);font-size:22px;font-weight:300;color:var(--INK);
+  margin:40px 0 14px;letter-spacing:-.01em;
+}
+.art-body p{font-size:16px;line-height:1.9;color:var(--TX);margin-bottom:24px;font-weight:300;}
+.art-body strong{color:var(--INK);font-weight:500;}
+.art-body em{font-family:var(--serif-it);font-style:italic;color:var(--O);}
+.art-pull{
+  background:var(--BG2);border-radius:var(--r-md);padding:36px 40px;
+  margin:48px 0;border-left:4px solid var(--O);
+}
+.art-pull p{font-family:var(--serif-it);font-style:italic;font-size:20px;line-height:1.6;color:var(--INK);margin:0;font-weight:300;}
+.art-img{
+  width:100%;aspect-ratio:16/9;border-radius:var(--r-md);
+  background:var(--BG3) center/cover no-repeat;margin:40px 0;overflow:hidden;
+}
+.art-img-cap{font-size:12px;color:var(--TX2);text-align:center;margin-top:-28px;margin-bottom:40px;letter-spacing:.02em;font-style:italic;}
+.art-cta-box{
+  background:var(--INK);border-radius:var(--r-xl);padding:56px;text-align:center;margin-top:64px;
+}
+.art-cta-box h3{font-family:var(--serif);font-size:32px;font-weight:300;color:#fff;margin-bottom:12px;}
+.art-cta-box p{font-size:15px;color:rgba(255,255,255,.55);margin-bottom:32px;line-height:1.7;}
+@media(max-width:900px){
+  .art-header{padding:14px 32px;}
+  .art-hero{padding:0 32px 48px;height:45vh;}
+  .art-body{padding:56px 32px 80px;}
+}
+@media(max-width:600px){
+  .art-header{padding:12px 20px;}
+  .art-hero{padding:0 20px 36px;}
+  .art-body{padding:40px 20px 64px;}
+  .art-lead{font-size:18px;padding-left:18px;}
+  .art-pull{padding:24px 24px;}
+  .art-cta-box{padding:36px 24px;}
+}
+
+/* ══ SERVIÇOS ══════════════════════════════════ */
+#servicos{padding:160px 80px;background:linear-gradient(180deg,var(--BG) 0%,var(--BG2) 100%);}
+.srv-grid-new{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:72px;background:rgba(26,23,20,.06);}
+.srv-card-new{
+  background:var(--BG);padding:52px 40px;
+  position:relative;overflow:hidden;
+  transition:background .4s var(--ease);cursor:default;
+}
+.srv-card-new::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--O);transform:scaleX(0);transform-origin:left;
+  transition:transform .5s var(--ease);
+}
+.srv-card-new:hover{background:var(--BG2);}
+.srv-card-new:hover::before{transform:scaleX(1);}
+.srv-card-num{
+  font-family:var(--serif);font-size:72px;font-weight:200;
+  color:rgba(26,23,20,.05);line-height:1;margin-bottom:0;
+  position:absolute;top:24px;right:28px;letter-spacing:-.04em;
+  transition:color .4s;
+}
+.srv-card-new:hover .srv-card-num{color:rgba(232,64,0,.06);}
+.srv-icon-new{
+  width:52px;height:52px;border-radius:var(--r-sm);
+  background:var(--O-soft);border:1px solid var(--O-line);
+  display:flex;align-items:center;justify-content:center;margin-bottom:28px;
+}
+.srv-icon-new svg{width:24px;height:24px;stroke:var(--O);fill:none;stroke-width:1.5;}
+.srv-name{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--INK);margin-bottom:12px;letter-spacing:-.01em;}
+.srv-desc{font-size:13.5px;line-height:1.75;color:var(--TX);margin-bottom:24px;}
+.srv-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.srv-tag{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--TX2);background:rgba(26,23,20,.05);padding:5px 12px;border-radius:20px;}
+.srv-prazo{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--O);margin-top:20px;font-weight:500;}
+@media(max-width:900px){
+  #servicos{padding:100px 40px;}
+  .srv-grid-new{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:600px){
+  #servicos{padding:64px 24px;}
+  .srv-grid-new{grid-template-columns:1fr;gap:1px;}
+  .srv-card-new{padding:40px 28px;}
+}
+
+/* ── Depoimento com foto ─────────────────────── */
+.dep-author{display:flex;align-items:center;gap:14px;margin-top:28px;}
+.dep-avatar{
+  width:48px;height:48px;border-radius:50%;flex-shrink:0;
+  background:var(--O-soft,rgba(232,64,0,.08)) center/cover no-repeat;
+  border:2px solid rgba(232,64,0,.2);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.dep-avatar span{font-family:var(--serif);font-size:18px;font-weight:300;color:var(--O);}
+.dep-author-info{display:flex;flex-direction:column;gap:2px;}
+.dep-name{font-size:14px;font-weight:500;color:var(--INK);}
+.dep-company{font-size:12px;color:var(--TX2);letter-spacing:.02em;}
+
+/* ── Contact Multi-step ─────────────────────── */
+.orc-step-tab{
+  flex:1;padding:14px 0;text-align:center;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:500;
+  color:rgba(26,23,20,.3);border-bottom:2px solid rgba(26,23,20,.1);
+  transition:all .3s;cursor:default;
+}
+.orc-step-tab.active{color:var(--O);border-bottom-color:var(--O);}
+.orc-step-tab.done{color:var(--TX);border-bottom-color:rgba(26,23,20,.2);}
+.orc-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px;}
+.orc-type-card{
+  padding:20px 16px;border:1px solid rgba(26,23,20,.12);border-radius:var(--r-md,8px);
+  text-align:center;cursor:pointer;transition:all .3s;background:transparent;
+  font-family:inherit;
+}
+.orc-type-card:hover{border-color:var(--O);background:rgba(232,64,0,.04);}
+.orc-type-card.sel{border-color:var(--O);background:rgba(232,64,0,.08);color:var(--O);}
+.orc-type-card-icon{font-size:24px;margin-bottom:8px;}
+.orc-type-card-label{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;}
+.orc-nav-btns{display:flex;gap:12px;justify-content:space-between;margin-top:32px;}
+.orc-back{background:none;border:1px solid rgba(26,23,20,.15);color:var(--TX);padding:14px 28px;border-radius:var(--r-pill,999px);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all .3s;}
+.orc-back:hover{border-color:var(--O);color:var(--O);}
+.orc-next{background:var(--O);color:#fff;border:none;padding:14px 36px;border-radius:var(--r-pill,999px);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;cursor:pointer;transition:background .3s;}
+.orc-next:hover{background:var(--O2,#c43600);}
+.orc-success{text-align:center;padding:48px 0;display:none;}
+.orc-success.show{display:block;}
+.orc-success-icon{font-size:48px;margin-bottom:16px;}
+.orc-success h3{font-family:var(--serif);font-size:32px;font-weight:300;color:var(--INK);margin-bottom:12px;}
+.orc-success p{font-size:15px;color:var(--TX);line-height:1.7;}
+@media(max-width:600px){.orc-type-grid{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body>
 <div id="scrollProg"></div>
+
+<!-- LGPD -->
+<div id="lgpdBanner" role="dialog" aria-label="Aviso de privacidade">
+  <p class="lgpd-text">Este site utiliza dados de navegação para melhorar sua experiência e analisar o tráfego. Ao continuar, você concorda com nossa <a href="#" onclick="return false">Política de Privacidade</a> em conformidade com a LGPD (Lei 13.709/2018).</p>
+  <div class="lgpd-btns">
+    <button class="lgpd-skip" onclick="lgpdClose()">Apenas essenciais</button>
+    <button class="lgpd-ok" onclick="lgpdAccept()">Aceitar e continuar</button>
+  </div>
+</div>
+
 <a id="waFloat" href="https://wa.me/" class="wa-href" target="_blank" rel="noopener" aria-label="WhatsApp">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
@@ -2453,13 +2772,17 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   </a>
   <ul class="nav-links">
     <li><a href="#portSection">Portfólio</a></li>
-    <li><a href="#srv">Serviços</a></li>
+    <li><a href="#servicos">Serviços</a></li>
     <li><a href="#tourSection" id="navTour360" style="display:none">Tour 360°</a></li>
     <li><a href="#sobre">Sobre</a></li>
     <li><a href="#dep">Clientes</a></li>
   </ul>
   <a href="#orc" class="nav-cta">Orçamento</a>
-  <button id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  <button id="dmToggle" onclick="toggleDark()" aria-label="Alternar modo escuro" title="Modo escuro">
+  <svg class="dm-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  <svg class="dm-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="position:absolute"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+</button>
+<button id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 
 <!-- FULLSCREEN MENU -->
@@ -2467,7 +2790,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   <button id="fClose" onclick="toggleMenu()">✕</button>
   <ul class="fm-list">
     <li class="fm-item"><a href="#portSection" onclick="toggleMenu()">Portfólio</a></li>
-    <li class="fm-item"><a href="#srv" onclick="toggleMenu()">Serviços</a></li>
+    <li class="fm-item"><a href="#servicos" onclick="toggleMenu()">Serviços</a></li>
     <li class="fm-item" id="menuTour360" style="display:none"><a href="#tourSection" onclick="toggleMenu()">Tour 360°</a></li>
     <li class="fm-item"><a href="#sobre" onclick="toggleMenu()">Sobre</a></li>
     <li class="fm-item"><a href="#dep" onclick="toggleMenu()">Clientes</a></li>
@@ -2487,6 +2810,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   <div class="hero-depth-mid" id="heroDepthMid"></div>
   <canvas id="heroCanvas"></canvas>
   <div class="hero-content" id="heroContent">
+    <div id="socialCounter"><span id="scNum">47</span> pessoas visitaram hoje</div>
     <div class="hero-eyebrow">Estúdio de Visualização Arquitetônica</div>
     <h1 class="hero-title">
       <span class="line"><span id="hl1">Onde o</span></span>
@@ -2578,6 +2902,65 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
       <div class="proc-step-icon">Entrega</div>
       <div class="proc-step-title">Arquivo final</div>
       <p class="proc-step-desc">Alta resolução, formatos adaptados para uso em marketing, lançamento e comercialização.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVIÇOS ═══ -->
+<section id="servicos">
+  <div class="rv">
+    <div class="s-eye">O que fazemos</div>
+    <h2 class="s-title">Serviços para quem<br><em>não admite o ordinário.</em></h2>
+    <p class="s-sub" style="margin-top:16px">Cada entrega é concebida como peça editorial — com direção de arte, luz e narrativa visual pensadas para o seu público.</p>
+  </div>
+  <div class="srv-grid-new">
+    <div class="srv-card-new rv">
+      <div class="srv-card-num">01</div>
+      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+      <div class="srv-name">Renderização Exterior</div>
+      <p class="srv-desc">Fachadas, implantações e perspectivas externas com luz natural e atmosfera reais. Do térreo à vista aérea — cada ângulo composto para vender o empreendimento.</p>
+      <div class="srv-tags"><span class="srv-tag">V-Ray</span><span class="srv-tag">D5 Render</span><span class="srv-tag">3ds Max</span></div>
+      <div class="srv-prazo">Prazo: 7–15 dias</div>
+    </div>
+    <div class="srv-card-new rv rv-d1">
+      <div class="srv-card-num">02</div>
+      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="srv-name">Renderização Interior</div>
+      <p class="srv-desc">Ambientes que comunicam estilo de vida — não apenas especificação técnica. Iluminação artificial, materiais nobres e composição editorial para cada cômodo.</p>
+      <div class="srv-tags"><span class="srv-tag">V-Ray</span><span class="srv-tag">Lumion</span><span class="srv-tag">Pós-produção</span></div>
+      <div class="srv-prazo">Prazo: 5–12 dias</div>
+    </div>
+    <div class="srv-card-new rv rv-d2">
+      <div class="srv-card-num">03</div>
+      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <div class="srv-name">Vídeo 3D</div>
+      <p class="srv-desc">Animações cinematográficas para lançamentos e apresentações. Do walk-through interno ao flythrough aéreo — com trilha, voice-over e edição final incluídos.</p>
+      <div class="srv-tags"><span class="srv-tag">Animação</span><span class="srv-tag">Lumion</span><span class="srv-tag">After Effects</span></div>
+      <div class="srv-prazo">Prazo: 15–30 dias</div>
+    </div>
+    <div class="srv-card-new rv rv-d1">
+      <div class="srv-card-num">04</div>
+      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
+      <div class="srv-name">Tour Virtual 360°</div>
+      <p class="srv-desc">Experiência imersiva da edificação antes da construção. O cliente navega por todos os ambientes no celular, tablet ou óculos VR — sem sair do lugar.</p>
+      <div class="srv-tags"><span class="srv-tag">360°</span><span class="srv-tag">VR Ready</span><span class="srv-tag">Mobile</span></div>
+      <div class="srv-prazo">Prazo: 10–20 dias</div>
+    </div>
+    <div class="srv-card-new rv rv-d2">
+      <div class="srv-card-num">05</div>
+      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+      <div class="srv-name">Implantação Aérea</div>
+      <p class="srv-desc">Vista de drone simulada com contexto urbano real. Integração do empreendimento ao entorno existente — vizinhança, vias, verde e pontos de referência.</p>
+      <div class="srv-tags"><span class="srv-tag">Drone View</span><span class="srv-tag">GIS</span><span class="srv-tag">Contexto real</span></div>
+      <div class="srv-prazo">Prazo: 8–14 dias</div>
+    </div>
+    <div class="srv-card-new rv rv-d3">
+      <div class="srv-card-num">06</div>
+      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <div class="srv-name">Direção de Arte</div>
+      <p class="srv-desc">Para empreendimentos que exigem identidade visual completa: paleta de cor, moodboard editorial, guia de imagem e supervisão de toda a comunicação visual do lançamento.</p>
+      <div class="srv-tags"><span class="srv-tag">Editorial</span><span class="srv-tag">Branding</span><span class="srv-tag">Estratégia</span></div>
+      <div class="srv-prazo">Prazo: sob consulta</div>
     </div>
   </div>
 </section>
@@ -3041,14 +3424,14 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
       <span class="cl-item">Helbor</span>
       <span class="cl-item">EZTec</span>
       <!-- Segunda cópia para loop infinito -->
-      <span class="cl-item">Brookfield</span>
+      <span aria-hidden="true"><span class="cl-item">Brookfield</span>
       <span class="cl-item">MRV</span>
       <span class="cl-item">Tenda</span>
       <span class="cl-item">Cyrela</span>
       <span class="cl-item">Tegra</span>
       <span class="cl-item">Even</span>
       <span class="cl-item">Helbor</span>
-      <span class="cl-item">EZTec</span>
+      <span class="cl-item">EZTec</span></span>
     </div>
   </div>
 </div>
@@ -3061,7 +3444,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
     <p class="s-sub" style="margin-top:16px">Artigos sobre visualização, mercado imobiliário e o papel da imagem na venda de projetos.</p>
   </div>
   <div class="journal-grid">
-    <div class="journal-card rv" onclick="window.open('#','_blank')">
+    <div class="journal-card rv" role="button" tabindex="0" onclick="openArticle('render-vs-ia')" onkeydown="if(event.key==='Enter')openArticle('render-vs-ia')">
       <div class="journal-card-img" style="background-color:var(--BG3)">
         <span class="journal-card-cat">Mercado</span>
       </div>
@@ -3069,10 +3452,10 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <div class="journal-card-date">Maio 2025</div>
         <div class="journal-card-title">Render vs IA: quando contratar um estúdio?</div>
         <p class="journal-card-desc">Entenda por que projetos de alto padrão ainda exigem direção de arte humana — e como a IA pode auxiliar sem substituir.</p>
-        <span class="journal-card-link">Ler artigo →</span>
+        <span class="journal-card-link" style="cursor:pointer">Ler artigo →</span>
       </div>
     </div>
-    <div class="journal-card rv rv-d1" onclick="window.open('#','_blank')">
+    <div class="journal-card rv rv-d1" role="button" tabindex="0" onclick="openArticle('vray-lumion-d5')" onkeydown="if(event.key==='Enter')openArticle('vray-lumion-d5')">
       <div class="journal-card-img" style="background-color:var(--BG3)">
         <span class="journal-card-cat">Técnico</span>
       </div>
@@ -3080,10 +3463,10 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <div class="journal-card-date">Abril 2025</div>
         <div class="journal-card-title">V-Ray, Lumion ou D5? O guia definitivo</div>
         <p class="journal-card-desc">Comparativo técnico entre os três principais softwares de renderização arquitetônica: casos de uso, velocidade e qualidade final.</p>
-        <span class="journal-card-link">Ler artigo →</span>
+        <span class="journal-card-link" style="cursor:pointer">Ler artigo →</span>
       </div>
     </div>
-    <div class="journal-card rv rv-d2" onclick="window.open('#','_blank')">
+    <div class="journal-card rv rv-d2" role="button" tabindex="0" onclick="openArticle('render-vende')" onkeydown="if(event.key==='Enter')openArticle('render-vende')">
       <div class="journal-card-img" style="background-color:var(--BG3)">
         <span class="journal-card-cat">Negócios</span>
       </div>
@@ -3091,7 +3474,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <div class="journal-card-date">Março 2025</div>
         <div class="journal-card-title">Como o render vende antes da obra existir</div>
         <p class="journal-card-desc">Casos reais de empreendimentos que fecharam vendas no lançamento usando visualização fotorrealista como principal ferramenta de marketing.</p>
-        <span class="journal-card-link">Ler artigo →</span>
+        <span class="journal-card-link" style="cursor:pointer">Ler artigo →</span>
       </div>
     </div>
   </div>
@@ -3115,29 +3498,29 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <div class="sim-step-label">Pergunta 1 de 3</div>
         <div class="sim-step-q">Qual tipo de projeto?</div>
         <div class="sim-opts">
-          <div class="sim-opt" onclick="simPick(1,'Residencial unifamiliar')">Residencial</div>
-          <div class="sim-opt" onclick="simPick(1,'Empreendimento vertical')">Vertical / Empreendimento</div>
-          <div class="sim-opt" onclick="simPick(1,'Interior / Área comum')">Interiores</div>
-          <div class="sim-opt" onclick="simPick(1,'Comercial / Corporativo')">Comercial</div>
+          <button class="sim-opt" onclick="simPick(1,'Residencial unifamiliar')">Residencial</button>
+          <button class="sim-opt" onclick="simPick(1,'Empreendimento vertical')">Vertical / Empreendimento</button>
+          <button class="sim-opt" onclick="simPick(1,'Interior / Área comum')">Interiores</button>
+          <button class="sim-opt" onclick="simPick(1,'Comercial / Corporativo')">Comercial</button>
         </div>
       </div>
       <div class="sim-step" id="sstep2">
         <div class="sim-step-label">Pergunta 2 de 3</div>
         <div class="sim-step-q">Quantas imagens finais?</div>
         <div class="sim-opts">
-          <div class="sim-opt" onclick="simPick(2,'1 a 3 imagens')">1 – 3 imagens</div>
-          <div class="sim-opt" onclick="simPick(2,'4 a 8 imagens')">4 – 8 imagens</div>
-          <div class="sim-opt" onclick="simPick(2,'9 ou mais imagens')">9+ imagens</div>
-          <div class="sim-opt" onclick="simPick(2,'Vídeo ou Tour 360°')">Vídeo / Tour 360°</div>
+          <button class="sim-opt" onclick="simPick(2,'1 a 3 imagens')">1 – 3 imagens</button>
+          <button class="sim-opt" onclick="simPick(2,'4 a 8 imagens')">4 – 8 imagens</button>
+          <button class="sim-opt" onclick="simPick(2,'9 ou mais imagens')">9+ imagens</button>
+          <button class="sim-opt" onclick="simPick(2,'Vídeo ou Tour 360°')">Vídeo / Tour 360°</button>
         </div>
       </div>
       <div class="sim-step" id="sstep3">
         <div class="sim-step-label">Pergunta 3 de 3</div>
         <div class="sim-step-q">Qual a urgência?</div>
         <div class="sim-opts">
-          <div class="sim-opt" onclick="simPick(3,'Sem urgência — até 30 dias')">Sem urgência (30+ dias)</div>
-          <div class="sim-opt" onclick="simPick(3,'Médio prazo — 15 dias')">Médio prazo (15 dias)</div>
-          <div class="sim-opt" onclick="simPick(3,'Urgente — menos de 10 dias')">Urgente (menos de 10 dias)</div>
+          <button class="sim-opt" onclick="simPick(3,'Sem urgência — até 30 dias')">Sem urgência (30+ dias)</button>
+          <button class="sim-opt" onclick="simPick(3,'Médio prazo — 15 dias')">Médio prazo (15 dias)</button>
+          <button class="sim-opt" onclick="simPick(3,'Urgente — menos de 10 dias')">Urgente (menos de 10 dias)</button>
         </div>
       </div>
     </div>
@@ -3292,15 +3675,26 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
     </div>
   </div>
   <div class="foot-bottom">
-    <p class="foot-copy">© 2025 Vértice 3D. Todos os direitos reservados.</p>
+    <p class="foot-copy">© <span id="footYear">2025</span> Vértice 3D. Todos os direitos reservados.</p>
     <div class="foot-social">
       <a href="#" class="soc-btn soc-ig" target="_blank" rel="noopener">ig</a>
       <a href="#" class="soc-btn">in</a>
       <a href="#" class="soc-btn soc-yt" target="_blank" rel="noopener">yt</a>
     </div>
   </div>
+  <div class="nl-wrap rv">
+    <div class="nl-text">
+      <h4>Projetos em primeira mão</h4>
+      <p>Receba inspirações e cases antes de todo mundo — sem spam.</p>
+    </div>
+    <form class="nl-form" onsubmit="nlSubmit(event)">
+      <input class="nl-input" type="email" id="nlEmail" placeholder="seu@email.com" required autocomplete="email" inputmode="email" style="font-size:16px"/>
+      <button class="nl-btn" type="submit">Inscrever</button>
+      <span class="nl-ok" id="nlOk">✓ Inscrito com sucesso!</span>
+    </form>
+  </div>
   <div class="foot-extra">
-    <p class="foot-extra-line">© 2025 Vértice 3D — Narrativas visuais para arquitetura contemporânea</p>
+    <p class="foot-extra-line">© <span class="footYear2">2025</span> Vértice 3D — Narrativas visuais para arquitetura contemporânea</p>
     <p class="foot-extra-line">Seg–Sex 09h–18h | Sob agendamento</p>
     <p class="foot-extra-line"><span id="fCNPJ"></span></p>
   </div>
@@ -3389,6 +3783,10 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
           <button class="adm-dash-link" onclick="swTab('leads')">Leads</button>
           <button class="adm-dash-link" onclick="swTab('tour')">Tour 360°</button>
           <button class="adm-dash-link" onclick="swTab('extras')">Extras</button>
+          <button class="adm-dash-link" onclick="swTab('processo')">Processo</button>
+          <button class="adm-dash-link" onclick="swTab('clientes')">Clientes</button>
+          <button class="adm-dash-link" onclick="swTab('simulador')">Preços</button>
+          <button class="adm-dash-link" onclick="swTab('journal')">Journal</button>
         </div>
         <button class="adm-dash-enter" onclick="document.getElementById('admDash').style.display='none'">Entrar no admin →</button>
       </div>
@@ -3403,6 +3801,10 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <button class="adm-tab" onclick="swTab('leads')">Leads</button>
         <button class="adm-tab" onclick="swTab('tour')">Tour 360°</button>
         <button class="adm-tab" onclick="swTab('extras')">Extras</button>
+        <button class="adm-tab" onclick="swTab('processo')">Processo</button>
+        <button class="adm-tab" onclick="swTab('clientes')">Clientes</button>
+        <button class="adm-tab" onclick="swTab('simulador')">Preços</button>
+        <button class="adm-tab" onclick="swTab('journal')">Journal</button>
         <a href="https://gersonleao2490.github.io/v-rtice-3d/" target="_blank" class="adm-preview-link">↗ Ver site</a>
       </div>
 
@@ -3540,7 +3942,12 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <div class="adm-sec-title">Adicionar Depoimento</div>
         <div class="adm-grid">
           <div class="adm-f"><label>Nome completo</label><input id="dNome" placeholder="João Silva"/></div>
-          <div class="adm-f"><label>Empresa / Cargo</label><input id="dEmp" placeholder="Construtora XYZ — Diretor"/></div>
+          <div class="adm-f"><label>Empresa</label><input id="dEmp" placeholder="Construtora XYZ"/></div>
+          <div class="adm-f"><label>Cargo / Função</label><input id="dCargo" placeholder="ex: Diretor de incorporação"/></div>
+          <div class="adm-f"><label>Foto (URL ou upload)</label>
+            <input id="dFotoUrl" placeholder="URL da foto do cliente"/>
+            <input type="file" accept="image/*" onchange="uploadMedia(this,'depFoto')" style="margin-top:6px"/>
+          </div>
           <div class="adm-f" style="grid-column:span 2"><label>Depoimento (texto completo)</label><textarea id="dTxt" placeholder="Texto do depoimento..."></textarea></div>
         </div>
         <button class="adm-save" onclick="addDep()">+ Adicionar Depoimento</button>
@@ -3656,6 +4063,56 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
           </div>
         </div>
         <div class="adm-msg" id="mExtras"></div>
+      </div>
+
+      <!-- ═══ PROCESSO ═══ -->
+      <div id="tab-processo" class="adm-sec" style="display:none">
+        <p class="adm-info">Edite os 4 passos do processo de trabalho exibidos no site.</p>
+        <div id="processoList">
+          <div class="adm-f"><label>Passo 1 — Título</label><input id="proc1t" value="Entendemos o projeto"/></div>
+          <div class="adm-f"><label>Passo 1 — Descrição</label><textarea id="proc1d" rows="2">Análise de plantas, referências visuais e intenção de comunicação do empreendimento.</textarea></div>
+          <div class="adm-f"><label>Passo 2 — Título</label><input id="proc2t" value="Construímos em 3D"/></div>
+          <div class="adm-f"><label>Passo 2 — Descrição</label><textarea id="proc2d" rows="2">Modelagem tridimensional precisa com materiais, luz e escala reais do projeto.</textarea></div>
+          <div class="adm-f"><label>Passo 3 — Título</label><input id="proc3t" value="Render fotorrealista"/></div>
+          <div class="adm-f"><label>Passo 3 — Descrição</label><textarea id="proc3d" rows="2">Processamento com V-Ray, Lumion ou D5 Render — iluminação natural e atmosfera precisas.</textarea></div>
+          <div class="adm-f"><label>Passo 4 — Título</label><input id="proc4t" value="Arquivo final"/></div>
+          <div class="adm-f"><label>Passo 4 — Descrição</label><textarea id="proc4d" rows="2">Alta resolução, formatos adaptados para uso em marketing, lançamento e comercialização.</textarea></div>
+        </div>
+        <button class="adm-save" onclick="saveProcesso()">Salvar Processo</button>
+        <div id="mProcesso"></div>
+      </div>
+
+      <!-- ═══ CLIENTES ═══ -->
+      <div id="tab-clientes" class="adm-sec" style="display:none">
+        <p class="adm-info">Gerencie os nomes de clientes/construtoras exibidos no carrossel.</p>
+        <div class="adm-f"><label>Nomes dos clientes (um por linha)</label>
+          <textarea id="clientesText" rows="10" placeholder="Brookfield&#10;MRV&#10;Cyrela&#10;Tegra&#10;Even"></textarea>
+        </div>
+        <button class="adm-save" onclick="saveClientes()">Salvar Clientes</button>
+        <div id="mClientes"></div>
+      </div>
+
+      <!-- ═══ SIMULADOR / PREÇOS ═══ -->
+      <div id="tab-simulador" class="adm-sec" style="display:none">
+        <p class="adm-info">Edite as faixas de preço do simulador de orçamento.</p>
+        <div class="adm-f"><label>Residencial — 1 a 3 imagens</label><input id="sp_res_1" value="R$ 1.800 – R$ 3.200"/></div>
+        <div class="adm-f"><label>Residencial — 4 a 8 imagens</label><input id="sp_res_2" value="R$ 4.000 – R$ 7.500"/></div>
+        <div class="adm-f"><label>Residencial — 9+ imagens</label><input id="sp_res_3" value="R$ 8.000 – R$ 14.000"/></div>
+        <div class="adm-f"><label>Residencial — Vídeo / Tour</label><input id="sp_res_v" value="R$ 6.000 – R$ 18.000"/></div>
+        <div class="adm-f"><label>Empreendimento — 1 a 3 imagens</label><input id="sp_emp_1" value="R$ 3.500 – R$ 7.000"/></div>
+        <div class="adm-f"><label>Empreendimento — 4 a 8 imagens</label><input id="sp_emp_2" value="R$ 7.000 – R$ 15.000"/></div>
+        <div class="adm-f"><label>Empreendimento — 9+ imagens</label><input id="sp_emp_3" value="R$ 14.000 – R$ 28.000"/></div>
+        <div class="adm-f"><label>Empreendimento — Vídeo / Tour</label><input id="sp_emp_v" value="R$ 12.000 – R$ 35.000"/></div>
+        <button class="adm-save" onclick="saveSimPrices()">Salvar Preços</button>
+        <div id="mSimulador"></div>
+      </div>
+
+      <!-- ═══ JOURNAL ═══ -->
+      <div id="tab-journal" class="adm-sec" style="display:none">
+        <p class="adm-info">Os 3 artigos do Journal são gerenciados aqui. Edite os textos diretamente no código por enquanto — esta aba está em desenvolvimento.</p>
+        <div style="background:rgba(232,64,0,.06);border:1px solid rgba(232,64,0,.15);border-radius:12px;padding:20px;">
+          <p style="font-size:13px;color:var(--TX);line-height:1.6;">Os artigos completos estão incorporados no site e podem ser editados diretamente no código. Em breve, gestão completa por aqui com upload de imagem de capa, edição de conteúdo e publicação/rascunho.</p>
+        </div>
       </div>
 
     </div><!-- /admContent -->
@@ -4321,7 +4778,19 @@ function startDepAuto(n){
   document.getElementById('depoTrack').addEventListener('mouseleave',()=>startDepAuto(n));
 }
 function buildDepoCard(item){
-  return `<div class="dep-card"><div class="dep-q">"</div><p class="dep-txt">${item.texto}</p><div class="dep-author"><div class="dep-av">${(item.nome||'?')[0]}</div><div><span class="dep-nm">${item.nome}</span><span class="dep-co">${item.empresa}</span></div></div></div>`;
+  return `<div class="dep-card">
+  <div class="dep-q">"</div>
+  <p class="dep-txt">${item.texto||''}</p>
+  <div class="dep-author">
+    <div class="dep-avatar" style="${item.fotoUrl?'background-image:url('+item.fotoUrl+')':''}">
+      ${!item.fotoUrl?'<span>'+(item.nome||'?')[0].toUpperCase()+'</span>':''}
+    </div>
+    <div class="dep-author-info">
+      <div class="dep-name">${item.nome||''}</div>
+      <div class="dep-company">${item.empresa||''}${item.cargo?' · '+item.cargo:''}</div>
+    </div>
+  </div>
+</div>`;
 }
 
 /* ════════════════════════════════════════════════
@@ -4535,7 +5004,7 @@ function buildHCard(item,idx){
   var media;
   var cover=item.imagem||((item.galeria&&item.galeria[0])||'');
   if(cover){
-    media=`<img class="hCard-img" src="${cover}" alt="${item.nome}" loading="lazy"/>`;
+    media=`<img class="hCard-img" src="${cover}" alt="${item.nome||'Projeto Vértice 3D'}" loading="lazy"/>`;
   } else if(v){
     media=`<video class="hCard-img" src="${v}" muted loop playsinline autoplay style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>`;
   } else {
@@ -4553,7 +5022,7 @@ function buildGCard(item,idx){
   var media;
   var cover=item.imagem||((item.galeria&&item.galeria[0])||'');
   if(cover){
-    media=`<img src="${cover}" alt="${item.nome}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`;
+    media=`<img src="${cover}" alt="${item.nome||'Projeto Vértice 3D'}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`;
   } else if(v){
     media=`<video src="${v}" muted loop playsinline autoplay style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"></video>`;
   } else {
@@ -4722,11 +5191,11 @@ async function checkAdmPass(){
 }
 
 function swTab(t){
-  const ts=['hero','sobre','port','dep','stats','contato','leads','tour','extras'];
+  const ts=['hero','sobre','port','dep','stats','contato','leads','tour','extras','processo','clientes','simulador','journal'];
   document.querySelectorAll('.adm-tab').forEach((el,i)=>el.classList.toggle('on',ts[i]===t));
-  document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.adm-sec').forEach(s=>{s.classList.remove('on');s.style.display='none';});
   var sec=document.getElementById('tab-'+t);
-  if(sec)sec.classList.add('on');
+  if(sec){sec.classList.add('on');sec.style.display='';}
   if(t==='leads')loadLeads();
   if(t==='port')loadAdmPort();
   if(t==='dep')loadAdmDep();
@@ -4736,6 +5205,9 @@ function swTab(t){
   if(t==='contato')loadAdmContato();
   if(t==='stats')loadAdmStats();
   if(t==='extras')loadAdmExtras();
+  if(t==='processo')loadAdmProcesso();
+  if(t==='clientes')loadAdmClientes();
+  if(t==='simulador')loadAdmSimulador();
 }
 
 async function saveHero(){
@@ -5092,6 +5564,7 @@ async function uploadMedia(input, key){
     lupaImg:{zone:'lupaAdmZone',prev:'lupaAdmPrev',lbl:'lupaAdmLbl',info:'lupaAdmInfo'},
     adBefore:{zone:'adBeforeZone',prev:'adBeforePrev',lbl:'adBeforeLbl',info:'adBeforeInfo'},
     adAfter:{zone:'adAfterZone',prev:'adAfterPrev',lbl:'adAfterLbl',info:'adAfterInfo'},
+    depFoto:{zone:'',prev:'',lbl:'',info:''},
   };
   var ids=maps[key]||{};
   var lblEl=document.getElementById(ids.lbl);
@@ -5156,6 +5629,12 @@ async function uploadMedia(input, key){
     }
     if(key==='adBefore'){var ab=document.querySelector('.ad-before');if(ab){ab.style.backgroundImage='url('+url+')';ab.style.backgroundSize='cover';ab.style.backgroundPosition='center';}}
     if(key==='adAfter'){var aa=document.getElementById('adAfter');if(aa){aa.style.backgroundImage='url('+url+')';aa.style.backgroundSize='cover';aa.style.backgroundPosition='center';}}
+    if(key==='depFoto'){
+      var fotoInput=document.getElementById('dFotoUrl');
+      if(fotoInput)fotoInput.value=url;
+      // Don't save to site config — URL is used in addDep() submission
+      return;
+    }
   }catch(e){
     if(lblEl){lblEl.style.color='#f44';lblEl.textContent='Erro: '+e.message;}
   }
@@ -5508,12 +5987,17 @@ async function addDep(){
   try{
     const {db,collection,addDoc}=window._FB;
     await addDoc(collection(db,'depoimentos'),{
-      nome,empresa:document.getElementById('dEmp').value,
+      nome,
+      empresa:document.getElementById('dEmp').value,
+      cargo:document.getElementById('dCargo').value||'',
+      fotoUrl:document.getElementById('dFotoUrl').value||'',
       texto:document.getElementById('dTxt').value,
     });
     showMsg('mDep','✓ Adicionado!');
     document.getElementById('dNome').value='';
     document.getElementById('dEmp').value='';
+    document.getElementById('dCargo').value='';
+    document.getElementById('dFotoUrl').value='';
     document.getElementById('dTxt').value='';
     loadAdmDep();if(window._loadDepoimentos)window._loadDepoimentos();
   }catch(e){showMsg('mDep','Erro: '+e.message,'#f44')}
@@ -5576,8 +6060,13 @@ function initVisitorCounter(){
   else{data.today=(data.today||0)+1;}
   localStorage.setItem(key,JSON.stringify(data));
   window._visitData=data;
+  var sc=document.getElementById('scNum');
+  if(sc)sc.textContent=data.today||1;
 }
 initVisitorCounter();
+
+/* ── Footer year ────────────────────────────────── */
+(function(){var fy=document.getElementById('footYear');if(fy)fy.textContent=new Date().getFullYear();document.querySelectorAll('.footYear2').forEach(function(el){el.textContent=new Date().getFullYear();});})();
 
 /* ── Simulador de orçamento ─────────────────────── */
 var _simAnswers={};
@@ -5589,6 +6078,9 @@ var _simRanges={
 };
 var _urgMulti={'Sem urgência — até 30 dias':1,'Médio prazo — 15 dias':1.15,'Urgente — menos de 10 dias':1.3};
 function simPick(step,val){
+  document.querySelectorAll('#sstep'+step+' .sim-opt').forEach(function(o){o.classList.remove('sel');});
+  var clicked=event&&event.currentTarget;
+  if(clicked)clicked.classList.add('sel');
   _simAnswers[step]=val;
   if(step<3){
     document.getElementById('sstep'+step).classList.remove('active');
@@ -5805,6 +6297,335 @@ async function togglePortAtivo(id,checked){
     if(window._loadPortfolio)window._loadPortfolio();
   }catch(e){console.warn('togglePortAtivo:',e.message);}
 }
+
+/* ── LGPD ─────────────────────────────────────── */
+function lgpdInit(){
+  if(localStorage.getItem('lgpd_ok'))return;
+  setTimeout(function(){
+    var b=document.getElementById('lgpdBanner');
+    if(b)b.classList.add('show');
+  },2500);
+}
+function lgpdAccept(){localStorage.setItem('lgpd_ok','all');lgpdClose();}
+function lgpdClose(){
+  var b=document.getElementById('lgpdBanner');
+  if(b){b.classList.remove('show');setTimeout(function(){b.style.display='none';},500);}
+  if(!localStorage.getItem('lgpd_ok'))localStorage.setItem('lgpd_ok','essential');
+}
+lgpdInit();
+
+/* ── Dark Mode ─────────────────────────────────── */
+function toggleDark(){
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem('dm',document.body.classList.contains('dark-mode')?'1':'0');
+}
+(function(){if(localStorage.getItem('dm')==='1')document.body.classList.add('dark-mode');})();
+
+/* ── Social Counter ────────────────────────────── */
+(function(){
+  var sc=document.getElementById('scNum');
+  if(sc&&window._visitData)sc.textContent=window._visitData.today||1;
+})();
+
+/* ── Article Reader ──────────────────────────── */
+var _articles=[
+  {
+    id:'render-vs-ia',
+    title:'Render vs IA: quando contratar um estúdio?',
+    cat:'Mercado',
+    date:'Maio 2025',
+    read:'8 min de leitura',
+    heroBg:'linear-gradient(135deg,#1a1200 0%,#2d1e00 50%,#1a0a00 100%)',
+    lead:'A inteligência artificial prometeu revolucionar a criação de imagens arquitetônicas. Em parte, cumpriu. Mas o que ela não consegue substituir — e talvez nunca consiga — é a direção de arte humana.',
+    body:`
+      <h2>O que a IA faz muito bem</h2>
+      <p>Ferramentas como Midjourney, Stable Diffusion e as verticalizações específicas para arquitetura — como o Veras da Enscape — transformaram o processo de ideação. Um arquiteto consegue gerar dezenas de variações de fachada em minutos, explorar paletas cromáticas e testar proporções sem abrir o 3ds Max.</p>
+      <p>Para <strong>estudos preliminares</strong> e comunicação interna entre equipes de projeto, a IA virou aliada indispensável. O tempo de iteração caiu dramaticamente.</p>
+      <div class="art-pull"><p>"IA é uma ferramenta de ideação extraordinária. Mas quando o projeto precisa vender antes da obra existir, a margem para imprecisão é zero."</p></div>
+      <h2>Onde a IA ainda falha — e muito</h2>
+      <p>O problema começa quando saímos do conceito e entramos no <strong>material de vendas definitivo</strong>. Construtoras que usaram imagens geradas por IA em lançamentos relatam problemas recorrentes:</p>
+      <p><strong>Proporções incorretas.</strong> A IA não lê plantas. Ela infere. Uma varanda que na planta tem 2,40m pode aparecer com 6m na imagem — um erro que promessas de marketing não podem sustentar.</p>
+      <p><strong>Materiais genéricos.</strong> O revestimento especificado pelo arquiteto tem textura, brilho e comportamento de luz específicos. A IA usa "mármore" como conceito, não como o Calacatta Gold 60x120 que o projeto especificou.</p>
+      <p><strong>Ausência de norte solar.</strong> Uma boa imagem fotorrealista respeita a orientação do terreno. A luz do fim de tarde no oeste é diferente da luz da manhã no leste. Isso muda completamente o mood do ambiente — e a IA não tem essa informação.</p>
+      <h2>O caso real: Torre Edifício Leblon Park</h2>
+      <p>Em 2024, uma incorporadora do eixo Rio-SP testou usar apenas imagens geradas por IA em um lançamento de médio-alto padrão. O resultado foi decepcionante: compradores compararam as imagens do material impresso com renders gerados no próprio celular via aplicativo e perceberam a inconsistência. O estande registrou 40% menos interesse na semana de lançamento comparado à média histórica da incorporadora.</p>
+      <p>O projeto foi relançado dois meses depois com renders produzidos por um estúdio especializado. A velocidade de vendas voltou ao padrão.</p>
+      <h3>Quando usar IA, quando contratar um estúdio</h3>
+      <p><strong>Use IA quando:</strong> você está em fase de estudo, apresentando conceito para o cliente, explorando variações sem custo de produção, ou gerando material para redes sociais de baixo impacto.</p>
+      <p><strong>Contrate um estúdio quando:</strong> o material vai para lançamento, para material impresso de alto padrão, para investidores, para aprovações de financiamento ou para qualquer contexto onde imprecisão tem custo real.</p>
+      <div class="art-cta-box">
+        <h3>Seu próximo projeto merece precisão</h3>
+        <p>Converse com a Vértice 3D sobre renders que vendem — sem margem para interpretação.</p>
+        <a class="btn-O wa-href" href="#" target="_blank" rel="noopener" style="display:inline-flex"><span>Solicitar proposta</span></a>
+      </div>
+    `
+  },
+  {
+    id:'vray-lumion-d5',
+    title:'V-Ray, Lumion ou D5? O guia definitivo',
+    cat:'Técnico',
+    date:'Abril 2025',
+    read:'11 min de leitura',
+    heroBg:'linear-gradient(135deg,#001a10 0%,#002d1a 50%,#001008 100%)',
+    lead:'Três softwares dominam o mercado de renderização arquitetônica no Brasil. Cada um tem um perfil de projeto, um tipo de cliente e um resultado visual distinto. Este é o guia que nenhum estúdio escreve porque expõe suas preferências.',
+    body:`
+      <h2>V-Ray: o padrão ouro da fotorrealidade</h2>
+      <p>O V-Ray, desenvolvido pela Chaos Group, é o motor de renderização mais utilizado em produção de alto padrão no mundo. Integra com 3ds Max, SketchUp, Rhino e Cinema 4D. É o favorito de estúdios como MIR (Noruega) e Brick Visual (Hungria) — referências absolutas do setor.</p>
+      <p><strong>Por que o V-Ray é tão preciso?</strong> Ele simula o comportamento físico da luz com fidelidade matemática. A forma como a luz atravessa um vidro temperado, como o HDRI do ambiente afeta a leitura dos materiais, como o subsurface scattering funciona em pedras — tudo isso é calculado, não aproximado.</p>
+      <div class="art-pull"><p>"V-Ray não é mais rápido — é mais verdadeiro. Para projetos onde cada detalhe material importa, não existe alternativa."</p></div>
+      <p><strong>Contra:</strong> curva de aprendizado longa. Tempo de render elevado sem infraestrutura de GPU adequada. Uma imagem full HD bem configurada pode levar de 2 a 8 horas em hardware médio.</p>
+      <p><strong>Melhor para:</strong> renders exteriores de alto padrão, interiores com materiais nobres (mármore, madeira tratada, metais), projetos para publicação editorial, empreendimentos de luxo.</p>
+      <h2>Lumion: velocidade com qualidade real-time</h2>
+      <p>O Lumion mudou o mercado ao trazer renderização em tempo real para arquitetos sem background em 3D. Sua biblioteca de objetos, vegetação e efeitos atmosféricos é imbatível — e a curva de aprendizado é radicalmente menor que o V-Ray.</p>
+      <p><strong>O Lumion brilha</strong> em projetos com muita vegetação, ambientes externos com luz natural dramática e apresentações de múltiplas vistas em pouco tempo. Uma animação de walk-through que levaria semanas em V-Ray fica pronta em dias no Lumion.</p>
+      <p><strong>Contra:</strong> materiais muito próximos da câmera perdem realismo. Interiores com iluminação artificial complexa — luminárias de design, luz indireta em sanca — ficam aquém do V-Ray. A "assinatura visual" do Lumion é reconhecível por profissionais experientes.</p>
+      <p><strong>Melhor para:</strong> projetos com prazo apertado, apresentações de conceito, empreendimentos com muito paisagismo, projetos residenciais de médio padrão, vídeos de apresentação.</p>
+      <h2>D5 Render: o novo equilibrista</h2>
+      <p>O D5 Render é o mais novo dos três e propõe justamente ocupar o espaço entre o Lumion (velocidade) e o V-Ray (qualidade). Com renderização por ray tracing em tempo real via GPU NVIDIA RTX, entrega resultados que até 2020 exigiam horas de processamento.</p>
+      <p>Na Vértice 3D, o D5 virou a ferramenta preferida para revisões intermediárias — conseguimos mostrar ao cliente como ficará o projeto com ajustes rápidos de luz, material e câmera em tempo real, antes de partir para o render final em V-Ray.</p>
+      <div class="art-pull"><p>"O D5 democratizou o ray tracing em tempo real. Para um estúdio que precisa de agilidade sem abrir mão de qualidade, ele é hoje insubstituível no processo."</p></div>
+      <p><strong>Contra:</strong> exige hardware robusto (GPU RTX de alta performance). Menos controle fino sobre shaders específicos comparado ao V-Ray. Biblioteca de materiais ainda menor que o Lumion.</p>
+      <p><strong>Melhor para:</strong> projetos que precisam de revisões rápidas com qualidade alta, apresentações interativas ao vivo, animações de médio padrão, interiores contemporâneos com materiais limpos.</p>
+      <h2>O que usamos na Vértice 3D — e por quê</h2>
+      <p>Não somos exclusivistas. Cada projeto tem uma ferramenta ideal. Nossa pipeline padrão usa <strong>3ds Max para modelagem</strong>, <strong>D5 Render para iterações com o cliente</strong> e <strong>V-Ray para o render final de entrega</strong>. Para projetos com muito paisagismo ou urgência, o Lumion entra no lugar do D5.</p>
+      <div class="art-cta-box">
+        <h3>Qual software é certo para o seu projeto?</h3>
+        <p>Conte sobre seu projeto e definimos juntos a abordagem técnica mais adequada.</p>
+        <a class="btn-O wa-href" href="#" target="_blank" rel="noopener" style="display:inline-flex"><span>Falar com a equipe</span></a>
+      </div>
+    `
+  },
+  {
+    id:'render-vende',
+    title:'Como o render vende antes da obra existir',
+    cat:'Negócios',
+    date:'Março 2025',
+    read:'9 min de leitura',
+    heroBg:'linear-gradient(135deg,#0a0010 0%,#1a0030 50%,#0a0018 100%)',
+    lead:'Vender um apartamento que não existe parece um exercício de fé. Mas para as incorporadoras que dominam o mercado de lançamentos, é uma ciência — e o render fotorrealista é o principal instrumento dessa ciência.',
+    body:`
+      <h2>O problema fundamental dos lançamentos imobiliários</h2>
+      <p>Quando uma incorporadora lança um empreendimento, ela vende uma promessa. O terreno pode ainda ser um estacionamento. O prédio existe apenas em AutoCAD. O comprador precisa imaginar — e a maioria das pessoas não consegue transformar uma planta baixa em experiência espacial.</p>
+      <p>É aqui que o render entra. Não como decoração do material de vendas, mas como <strong>ferramenta de antecipação de valor</strong>. O cliente que vê um render fotorrealista de alta qualidade não está comprando um apartamento — está comprando a confirmação visual de que o apartamento vai corresponder ao que ele imaginou.</p>
+      <div class="art-pull"><p>"O render não é um custo de marketing. É o primeiro produto que o comprador experimenta. Se ele falhar, o projeto falha — independentemente de quantas visitas ao stand."</p></div>
+      <h2>Caso 1: Empreendimento Residencial em Campinas</h2>
+      <p>Em 2023, uma incorporadora de médio porte do interior de São Paulo enfrentava dificuldades para lançar um empreendimento vertical de 120 unidades em um bairro em expansão — mas sem histórico de lançamentos premium na região.</p>
+      <p>A decisão foi investir em renders de altíssima qualidade: <strong>12 imagens externas e de áreas comuns</strong>, um <strong>tour virtual 360°</strong> da cobertura e uma <strong>animação de 2 minutos</strong> mostrando o percurso desde a entrada do condomínio até a varanda do apartamento tipo.</p>
+      <p>Resultado: <strong>67% das unidades vendidas na primeira semana de lançamento</strong>. A velocidade de vendas superou todos os empreendimentos anteriores da incorporadora. O corretor-chefe relatou que os clientes chegavam ao stand com o vídeo já assistido no celular — a visita era de confirmação, não de convencimento.</p>
+      <h2>Caso 2: Escritório comercial em São Paulo</h2>
+      <p>Escritórios corporativos têm um comprador diferente — mais racional, mais focado em números. Custo por m², potencial de locação, valor de revenda. Convencê-lo por imagem parece menos óbvio.</p>
+      <p>Uma desenvolvedora de lajes comerciais em Pinheiros (SP) decidiu testar: lançou uma torre com material visual básico (maquete física e renders simples) e outra, de especificação similar, com renders cinematográficos focados no <strong>ambiente de trabalho</strong> — não na arquitetura, mas em como seria trabalhar naquele espaço.</p>
+      <p>A torre com renders cinematográficos vendeu <strong>40% mais rápido</strong> e atingiu um ticket médio por m² <strong>8% superior</strong>. O insight: mesmo compradores racionais tomam decisões emocionais quando confrontados com imagens que antecipam o benefício real — não apenas a estrutura.</p>
+      <h2>O que faz um render "vender" de verdade</h2>
+      <p><strong>1. Luz coerente com o norte solar.</strong> O comprador vai visitar o apartamento. Se a luz na imagem não corresponde à realidade, ele sai desconfiante — mesmo que inconscientemente.</p>
+      <p><strong>2. Móveis e pessoas com escala real.</strong> Nada destrói a percepção de espaço mais rápido que móveis que parecem de boneca ou ausência de figuras humanas. A presença de pessoas no render humaniza o espaço e dá referência de escala imediata.</p>
+      <p><strong>3. Narrativa, não apenas arquitetura.</strong> Os melhores renders contam uma história: quem mora aqui, que tipo de vida é possível nesse espaço, que sensação o ambiente transmite. Isso é direção de arte — não software.</p>
+      <p><strong>4. Consistência entre peças.</strong> Um render extraordinário de fachada acompanhado de renders de interiores medíocres comunica inconsistência — o comprador inconscientemente suspeita que algo está sendo escondido.</p>
+      <div class="art-cta-box">
+        <h3>Seu lançamento merece renders que vendem</h3>
+        <p>Desenvolvemos a estratégia visual completa do seu empreendimento — do briefing à entrega final.</p>
+        <a class="btn-O wa-href" href="#" target="_blank" rel="noopener" style="display:inline-flex"><span>Solicitar proposta</span></a>
+      </div>
+    `
+  }
+];
+
+function openArticle(id){
+  var art=_articles.find(function(a){return a.id===id;});
+  if(!art)return;
+  var modal=document.getElementById('articleModal');
+  if(!modal)return;
+  document.getElementById('artHeaderCat').textContent=art.cat;
+  document.getElementById('artTitle').textContent=art.title;
+  document.getElementById('artEyebrow').textContent='Vértice 3D — '+art.cat;
+  document.getElementById('artDate').textContent=art.date;
+  document.getElementById('artReadTime').textContent=art.read;
+  document.getElementById('artHero').style.background=art.heroBg;
+  document.getElementById('artBody').innerHTML='<p class="art-lead">'+art.lead+'</p>'+art.body;
+  modal.style.display='flex';
+  requestAnimationFrame(function(){requestAnimationFrame(function(){modal.classList.add('open');});});
+  document.body.style.overflow='hidden';
+  modal.scrollTop=0;
+}
+function closeArticle(){
+  var modal=document.getElementById('articleModal');
+  if(!modal)return;
+  modal.classList.remove('open');
+  setTimeout(function(){modal.style.display='none';},500);
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    var am=document.getElementById('articleModal');
+    if(am&&am.classList.contains('open'))closeArticle();
+  }
+});
+
+/* ── Exit Intent ──────────────────────────────── */
+var _exitShown=false;
+function exitClose(){
+  var p=document.getElementById('exitPopup');
+  if(p){p.classList.remove('show');setTimeout(function(){p.style.display='none';},400);}
+  sessionStorage.setItem('exit_shown','1');
+}
+document.addEventListener('mouseleave',function(e){
+  if(e.clientY<=0&&!_exitShown&&!sessionStorage.getItem('exit_shown')){
+    _exitShown=true;
+    var p=document.getElementById('exitPopup');
+    if(p){p.style.display='flex';requestAnimationFrame(function(){p.classList.add('show');});}
+  }
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')exitClose();});
+
+/* ── Admin: Processo ────────────────────────── */
+async function saveProcesso(){
+  try{
+    var {db,doc,setDoc}=window._FB;
+    var d={
+      proc1t:document.getElementById('proc1t').value,proc1d:document.getElementById('proc1d').value,
+      proc2t:document.getElementById('proc2t').value,proc2d:document.getElementById('proc2d').value,
+      proc3t:document.getElementById('proc3t').value,proc3d:document.getElementById('proc3d').value,
+      proc4t:document.getElementById('proc4t').value,proc4d:document.getElementById('proc4d').value,
+    };
+    await setDoc(doc(db,'config','site'),d,{merge:true});
+    _admCache=null;
+    var steps=document.querySelectorAll('.proc-step-title');
+    var descs=document.querySelectorAll('.proc-step-desc');
+    [[d.proc1t,d.proc1d],[d.proc2t,d.proc2d],[d.proc3t,d.proc3d],[d.proc4t,d.proc4d]].forEach(function(pair,i){
+      if(steps[i])steps[i].textContent=pair[0];
+      if(descs[i])descs[i].textContent=pair[1];
+    });
+    showMsg('mProcesso','✓ Processo salvo!');
+  }catch(e){showMsg('mProcesso','Erro: '+e.message,'#f44');}
+}
+async function loadAdmProcesso(){
+  try{
+    var d=await getAdmData();
+    if(!d)return;
+    if(d.proc1t){var el=document.getElementById('proc1t');if(el)el.value=d.proc1t;}
+    if(d.proc1d){var el=document.getElementById('proc1d');if(el)el.value=d.proc1d;}
+    if(d.proc2t){var el=document.getElementById('proc2t');if(el)el.value=d.proc2t;}
+    if(d.proc2d){var el=document.getElementById('proc2d');if(el)el.value=d.proc2d;}
+    if(d.proc3t){var el=document.getElementById('proc3t');if(el)el.value=d.proc3t;}
+    if(d.proc3d){var el=document.getElementById('proc3d');if(el)el.value=d.proc3d;}
+    if(d.proc4t){var el=document.getElementById('proc4t');if(el)el.value=d.proc4t;}
+    if(d.proc4d){var el=document.getElementById('proc4d');if(el)el.value=d.proc4d;}
+  }catch(e){console.warn('loadAdmProcesso:',e);}
+}
+
+/* ── Admin: Clientes ────────────────────────── */
+async function saveClientes(){
+  try{
+    var {db,doc,setDoc}=window._FB;
+    var raw=document.getElementById('clientesText').value;
+    var names=raw.split('\n').map(function(n){return n.trim();}).filter(Boolean);
+    await setDoc(doc(db,'config','site'),{clientesNomes:names},{merge:true});
+    _admCache=null;
+    var track=document.querySelector('#clientesLogos .cl-track');
+    if(track){
+      var items=names.map(function(n){return '<span class="cl-item">'+n+'</span>';}).join('');
+      track.innerHTML=items+items;
+    }
+    showMsg('mClientes','✓ Clientes salvos!');
+  }catch(e){showMsg('mClientes','Erro: '+e.message,'#f44');}
+}
+async function loadAdmClientes(){
+  try{
+    var d=await getAdmData();
+    if(!d)return;
+    if(d.clientesNomes&&d.clientesNomes.length){
+      var el=document.getElementById('clientesText');
+      if(el)el.value=d.clientesNomes.join('\n');
+    }
+  }catch(e){console.warn('loadAdmClientes:',e);}
+}
+
+/* ── Admin: Simulador prices ────────────────── */
+async function saveSimPrices(){
+  try{
+    var {db,doc,setDoc}=window._FB;
+    var prices={
+      sp_res_1:document.getElementById('sp_res_1').value,
+      sp_res_2:document.getElementById('sp_res_2').value,
+      sp_res_3:document.getElementById('sp_res_3').value,
+      sp_res_v:document.getElementById('sp_res_v').value,
+      sp_emp_1:document.getElementById('sp_emp_1').value,
+      sp_emp_2:document.getElementById('sp_emp_2').value,
+      sp_emp_3:document.getElementById('sp_emp_3').value,
+      sp_emp_v:document.getElementById('sp_emp_v').value,
+    };
+    await setDoc(doc(db,'config','site'),prices,{merge:true});
+    _admCache=null;
+    if(window._simRanges){
+      _simRanges['Residencial unifamiliar']['1 a 3 imagens'].range=prices.sp_res_1;
+      _simRanges['Residencial unifamiliar']['4 a 8 imagens'].range=prices.sp_res_2;
+      _simRanges['Residencial unifamiliar']['9 ou mais imagens'].range=prices.sp_res_3;
+      _simRanges['Residencial unifamiliar']['Vídeo ou Tour 360°'].range=prices.sp_res_v;
+      _simRanges['Empreendimento vertical']['1 a 3 imagens'].range=prices.sp_emp_1;
+      _simRanges['Empreendimento vertical']['4 a 8 imagens'].range=prices.sp_emp_2;
+      _simRanges['Empreendimento vertical']['9 ou mais imagens'].range=prices.sp_emp_3;
+      _simRanges['Empreendimento vertical']['Vídeo ou Tour 360°'].range=prices.sp_emp_v;
+    }
+    showMsg('mSimulador','✓ Preços salvos!');
+  }catch(e){showMsg('mSimulador','Erro: '+e.message,'#f44');}
+}
+async function loadAdmSimulador(){
+  try{
+    var d=await getAdmData();
+    if(!d)return;
+    ['sp_res_1','sp_res_2','sp_res_3','sp_res_v','sp_emp_1','sp_emp_2','sp_emp_3','sp_emp_v'].forEach(function(k){
+      if(d[k]){var el=document.getElementById(k);if(el)el.value=d[k];}
+    });
+  }catch(e){console.warn('loadAdmSimulador:',e);}
+}
+
+/* ── Newsletter ───────────────────────────────── */
+async function nlSubmit(e){
+  e.preventDefault();
+  var email=document.getElementById('nlEmail').value.trim();
+  if(!email)return;
+  try{
+    var {db,collection,addDoc}=window._FB;
+    await addDoc(collection(db,'newsletter'),{email:email,ts:new Date().toISOString()});
+    document.getElementById('nlOk').style.display='inline';
+    document.getElementById('nlEmail').value='';
+    setTimeout(function(){var ok=document.getElementById('nlOk');if(ok)ok.style.display='none';},4000);
+  }catch(err){console.warn('Newsletter:',err.message);}
+}
 </script>
+
+<!-- ARTICLE READER MODAL -->
+<div id="articleModal">
+  <div class="art-header">
+    <span class="art-header-cat" id="artHeaderCat">Artigo</span>
+    <button class="art-header-close" onclick="closeArticle()" aria-label="Fechar artigo">✕</button>
+  </div>
+  <div class="art-hero" id="artHero">
+    <div class="art-hero-content">
+      <div class="art-eyebrow" id="artEyebrow">Vértice 3D — Conteúdo</div>
+      <h1 class="art-title" id="artTitle"></h1>
+      <div class="art-meta">
+        <span id="artDate"></span>
+        <span id="artReadTime"></span>
+      </div>
+    </div>
+  </div>
+  <div class="art-body" id="artBody"></div>
+</div>
+
+<!-- EXIT INTENT -->
+<div id="exitPopup" onclick="if(event.target===this)exitClose()">
+  <div class="exit-box">
+    <button class="exit-close" onclick="exitClose()" aria-label="Fechar">✕</button>
+    <div class="exit-eyebrow">Antes de ir</div>
+    <h3 class="exit-title">Veja como transformamos projetos em vendas</h3>
+    <p class="exit-sub">Mais de 180 projetos entregues para construtoras e incorporadoras. Solicite uma proposta sem compromisso.</p>
+    <div class="exit-btns">
+      <a class="btn-O wa-href" href="#" target="_blank" rel="noopener"><span>Falar no WhatsApp</span></a>
+      <a class="btn-ghost" href="#portfolio" onclick="exitClose()">Ver portfólio</a>
+    </div>
+    <button class="exit-dismiss" onclick="exitClose()">Não, obrigado</button>
+  </div>
+</div>
 </body>
 </html>
