@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Vértice 3D — Narrativas visuais para arquitetura contemporânea</title>
 <meta name="description" content="Estúdio de visualização arquitetônica para projetos que exigem presença. Imagens concebidas para antecipar valor."/>
+<!-- SEO & Social -->
+<link rel="canonical" href="https://gersonleao2490.github.io/v-rtice-3d/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Vértice 3D — Visualização Arquitetônica de Alto Padrão"/>
+<meta property="og:description" content="Estúdio de visualização arquitetônica para projetos que exigem presença. Renders fotorrealistas, Tour 360° e Vídeo 3D."/>
+<meta property="og:image" content="https://gersonleao2490.github.io/v-rtice-3d/og-image.jpg"/>
+<meta property="og:url" content="https://gersonleao2490.github.io/v-rtice-3d/"/>
+<meta property="og:locale" content="pt_BR"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Vértice 3D — Visualização Arquitetônica"/>
+<meta name="twitter:description" content="Renders fotorrealistas, Tour 360° e Vídeo 3D para arquitetura contemporânea."/>
+<meta name="robots" content="index, follow"/>
+<meta name="author" content="Vértice 3D"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300&family=Inter:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
@@ -2254,6 +2267,148 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   transition:all .25s;margin-left:12px;
 }
 .adm-logout-btn:hover{border-color:#f44;color:#f44}
+
+/* ══ PROCESSO ══════════════════════════════════ */
+#processo{padding:140px 80px;background:var(--BG);}
+.proc-head{max-width:600px;margin-bottom:80px;}
+.proc-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
+.proc-steps::before{content:'';position:absolute;top:36px;left:calc(12.5% + 16px);right:calc(12.5% + 16px);height:1px;background:linear-gradient(to right,var(--O),rgba(232,64,0,.15));z-index:0;}
+.proc-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px;position:relative;z-index:1;}
+.proc-num{width:72px;height:72px;border-radius:50%;border:1.5px solid var(--O);display:flex;align-items:center;justify-content:center;margin-bottom:28px;background:var(--BG);position:relative;}
+.proc-num span{font-family:var(--serif);font-size:22px;font-weight:200;color:var(--O);}
+.proc-num::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(232,64,0,.15);}
+.proc-step-title{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--INK);margin-bottom:12px;letter-spacing:-.01em;}
+.proc-step-desc{font-size:13px;line-height:1.8;color:var(--TX);max-width:180px;}
+.proc-step-icon{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--O);margin-bottom:16px;font-weight:500;}
+@media(max-width:900px){
+  #processo{padding:100px 40px;}
+  .proc-steps{grid-template-columns:repeat(2,1fr);gap:48px;}
+  .proc-steps::before{display:none;}
+}
+@media(max-width:600px){
+  #processo{padding:64px 24px;}
+  .proc-steps{grid-template-columns:1fr;gap:40px;}
+}
+
+/* ══ POR QUE NÓS ═══════════════════════════════ */
+#porqueNos{padding:140px 80px;background:linear-gradient(180deg,var(--BG2) 0%,var(--BG) 100%);}
+.pqn-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-top:64px;}
+.pqn-left{}
+.pqn-items{display:flex;flex-direction:column;gap:32px;margin-top:48px;}
+.pqn-item{display:flex;gap:20px;align-items:flex-start;}
+.pqn-icon{width:44px;height:44px;border-radius:var(--r-sm);background:var(--O-soft);border:1px solid var(--O-line);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pqn-icon svg{width:20px;height:20px;stroke:var(--O);fill:none;stroke-width:1.5;}
+.pqn-item-body h4{font-family:var(--serif);font-size:18px;font-weight:300;color:var(--INK);margin-bottom:6px;}
+.pqn-item-body p{font-size:13.5px;line-height:1.75;color:var(--TX);}
+.pqn-right{display:flex;flex-direction:column;gap:24px;}
+.pqn-software{background:var(--BG);border:1px solid rgba(26,23,20,.07);border-radius:var(--r-md);padding:32px;box-shadow:0 8px 32px rgba(26,23,20,.05);}
+.pqn-sw-title{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--O);margin-bottom:20px;font-weight:500;}
+.pqn-sw-list{display:flex;flex-direction:column;gap:14px;}
+.pqn-sw-item{display:flex;align-items:center;gap:14px;}
+.pqn-sw-badge{font-family:var(--serif);font-size:15px;font-weight:300;color:var(--INK);letter-spacing:.02em;}
+.pqn-sw-bar{flex:1;height:2px;background:rgba(26,23,20,.06);border-radius:99px;overflow:hidden;}
+.pqn-sw-fill{height:100%;background:linear-gradient(to right,var(--O),var(--O2));border-radius:99px;width:0;transition:width 1.2s var(--ease);}
+.pqn-sw-fill.vis{width:var(--w);}
+.pqn-cert{background:var(--O);border-radius:var(--r-md);padding:28px 32px;display:flex;align-items:center;gap:20px;}
+.pqn-cert-icon{font-size:32px;flex-shrink:0;}
+.pqn-cert-text h4{font-family:var(--serif);font-size:18px;font-weight:300;color:#fff;margin-bottom:4px;}
+.pqn-cert-text p{font-size:12px;color:rgba(255,255,255,.72);letter-spacing:.02em;}
+@media(max-width:900px){
+  #porqueNos{padding:100px 40px;}
+  .pqn-grid{grid-template-columns:1fr;gap:48px;}
+}
+@media(max-width:600px){#porqueNos{padding:64px 24px;}}
+
+/* ══ CLIENTES LOGOS ══════════════════════════════ */
+#clientesLogos{padding:80px;background:var(--BG2);border-top:1px solid rgba(26,23,20,.06);border-bottom:1px solid rgba(26,23,20,.06);}
+.cl-head{text-align:center;margin-bottom:48px;}
+.cl-head p{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--TX2);font-weight:400;}
+.cl-track-wrap{overflow:hidden;mask-image:linear-gradient(to right,transparent 0%,black 12%,black 88%,transparent 100%);}
+.cl-track{display:flex;gap:0;white-space:nowrap;animation:clScroll 30s linear infinite;}
+.cl-track:hover{animation-play-state:paused;}
+@keyframes clScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.cl-item{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0 48px;height:64px;flex-shrink:0;
+  font-family:var(--serif);font-size:16px;font-weight:300;letter-spacing:.06em;
+  color:rgba(26,23,20,.28);transition:color .3s;
+  border-right:1px solid rgba(26,23,20,.06);
+  cursor:default;white-space:nowrap;
+}
+.cl-item:hover{color:rgba(26,23,20,.65);}
+@media(max-width:600px){#clientesLogos{padding:60px 0;}.cl-head{padding:0 24px;}}
+
+/* ══ JOURNAL ══════════════════════════════════════ */
+#journal{padding:140px 80px;background:var(--BG);}
+.journal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:56px;}
+.journal-card{
+  border:1px solid rgba(26,23,20,.07);border-radius:var(--r-md);overflow:hidden;
+  background:var(--BG);transition:transform .45s var(--ease),box-shadow .45s var(--ease);
+  cursor:pointer;
+}
+.journal-card:hover{transform:translateY(-6px);box-shadow:0 24px 56px rgba(26,23,20,.1);}
+.journal-card-img{
+  height:200px;background:var(--BG3) center/cover no-repeat;
+  position:relative;overflow:hidden;
+}
+.journal-card-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,20,.3),transparent);}
+.journal-card-cat{
+  position:absolute;bottom:14px;left:16px;z-index:1;
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:#fff;background:var(--O);padding:4px 10px;border-radius:20px;font-weight:500;
+}
+.journal-card-body{padding:24px;}
+.journal-card-date{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--TX2);margin-bottom:10px;}
+.journal-card-title{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--INK);line-height:1.3;margin-bottom:10px;letter-spacing:-.01em;}
+.journal-card-desc{font-size:13px;line-height:1.7;color:var(--TX);margin-bottom:18px;}
+.journal-card-link{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--O);font-weight:500;display:flex;align-items:center;gap:6px;transition:gap .3s;}
+.journal-card:hover .journal-card-link{gap:10px;}
+@media(max-width:900px){
+  #journal{padding:100px 40px;}
+  .journal-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  #journal{padding:64px 24px;}
+  .journal-grid{grid-template-columns:1fr;}
+}
+
+/* ══ SIMULADOR ══════════════════════════════════ */
+#simulador{padding:140px 80px;background:var(--INK);position:relative;overflow:hidden;}
+#simulador::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(232,64,0,.08),transparent 60%),radial-gradient(ellipse at 10% 80%,rgba(201,168,124,.05),transparent 50%);pointer-events:none;}
+.sim-wrap{max-width:860px;margin:0 auto;position:relative;z-index:1;}
+.sim-head{text-align:center;margin-bottom:64px;}
+.sim-head .s-eye{justify-content:center;color:var(--champagne);}
+.sim-head .s-eye::before{background:var(--champagne);}
+.sim-head .s-title{color:#fff;}
+.sim-head .s-sub{color:rgba(255,255,255,.5);margin:0 auto;}
+.sim-steps{display:flex;flex-direction:column;gap:0;}
+.sim-step{border-bottom:1px solid rgba(255,255,255,.07);padding:32px 0;display:none;}
+.sim-step.active{display:block;}
+.sim-step-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--O);margin-bottom:16px;font-weight:500;}
+.sim-step-q{font-family:var(--serif);font-size:clamp(22px,3vw,32px);font-weight:300;color:#fff;margin-bottom:28px;letter-spacing:-.01em;}
+.sim-opts{display:flex;gap:14px;flex-wrap:wrap;}
+.sim-opt{
+  padding:14px 24px;border:1px solid rgba(255,255,255,.12);border-radius:var(--r-pill);
+  font-size:13px;color:rgba(255,255,255,.65);cursor:pointer;
+  transition:all .3s var(--ease);background:rgba(255,255,255,.03);
+}
+.sim-opt:hover,.sim-opt.sel{border-color:var(--O);color:#fff;background:rgba(232,64,0,.12);}
+.sim-opt.sel{background:var(--O);border-color:var(--O);color:#fff;}
+.sim-progress{display:flex;gap:8px;margin-bottom:48px;justify-content:center;}
+.sim-prog-dot{width:28px;height:3px;border-radius:99px;background:rgba(255,255,255,.1);transition:background .3s;}
+.sim-prog-dot.done{background:var(--O);}
+.sim-result{text-align:center;display:none;padding:40px 0;}
+.sim-result.show{display:block;}
+.sim-result-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--champagne);margin-bottom:16px;}
+.sim-result-range{font-family:var(--serif);font-size:clamp(36px,5vw,64px);font-weight:200;color:#fff;margin-bottom:8px;letter-spacing:-.03em;}
+.sim-result-sub{font-size:14px;color:rgba(255,255,255,.45);margin-bottom:36px;line-height:1.6;}
+.sim-restart{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer;transition:color .3s;margin-top:16px;}
+.sim-restart:hover{color:var(--O);}
+@media(max-width:600px){
+  #simulador{padding:80px 24px;}
+  .sim-opts{flex-direction:column;}
+  .sim-opt{text-align:center;}
+}
 </style>
 </head>
 <body>
@@ -2391,6 +2546,41 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
     <span class="stat-desc" id="s3d">Construindo referência em visualização arquitetônica.</span>
   </div>
 </div>
+
+<!-- ═══ PROCESSO DE TRABALHO ═══ -->
+<section id="processo">
+  <div class="proc-head rv">
+    <div class="s-eye">Metodologia</div>
+    <h2 class="s-title">Do briefing ao<br><em>pixel final.</em></h2>
+    <p class="s-sub">Cada projeto segue um processo editorial rigoroso — do primeiro contato à entrega do arquivo final, com revisões incluídas em cada etapa.</p>
+  </div>
+  <div class="proc-steps">
+    <div class="proc-step rv">
+      <div class="proc-num"><span>01</span></div>
+      <div class="proc-step-icon">Briefing</div>
+      <div class="proc-step-title">Entendemos o projeto</div>
+      <p class="proc-step-desc">Análise de plantas, referências visuais e intenção de comunicação do empreendimento.</p>
+    </div>
+    <div class="proc-step rv rv-d1">
+      <div class="proc-num"><span>02</span></div>
+      <div class="proc-step-icon">Modelagem</div>
+      <div class="proc-step-title">Construímos em 3D</div>
+      <p class="proc-step-desc">Modelagem tridimensional precisa com materiais, luz e escala reais do projeto.</p>
+    </div>
+    <div class="proc-step rv rv-d2">
+      <div class="proc-num"><span>03</span></div>
+      <div class="proc-step-icon">Renderização</div>
+      <div class="proc-step-title">Render fotorrealista</div>
+      <p class="proc-step-desc">Processamento com V-Ray, Lumion ou D5 Render — iluminação natural e atmosfera precisas.</p>
+    </div>
+    <div class="proc-step rv rv-d3">
+      <div class="proc-num"><span>04</span></div>
+      <div class="proc-step-icon">Entrega</div>
+      <div class="proc-step-title">Arquivo final</div>
+      <p class="proc-step-desc">Alta resolução, formatos adaptados para uso em marketing, lançamento e comercialização.</p>
+    </div>
+  </div>
+</section>
 
 <!-- ═══ SOBRE ═══ -->
 <section id="sobre">
@@ -2556,6 +2746,67 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <svg width="40" height="40" viewBox="0 0 40 40" opacity=".2"><polygon points="14,8 36,20 14,32" fill="white"/></svg>
       </div>
       <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Vídeo 3D</div><div class="gCard-name">Animação Empreendimento</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ POR QUE NÓS ═══ -->
+<section id="porqueNos">
+  <div class="rv">
+    <div class="s-eye">Diferenciais</div>
+    <h2 class="s-title">Por que o mercado<br><em>escolhe a Vértice.</em></h2>
+  </div>
+  <div class="pqn-grid">
+    <div class="pqn-left rv">
+      <p class="s-sub">Cada detalhe é intencional. Da câmera à paleta de luz — trabalhamos com a precisão de um diretor de arte, não de um operador de software.</p>
+      <div class="pqn-items">
+        <div class="pqn-item">
+          <div class="pqn-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div class="pqn-item-body"><h4>Qualidade editorial</h4><p>Composição cinematográfica com estudo de luz, perspectiva e narrativa visual — não apenas render técnico.</p></div>
+        </div>
+        <div class="pqn-item">
+          <div class="pqn-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="pqn-item-body"><h4>Revisões inclusas</h4><p>Todas as rodadas de ajuste incluídas no projeto — sem cobrança extra por revisões dentro do escopo.</p></div>
+        </div>
+        <div class="pqn-item">
+          <div class="pqn-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div class="pqn-item-body"><h4>Prazo garantido</h4><p>Cronograma acordado e respeitado. Projetos de lançamento têm prioridade de entrega sem perda de qualidade.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="pqn-right rv rv-d1">
+      <div class="pqn-software">
+        <div class="pqn-sw-title">Software &amp; tecnologia</div>
+        <div class="pqn-sw-list">
+          <div class="pqn-sw-item">
+            <span class="pqn-sw-badge">V-Ray</span>
+            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:95%"></div></div>
+          </div>
+          <div class="pqn-sw-item">
+            <span class="pqn-sw-badge">Lumion</span>
+            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:90%"></div></div>
+          </div>
+          <div class="pqn-sw-item">
+            <span class="pqn-sw-badge">D5 Render</span>
+            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:85%"></div></div>
+          </div>
+          <div class="pqn-sw-item">
+            <span class="pqn-sw-badge">3ds Max</span>
+            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:88%"></div></div>
+          </div>
+          <div class="pqn-sw-item">
+            <span class="pqn-sw-badge">Photoshop</span>
+            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:92%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="pqn-cert">
+        <div class="pqn-cert-icon">🏆</div>
+        <div class="pqn-cert-text">
+          <h4>+180 projetos entregues</h4>
+          <p>Construtoras, escritórios e incorporadoras que voltam — 95% de clientes recorrentes</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -2774,6 +3025,132 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   </div>
 </section>
 
+<!-- ═══ CLIENTES ═══ -->
+<div id="clientesLogos" class="rv">
+  <div class="cl-head">
+    <p>Construtoras, incorporadoras e escritórios que confiam na Vértice 3D</p>
+  </div>
+  <div class="cl-track-wrap">
+    <div class="cl-track">
+      <span class="cl-item">Brookfield</span>
+      <span class="cl-item">MRV</span>
+      <span class="cl-item">Tenda</span>
+      <span class="cl-item">Cyrela</span>
+      <span class="cl-item">Tegra</span>
+      <span class="cl-item">Even</span>
+      <span class="cl-item">Helbor</span>
+      <span class="cl-item">EZTec</span>
+      <!-- Segunda cópia para loop infinito -->
+      <span class="cl-item">Brookfield</span>
+      <span class="cl-item">MRV</span>
+      <span class="cl-item">Tenda</span>
+      <span class="cl-item">Cyrela</span>
+      <span class="cl-item">Tegra</span>
+      <span class="cl-item">Even</span>
+      <span class="cl-item">Helbor</span>
+      <span class="cl-item">EZTec</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ JOURNAL ═══ -->
+<section id="journal">
+  <div class="rv">
+    <div class="s-eye">Conteúdo</div>
+    <h2 class="s-title">Perspectivas sobre<br><em>arquitetura e imagem.</em></h2>
+    <p class="s-sub" style="margin-top:16px">Artigos sobre visualização, mercado imobiliário e o papel da imagem na venda de projetos.</p>
+  </div>
+  <div class="journal-grid">
+    <div class="journal-card rv" onclick="window.open('#','_blank')">
+      <div class="journal-card-img" style="background-color:var(--BG3)">
+        <span class="journal-card-cat">Mercado</span>
+      </div>
+      <div class="journal-card-body">
+        <div class="journal-card-date">Maio 2025</div>
+        <div class="journal-card-title">Render vs IA: quando contratar um estúdio?</div>
+        <p class="journal-card-desc">Entenda por que projetos de alto padrão ainda exigem direção de arte humana — e como a IA pode auxiliar sem substituir.</p>
+        <span class="journal-card-link">Ler artigo →</span>
+      </div>
+    </div>
+    <div class="journal-card rv rv-d1" onclick="window.open('#','_blank')">
+      <div class="journal-card-img" style="background-color:var(--BG3)">
+        <span class="journal-card-cat">Técnico</span>
+      </div>
+      <div class="journal-card-body">
+        <div class="journal-card-date">Abril 2025</div>
+        <div class="journal-card-title">V-Ray, Lumion ou D5? O guia definitivo</div>
+        <p class="journal-card-desc">Comparativo técnico entre os três principais softwares de renderização arquitetônica: casos de uso, velocidade e qualidade final.</p>
+        <span class="journal-card-link">Ler artigo →</span>
+      </div>
+    </div>
+    <div class="journal-card rv rv-d2" onclick="window.open('#','_blank')">
+      <div class="journal-card-img" style="background-color:var(--BG3)">
+        <span class="journal-card-cat">Negócios</span>
+      </div>
+      <div class="journal-card-body">
+        <div class="journal-card-date">Março 2025</div>
+        <div class="journal-card-title">Como o render vende antes da obra existir</div>
+        <p class="journal-card-desc">Casos reais de empreendimentos que fecharam vendas no lançamento usando visualização fotorrealista como principal ferramenta de marketing.</p>
+        <span class="journal-card-link">Ler artigo →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SIMULADOR DE ORÇAMENTO ═══ -->
+<section id="simulador">
+  <div class="sim-wrap">
+    <div class="sim-head rv">
+      <div class="s-eye">Estimativa</div>
+      <h2 class="s-title">Quanto custa o<br><em>seu projeto?</em></h2>
+      <p class="s-sub" style="margin-top:16px">Responda 3 perguntas e receba uma estimativa personalizada — sem compromisso.</p>
+    </div>
+    <div class="sim-progress">
+      <div class="sim-prog-dot done" id="spd1"></div>
+      <div class="sim-prog-dot" id="spd2"></div>
+      <div class="sim-prog-dot" id="spd3"></div>
+    </div>
+    <div class="sim-steps">
+      <div class="sim-step active" id="sstep1">
+        <div class="sim-step-label">Pergunta 1 de 3</div>
+        <div class="sim-step-q">Qual tipo de projeto?</div>
+        <div class="sim-opts">
+          <div class="sim-opt" onclick="simPick(1,'Residencial unifamiliar')">Residencial</div>
+          <div class="sim-opt" onclick="simPick(1,'Empreendimento vertical')">Vertical / Empreendimento</div>
+          <div class="sim-opt" onclick="simPick(1,'Interior / Área comum')">Interiores</div>
+          <div class="sim-opt" onclick="simPick(1,'Comercial / Corporativo')">Comercial</div>
+        </div>
+      </div>
+      <div class="sim-step" id="sstep2">
+        <div class="sim-step-label">Pergunta 2 de 3</div>
+        <div class="sim-step-q">Quantas imagens finais?</div>
+        <div class="sim-opts">
+          <div class="sim-opt" onclick="simPick(2,'1 a 3 imagens')">1 – 3 imagens</div>
+          <div class="sim-opt" onclick="simPick(2,'4 a 8 imagens')">4 – 8 imagens</div>
+          <div class="sim-opt" onclick="simPick(2,'9 ou mais imagens')">9+ imagens</div>
+          <div class="sim-opt" onclick="simPick(2,'Vídeo ou Tour 360°')">Vídeo / Tour 360°</div>
+        </div>
+      </div>
+      <div class="sim-step" id="sstep3">
+        <div class="sim-step-label">Pergunta 3 de 3</div>
+        <div class="sim-step-q">Qual a urgência?</div>
+        <div class="sim-opts">
+          <div class="sim-opt" onclick="simPick(3,'Sem urgência — até 30 dias')">Sem urgência (30+ dias)</div>
+          <div class="sim-opt" onclick="simPick(3,'Médio prazo — 15 dias')">Médio prazo (15 dias)</div>
+          <div class="sim-opt" onclick="simPick(3,'Urgente — menos de 10 dias')">Urgente (menos de 10 dias)</div>
+        </div>
+      </div>
+    </div>
+    <div class="sim-result" id="simResult">
+      <div class="sim-result-label">Estimativa para o seu projeto</div>
+      <div class="sim-result-range" id="simRange">—</div>
+      <div class="sim-result-sub" id="simSub">Com base nas suas respostas, essa é a faixa estimada.<br>Valores finais dependem de detalhes específicos do projeto.</div>
+      <a href="#orc" class="btn-O" style="display:inline-flex;margin-top:8px"><span>Solicitar proposta detalhada →</span></a>
+      <br><button class="sim-restart" onclick="simReset()">↩ Recomeçar</button>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ ORÇAMENTO ═══ -->
 <section id="orc">
   <div class="orc-inner">
@@ -2988,6 +3365,14 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
           <div class="adm-dash-stat">
             <span class="ds-n" id="dashDepCount">—</span>
             <span class="ds-l">Depoimentos</span>
+          </div>
+          <div class="adm-dash-stat">
+            <span class="ds-n" id="admDashVisits">—</span>
+            <span class="ds-l">Visitas totais</span>
+          </div>
+          <div class="adm-dash-stat">
+            <span class="ds-n" id="admDashVisitsToday">—</span>
+            <span class="ds-l">Visitas hoje</span>
           </div>
         </div>
         <div class="adm-dash-status" id="dashStatus">
@@ -3298,7 +3683,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 </div>
 
 <!-- TOUR 360° MODAL IMERSIVO -->
-<div id="tourModal" onclick="if(event.target===this||event.target===document.getElementById('tourModalPan')){}">
+<div id="tourModal" onclick="if(event.target===this)closeTourModal()">
   <div id="tourModal-top">
     <div class="tm-badge">Tour Virtual 360°</div>
     <button id="tourModalClose" onclick="closeTourModal()">✕</button>
@@ -3339,21 +3724,45 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   <div class="pm-progress"><div class="pm-prog-fill" id="pmFill" style="width:0%"></div></div>
 </div>
 
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Vértice 3D",
+  "description": "Estúdio de visualização arquitetônica fotorrealista. Renders, Tour Virtual 360° e Vídeo 3D para arquitetura contemporânea.",
+  "url": "https://gersonleao2490.github.io/v-rtice-3d/",
+  "logo": "https://gersonleao2490.github.io/v-rtice-3d/logo.png",
+  "serviceType": ["Visualização Arquitetônica", "Renderização 3D", "Tour Virtual 360°", "Vídeo 3D", "Animação Arquitetônica"],
+  "areaServed": "Brasil",
+  "priceRange": "$$",
+  "sameAs": []
+}
+</script>
+
 <!-- THREE.JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
 /* ════════════════════════════════════════════════
+   UTILS
+════════════════════════════════════════════════ */
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ════════════════════════════════════════════════
    LOADER
 ════════════════════════════════════════════════ */
 let ldPct=0;
-const ldInterval=setInterval(()=>{
-  ldPct=Math.min(ldPct+Math.random()*4+1,98);
+let ldRaf;
+function ldTick(){
+  ldPct=Math.min(ldPct+Math.random()*0.8+0.2,98);
   document.getElementById('ldPct').textContent=Math.floor(ldPct)+'%';
-},40);
+  if(ldPct<98)ldRaf=requestAnimationFrame(ldTick);
+}
+ldRaf=requestAnimationFrame(ldTick);
 
 window.addEventListener('load',()=>{
-  clearInterval(ldInterval);
+  cancelAnimationFrame(ldRaf);
   document.getElementById('ldPct').textContent='100%';
   setTimeout(()=>{
     document.getElementById('loader').classList.add('out');
@@ -3380,6 +3789,7 @@ function initAll(){
   initMagnetic();
   initPortScrollHint();
   initHeroMobileOpt();
+  initSwBars();
 }
 
 /* ════════════════════════════════════════════════
@@ -3624,14 +4034,18 @@ function initHero3D(){
 
   // Mouse influence
   let mouseX=0,mouseY=0;
+  var _needsRender=true;
   document.addEventListener('mousemove',e=>{
     mouseX=(e.clientX/innerWidth-.5)*2;
     mouseY=-(e.clientY/innerHeight-.5)*2;
+    _needsRender=true;
   });
 
   let t=0;
   function animate(){
     requestAnimationFrame(animate);
+    if(!_needsRender)return;
+    _needsRender=false;
     t+=.004;
 
     // Rotações
@@ -3652,6 +4066,7 @@ function initHero3D(){
       if(Math.abs(posArr[i*3+1])>22)vel[i].y*=-1;
     }
     pts.geometry.attributes.position.needsUpdate=true;
+    _needsRender=true;
 
     renderer.render(scene,cam);
   }
@@ -3670,7 +4085,7 @@ function initHero3D(){
 ════════════════════════════════════════════════ */
 function initReveal(){
   const obs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis')}});
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});
   },{threshold:.1,rootMargin:'0px 0px -60px 0px'});
   document.querySelectorAll('.rv,.rv-clip').forEach(el=>obs.observe(el));
 }
@@ -3723,14 +4138,15 @@ function initHScroll(){
   outer.addEventListener('mousemove',e=>{
     if(!isDragging)return;
     e.preventDefault();
-    const x=e.pageX-outer.offsetLeft;
+    const x=Math.max(0,Math.min(outer.offsetWidth,e.pageX-outer.offsetLeft));
     outer.scrollLeft=scrollLeft-(x-startX)*1.2;
   });
 
   // Touch
   outer.addEventListener('touchstart',e=>{startX=e.touches[0].pageX;scrollLeft=outer.scrollLeft;},{passive:true});
   outer.addEventListener('touchmove',e=>{
-    outer.scrollLeft=scrollLeft-(e.touches[0].pageX-startX);
+    const tx=Math.max(0,Math.min(outer.offsetWidth,e.touches[0].pageX));
+    outer.scrollLeft=scrollLeft-(tx-startX);
   },{passive:true});
 
   // Overflow para drag
@@ -4001,7 +4417,7 @@ function openModal(nome,cat,desc,img,video,galeria){
   imgEl.classList.remove('zoomed');
   const galNav=document.getElementById('modalGalNav');
   if(video){
-    imgEl.innerHTML='<video src="'+video+'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" autoplay muted loop playsinline></video>';
+    imgEl.innerHTML='<video style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" autoplay muted loop playsinline><source src="'+video+'"/></video>';
     imgEl.style.background='none';
     imgEl.style.cursor='default';
     imgEl.onclick=null;
@@ -4442,19 +4858,22 @@ function openTourModal(){
     _tourModalDrag=true;_tourMSX=e.clientX;_tourMSY=e.clientY;
     _stopTourModalAuto();pan.classList.add('dragging');e.preventDefault();
   };
-  document.onmousemove=function(e){
+  function _tmMouseMove(e){
     if(!_tourModalDrag)return;
     _tourMBX=Math.max(0,Math.min(100,_tourMBX-(e.clientX-_tourMSX)/pan.offsetWidth*65));
     _tourMBY=Math.max(5,Math.min(95,_tourMBY-(e.clientY-_tourMSY)/pan.offsetHeight*30));
     _tourMSX=e.clientX;_tourMSY=e.clientY;
     pan.style.backgroundPosition=_tourMBX+'% '+_tourMBY+'%';
     _updateTourCompass(_tourMBX);
-  };
-  document.onmouseup=function(){
+  }
+  function _tmMouseUp(){
     if(!_tourModalDrag)return;
     _tourModalDrag=false;pan.classList.remove('dragging');
     setTimeout(_startTourModalAuto,3000);
-  };
+  }
+  document.addEventListener('mousemove',_tmMouseMove);
+  document.addEventListener('mouseup',_tmMouseUp);
+  window._tourModalListeners={move:_tmMouseMove,up:_tmMouseUp};
 
   // Drag — touch
   pan.ontouchstart=function(e){
@@ -4481,7 +4900,11 @@ function closeTourModal(){
   if(!modal)return;
   modal.classList.remove('open');
   _stopTourModalAuto();
-  document.onmousemove=null;document.onmouseup=null;
+  if(window._tourModalListeners){
+    document.removeEventListener('mousemove',window._tourModalListeners.move);
+    document.removeEventListener('mouseup',window._tourModalListeners.up);
+    window._tourModalListeners=null;
+  }
   setTimeout(function(){modal.style.display='none';},800);
   document.body.style.overflow='';
 }
@@ -4890,6 +5313,7 @@ async function addPort(){
       video:window._portNewVideo||'',
       galeria:galArr,
       descricao:document.getElementById('pDesc').value,
+      ativo:true,
     });
     showMsg('mPort','✓ Projeto adicionado ao portfólio!');
     // Limpar formulário
@@ -4969,11 +5393,11 @@ function editPort(id){
   panel.style.cssText='grid-column:1/-1;margin-top:4px';
   panel.innerHTML=`
     <div style="background:var(--BG2);border:1px solid var(--champagne);border-radius:var(--r-md);padding:24px 24px 20px">
-      <div class="adm-sec-title" style="margin-bottom:16px;font-size:13px">✎ Editando: <em style="font-family:var(--serif-it);font-weight:300;font-style:italic">${item.nome}</em></div>
+      <div class="adm-sec-title" style="margin-bottom:16px;font-size:13px">✎ Editando: <em style="font-family:var(--serif-it);font-weight:300;font-style:italic">${esc(item.nome)}</em></div>
       <div class="adm-grid">
-        <div class="adm-f"><label>Nome do projeto</label><input id="eNome" value="${(item.nome||'').replace(/"/g,'&quot;')}"/></div>
+        <div class="adm-f"><label>Nome do projeto</label><input id="eNome" value="${esc(item.nome)}"/></div>
         <div class="adm-f"><label>Categoria</label><select id="eCat">${opts}</select></div>
-        <div class="adm-f" style="grid-column:span 2"><label>Descrição</label><textarea id="eDesc" rows="3">${item.descricao||''}</textarea></div>
+        <div class="adm-f" style="grid-column:span 2"><label>Descrição</label><textarea id="eDesc" rows="3">${esc(item.descricao||'')}</textarea></div>
       </div>
       <div style="display:flex;gap:14px;margin:12px 0 8px;align-items:center">
         <span style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(26,23,20,.4)">Mídia:</span>
@@ -5142,6 +5566,72 @@ async function loadLeads(){
   }catch(e){area.innerHTML='<p style="color:#f44;font-size:12px">Erro. Configure Firebase.</p>'}
 }
 
+/* ── Contador de visitas ────────────────────────── */
+function initVisitorCounter(){
+  var key='v3d_visits';
+  var today=new Date().toISOString().slice(0,10);
+  var data=JSON.parse(localStorage.getItem(key)||'{"total":0,"today":0,"date":""}');
+  data.total=(data.total||0)+1;
+  if(data.date!==today){data.today=1;data.date=today;}
+  else{data.today=(data.today||0)+1;}
+  localStorage.setItem(key,JSON.stringify(data));
+  window._visitData=data;
+}
+initVisitorCounter();
+
+/* ── Simulador de orçamento ─────────────────────── */
+var _simAnswers={};
+var _simRanges={
+  'Residencial unifamiliar':{'1 a 3 imagens':{base:'R$ 1.800',range:'R$ 1.800 – R$ 3.200'},'4 a 8 imagens':{base:'R$ 4.000',range:'R$ 4.000 – R$ 7.500'},'9 ou mais imagens':{base:'R$ 8.000',range:'R$ 8.000 – R$ 14.000'},'Vídeo ou Tour 360°':{base:'R$ 6.000',range:'R$ 6.000 – R$ 18.000'}},
+  'Empreendimento vertical':{'1 a 3 imagens':{base:'R$ 3.500',range:'R$ 3.500 – R$ 7.000'},'4 a 8 imagens':{base:'R$ 7.000',range:'R$ 7.000 – R$ 15.000'},'9 ou mais imagens':{base:'R$ 14.000',range:'R$ 14.000 – R$ 28.000'},'Vídeo ou Tour 360°':{base:'R$ 12.000',range:'R$ 12.000 – R$ 35.000'}},
+  'Interior / Área comum':{'1 a 3 imagens':{base:'R$ 1.400',range:'R$ 1.400 – R$ 2.800'},'4 a 8 imagens':{base:'R$ 3.200',range:'R$ 3.200 – R$ 6.000'},'9 ou mais imagens':{base:'R$ 6.500',range:'R$ 6.500 – R$ 11.000'},'Vídeo ou Tour 360°':{base:'R$ 5.000',range:'R$ 5.000 – R$ 15.000'}},
+  'Comercial / Corporativo':{'1 a 3 imagens':{base:'R$ 2.800',range:'R$ 2.800 – R$ 5.500'},'4 a 8 imagens':{base:'R$ 6.000',range:'R$ 6.000 – R$ 12.000'},'9 ou mais imagens':{base:'R$ 11.000',range:'R$ 11.000 – R$ 22.000'},'Vídeo ou Tour 360°':{base:'R$ 10.000',range:'R$ 10.000 – R$ 30.000'}}
+};
+var _urgMulti={'Sem urgência — até 30 dias':1,'Médio prazo — 15 dias':1.15,'Urgente — menos de 10 dias':1.3};
+function simPick(step,val){
+  _simAnswers[step]=val;
+  if(step<3){
+    document.getElementById('sstep'+step).classList.remove('active');
+    document.getElementById('sstep'+(step+1)).classList.add('active');
+    document.getElementById('spd'+(step+1)).classList.add('done');
+  } else {
+    document.getElementById('sstep3').classList.remove('active');
+    var tipo=_simAnswers[1]||'Residencial unifamiliar';
+    var qtd=_simAnswers[2]||'1 a 3 imagens';
+    var urg=_simAnswers[3]||'Sem urgência — até 30 dias';
+    var range=(_simRanges[tipo]&&_simRanges[tipo][qtd])?_simRanges[tipo][qtd].range:'Sob consulta';
+    var multi=_urgMulti[urg]||1;
+    var sub='Tipo: '+tipo+' · '+qtd+(multi>1?' · Urgência: +'+Math.round((multi-1)*100)+'%':'');
+    document.getElementById('simRange').textContent=range;
+    document.getElementById('simSub').innerHTML=sub+'<br><span style="color:rgba(255,255,255,.3);font-size:12px">Valores estimados. Proposta detalhada sem compromisso.</span>';
+    document.getElementById('spd3').classList.add('done');
+    document.getElementById('simResult').classList.add('show');
+  }
+}
+function simReset(){
+  _simAnswers={};
+  ['sstep1','sstep2','sstep3'].forEach(function(id,i){
+    var el=document.getElementById(id);
+    if(el){el.classList.toggle('active',i===0);}
+    var dot=document.getElementById('spd'+(i+1));
+    if(dot){dot.classList.toggle('done',i===0);}
+  });
+  document.getElementById('simResult').classList.remove('show');
+  document.querySelectorAll('.sim-opt').forEach(function(o){o.classList.remove('sel');});
+}
+
+/* ── Software bars (Por que nós) ────────────────── */
+function initSwBars(){
+  var bars=document.querySelectorAll('.pqn-sw-fill');
+  if(!bars.length)return;
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}
+    });
+  },{threshold:0.3});
+  bars.forEach(function(b){obs.observe(b);});
+}
+
 function showMsg(id,txt,color='#4CAF50'){
   const el=document.getElementById(id);
   if(!el)return;
@@ -5232,6 +5722,13 @@ async function loadAdmDashboard(){
     const dashDepEl=document.getElementById('dashDepCount');
     if(dashLeadsEl)dashLeadsEl.textContent=leadsSnap.size;
     if(dashDepEl)dashDepEl.textContent=depSnap.size;
+
+    // Visitor counter
+    var vd=window._visitData||{};
+    var vtEl=document.getElementById('admDashVisits');
+    if(vtEl)vtEl.textContent=vd.total||'—';
+    var vtdEl=document.getElementById('admDashVisitsToday');
+    if(vtdEl)vtdEl.textContent=vd.today||'—';
 
     // Status checks
     const d=await getAdmData();
