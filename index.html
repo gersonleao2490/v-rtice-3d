@@ -66,16 +66,17 @@ async function loadSiteData(){
   if(d.stat3d) document.getElementById('s3d').textContent=d.stat3d;
   if(d.email) document.getElementById('fEmail').textContent=d.email;
   if(d.instagram) document.getElementById('fIG').textContent=d.instagram;
+  if(d.instagramUrl) document.querySelectorAll('.soc-ig').forEach(function(el){el.href=d.instagramUrl;});
+  if(d.youtubeUrl) document.querySelectorAll('.soc-yt').forEach(function(el){el.href=d.youtubeUrl;});
   if(d.cidade) document.getElementById('fCidade').textContent=d.cidade;
   if(d.coords) document.getElementById('fCoords').textContent=d.coords;
-  // Imagem da seção Sobre
-  if(d.sobreImgUrl){
-    var wrap=document.getElementById('sobreImgWrap');
-    if(wrap)wrap.innerHTML=`<img class="sobre-img" src="${d.sobreImgUrl}" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>`;
-  }
-  // Tour 360° — injeta viewer no lado esquerdo da seção "Sobre"
+  // Tour 360° — tem prioridade total sobre imagem estática
   if(d.tour360Url){
     initTour360(d.tour360Url);
+  } else if(d.sobreImgUrl){
+    // Imagem estática só aparece se NÃO houver tour ativo
+    var wrap=document.getElementById('sobreImgWrap');
+    if(wrap)wrap.innerHTML=`<img class="sobre-img" src="${d.sobreImgUrl}" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>`;
   }
   // Lupa — imagem de qualidade em detalhe
   if(d.lupaImg){
@@ -1836,6 +1837,21 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 /* ── Tour ativo: esconder floats no desktop também ──────────── */
 .sobre-img-wrap.tour-active ~ .sobre-float,
 .sobre-img-wrap.tour-active ~ .sobre-accent{display:none !important}
+/* ── Filtros portfólio: scroll horizontal no mobile ─────────── */
+@media(max-width:600px){
+  .filter-row{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .filter-row::-webkit-scrollbar{display:none}
+  .fBtn{flex-shrink:0}
+}
+/* ── Admin: badge de status nos tabs ────────────────────────── */
+.adm-tab-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--O);margin-left:5px;vertical-align:middle;opacity:0}
+.adm-tab-dot.on{opacity:1}
+/* ── Admin: preview link ─────────────────────────────────────── */
+.adm-preview-link{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.08);padding:6px 12px;border-radius:40px;text-decoration:none;transition:all .2s;margin-left:auto}
+.adm-preview-link:hover{color:var(--O);border-color:var(--O)}
+/* ── Admin: clear button ─────────────────────────────────────── */
+.adm-clear-btn{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.2);border:none;background:none;cursor:pointer;padding:4px 8px;transition:color .2s}
+.adm-clear-btn:hover{color:#f44}
 /* ── Painel edição portfólio: texto escuro sobre fundo claro ── */
 #portEditPanel .adm-f label{color:rgba(26,23,20,.55)!important}
 #portEditPanel .adm-f input,
@@ -2496,9 +2512,9 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   <div class="foot-bottom">
     <p class="foot-copy">© 2025 Vértice 3D. Todos os direitos reservados.</p>
     <div class="foot-social">
-      <a href="#" class="soc-btn">ig</a>
+      <a href="#" class="soc-btn soc-ig" target="_blank" rel="noopener">ig</a>
       <a href="#" class="soc-btn">in</a>
-      <a href="#" class="soc-btn">yt</a>
+      <a href="#" class="soc-btn soc-yt" target="_blank" rel="noopener">yt</a>
     </div>
   </div>
 </footer>
@@ -2545,6 +2561,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <button class="adm-tab" onclick="swTab('leads')">Leads</button>
         <button class="adm-tab" onclick="swTab('tour')">Tour 360°</button>
         <button class="adm-tab" onclick="swTab('extras')">Extras</button>
+        <a href="https://gersonleao2490.github.io/v-rtice-3d/" target="_blank" class="adm-preview-link">↗ Ver site</a>
       </div>
 
       <!-- ═══ HERO ═══ -->
@@ -2703,7 +2720,9 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
         <div class="adm-grid">
           <div class="adm-f"><label>WhatsApp (só números)</label><input id="aCWa" placeholder="5544999999999"/></div>
           <div class="adm-f"><label>E-mail</label><input id="aCEmail" placeholder="contato@vertice3d.com.br"/></div>
-          <div class="adm-f"><label>Instagram</label><input id="aCIG" placeholder="@vertice3d"/></div>
+          <div class="adm-f"><label>Instagram — handle (@)</label><input id="aCIG" placeholder="@vertice3d"/></div>
+          <div class="adm-f"><label>Instagram — link completo</label><input id="aCIGUrl" placeholder="https://instagram.com/vertice3d"/></div>
+          <div class="adm-f"><label>YouTube — link</label><input id="aCYT" placeholder="https://youtube.com/@vertice3d"/></div>
           <div class="adm-f"><label>Cidade</label><input id="aCCid" placeholder="São Paulo, SP"/></div>
           <div class="adm-f" style="grid-column:span 2"><label>Coordenadas (exibidas no rodapé)</label><input id="aCCoords" placeholder="23°33'S 46°38'O — Brasil"/></div>
         </div>
@@ -2740,6 +2759,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
           <div class="adm-f"><label>Subtítulo (opcional)</label><input id="aTourSub" placeholder="Clique e arraste para navegar"/></div>
         </div>
         <button class="adm-save" onclick="saveTour360()">Salvar Tour 360°</button>
+        <button class="adm-clear-btn" onclick="removeTour360()" style="display:block;margin-top:10px">✕ Remover tour — exibir imagem estática</button>
         <div class="adm-msg" id="mTour"></div>
       </div>
 
@@ -3584,10 +3604,8 @@ async function uploadEditPortVideo(id){
 
 async function loadAdmExtras(){
   try{
-    const {db,doc,getDoc}=window._FB;
-    const snap=await getDoc(doc(db,'config','site'));
-    if(!snap.exists())return;
-    const d=snap.data();
+    const d=await getAdmData();
+    if(!d||!Object.keys(d).length)return;
     if(d.lupaImg){
       var prev=document.getElementById('lupaAdmPrev');
       var zone=document.getElementById('lupaAdmZone');
@@ -3668,6 +3686,7 @@ async function saveHero(){
     const logoPreview=document.getElementById('logoAdmPreview');
     if(logoPreview&&logoPreview.src&&logoPreview.style.display!=='none'){d.logoUrl=logoPreview.src;}
     await setDoc(doc(db,'config','site'),d,{merge:true});
+    _admCache=null;
     if(document.getElementById('hl1'))document.getElementById('hl1').textContent=d.heroLine1;
     if(document.getElementById('hl2'))document.getElementById('hl2').textContent=d.heroLine2;
     if(document.getElementById('hl3'))document.getElementById('hl3').textContent=d.heroLine3;
@@ -3681,6 +3700,8 @@ function initTour360(url){
   var wrap=document.getElementById('sobreImgWrap');
   if(!wrap)return;
   wrap.classList.add('tour-active');
+  // Esconde os cards flutuantes diretamente via JS (mais confiável que CSS)
+  document.querySelectorAll('.sobre-vis .sobre-float,.sobre-vis .sobre-accent').forEach(function(el){el.style.display='none';});
   wrap.innerHTML=
     '<div id="t360Pan" style="position:absolute;inset:0;'
     +'background-image:url(\''+url+'\');background-size:250% auto;'
@@ -3731,10 +3752,8 @@ function initTour360(url){
 
 async function loadAdmHero(){
   try{
-    const {db,doc,getDoc}=window._FB;
-    const snap=await getDoc(doc(db,'config','site'));
-    if(!snap.exists())return;
-    const d=snap.data();
+    const d=await getAdmData();
+    if(!d||!Object.keys(d).length)return;
     if(d.heroLine1){var el=document.getElementById('aHl1');if(el)el.value=d.heroLine1;}
     if(d.heroLine2){var el=document.getElementById('aHl2');if(el)el.value=d.heroLine2;}
     if(d.heroLine3){var el=document.getElementById('aHl3');if(el)el.value=d.heroLine3;}
@@ -3760,10 +3779,8 @@ async function loadAdmHero(){
 
 async function loadAdmSobre(){
   try{
-    const {db,doc,getDoc}=window._FB;
-    const snap=await getDoc(doc(db,'config','site'));
-    if(!snap.exists())return;
-    const d=snap.data();
+    const d=await getAdmData();
+    if(!d||!Object.keys(d).length)return;
     if(d.sobreTexto){var el=document.getElementById('aSobreT');if(el)el.value=d.sobreTexto;}
     if(d.sobreQ){var el=document.getElementById('aSobreQ');if(el)el.value=d.sobreQ;}
     if(d.sobreN){var el=document.getElementById('aSobreN');if(el)el.value=d.sobreN;}
@@ -3785,10 +3802,8 @@ async function loadAdmSobre(){
 
 async function loadAdmStats(){
   try{
-    const {db,doc,getDoc}=window._FB;
-    const snap=await getDoc(doc(db,'config','site'));
-    if(!snap.exists())return;
-    const d=snap.data();
+    const d=await getAdmData();
+    if(!d||!Object.keys(d).length)return;
     if(d.stat1n){var el=document.getElementById('as1n');if(el)el.value=d.stat1n;}
     if(d.stat1l){var el=document.getElementById('as1l');if(el)el.value=d.stat1l;}
     if(d.stat1d){var el=document.getElementById('as1d');if(el)el.value=d.stat1d;}
@@ -3803,24 +3818,22 @@ async function loadAdmStats(){
 
 async function loadAdmContato(){
   try{
-    const {db,doc,getDoc}=window._FB;
-    const snap=await getDoc(doc(db,'config','site'));
-    if(!snap.exists())return;
-    const d=snap.data();
+    const d=await getAdmData();
+    if(!d||!Object.keys(d).length)return;
     if(d.whatsapp){var el=document.getElementById('aCWa');if(el)el.value=d.whatsapp;}
     if(d.email){var el=document.getElementById('aCEmail');if(el)el.value=d.email;}
     if(d.instagram){var el=document.getElementById('aCIG');if(el)el.value=d.instagram;}
     if(d.cidade){var el=document.getElementById('aCCid');if(el)el.value=d.cidade;}
     if(d.coords){var el=document.getElementById('aCCoords');if(el)el.value=d.coords;}
+    if(d.instagramUrl){var el=document.getElementById('aCIGUrl');if(el)el.value=d.instagramUrl;}
+    if(d.youtubeUrl){var el=document.getElementById('aCYT');if(el)el.value=d.youtubeUrl;}
   }catch(e){console.error('loadAdmContato:',e);}
 }
 
 async function loadAdmTour360(){
   try{
-    const {db,doc,getDoc}=window._FB;
-    const snap=await getDoc(doc(db,'config','site'));
-    if(!snap.exists())return;
-    const d=snap.data();
+    const d=await getAdmData();
+    if(!d||!Object.keys(d).length)return;
     if(d.tourTitle){var el=document.getElementById('aTourTitle');if(el)el.value=d.tourTitle;}
     if(d.tourSub){var el=document.getElementById('aTourSub');if(el)el.value=d.tourSub;}
     if(d.tour360Url){
@@ -3834,6 +3847,31 @@ async function loadAdmTour360(){
   }catch(e){console.error('loadAdmTour360:',e);}
 }
 
+async function removeTour360(){
+  if(!confirm('Remover o tour 360° e voltar à imagem estática?'))return;
+  try{
+    const {db,doc,setDoc}=window._FB;
+    await setDoc(doc(db,'config','site'),{tour360Url:'',tourTitle:'',tourSub:''},{merge:true});
+    _admCache=null;
+    // Restaura sobreImgWrap ao estado original
+    var wrap=document.getElementById('sobreImgWrap');
+    if(wrap){
+      wrap.classList.remove('tour-active');
+      wrap.innerHTML='<div class="sobre-img-placeholder"><svg class="sobre-img-svg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="370" x2="400" y2="370" stroke="rgba(232,64,0,.18)" stroke-width=".7"/><rect x="78" y="120" width="158" height="250" stroke="rgba(26,23,20,.18)" stroke-width=".7" fill="rgba(232,64,0,.025)"/></svg><span class="sobre-img-label">Tour removido</span></div>';
+    }
+    // Reexibe os cards flutuantes
+    document.querySelectorAll('.sobre-vis .sobre-float,.sobre-vis .sobre-accent').forEach(function(el){el.style.display='';});
+    // Atualiza admin preview
+    var prev=document.getElementById('t360Prev');
+    var zone=document.getElementById('t360Zone');
+    var lbl=document.getElementById('t360Lbl');
+    if(prev){prev.style.backgroundImage='none';prev.style.display='none';}
+    if(zone)zone.classList.remove('has-file');
+    if(lbl){lbl.style.color='';lbl.textContent='Clique para enviar panorama 360°';}
+    showMsg('mTour','✓ Tour removido. Faça upload da imagem estática na aba Sobre.');
+  }catch(e){showMsg('mTour','Erro: '+e.message,'#f44');}
+}
+
 async function saveTour360(){
   try{
     const {db,doc,setDoc}=window._FB;
@@ -3843,8 +3881,21 @@ async function saveTour360(){
     };
     // Se houve upload, a URL já foi salva pelo uploadMedia; só salva título/subtítulo
     await setDoc(doc(db,'config','site'),d,{merge:true});
+    _admCache=null;
     showMsg('mTour','✓ Tour 360° salvo!');
   }catch(e){showMsg('mTour','Erro: '+e.message,'#f44')}
+}
+
+/* ═══ CACHE — evita múltiplas leituras Firestore no admin ══════════════ */
+var _admCache=null,_admCacheTime=0;
+async function getAdmData(){
+  var now=Date.now();
+  if(_admCache&&now-_admCacheTime<60000)return _admCache;
+  var {db,doc,getDoc}=window._FB;
+  var snap=await getDoc(doc(db,'config','site'));
+  _admCache=snap.exists()?snap.data():{};
+  _admCacheTime=now;
+  return _admCache;
 }
 
 /* ═══ uploadMedia — handler genérico para todos os uploads do admin ═════ */
@@ -3904,7 +3955,10 @@ async function uploadMedia(input, key){
     await setDoc(doc(db,'config','site'),field,{merge:true});
     if(key==='sobreImg'){
       var wrap=document.getElementById('sobreImgWrap');
-      if(wrap)wrap.innerHTML='<img class="sobre-img" src="'+url+'" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>';
+      // Só aplica imagem estática se tour 360° NÃO estiver ativo
+      if(wrap&&!wrap.classList.contains('tour-active')){
+        wrap.innerHTML='<img class="sobre-img" src="'+url+'" alt="Estúdio" style="width:100%;height:100%;object-fit:cover"/>';
+      }
     }
     if(key==='tour360')initTour360(url);
     if(key==='heroBg'){var bg=document.getElementById('heroBg');if(bg)bg.style.backgroundImage='url('+url+')';}
@@ -3974,6 +4028,7 @@ async function saveStats(){
       stat3n:document.getElementById('as3n').value,stat3l:document.getElementById('as3l').value,stat3d:document.getElementById('as3d').value,
     };
     await setDoc(doc(db,'config','site'),d,{merge:true});
+    _admCache=null;
     document.getElementById('s1n').dataset.target=d.stat1n;
     document.getElementById('s1l').textContent=d.stat1l;
     document.getElementById('s1d').textContent=d.stat1d;
@@ -4003,12 +4058,12 @@ async function saveSobre(){
       sobreM2n:m2n?m2n.value:'',sobreM2l:m2l?m2l.value:'',
     };
     await setDoc(doc(db,'config','site'),d,{merge:true});
-    document.getElementById('sobreTexto').textContent=d.sobreTexto;
+    _admCache=null; // invalida cache
+    document.getElementById('sobreTexto').innerHTML=d.sobreTexto;
     document.getElementById('sobreN').textContent=d.sobreN;
     document.getElementById('sobreAt').textContent=d.sobreAt;
-    if(d.sobreImg){
-      document.getElementById('sobreImgWrap').innerHTML=`<img class="sobre-img" src="${d.sobreImg}" alt="Estúdio"/>`;
-    }
+    var qEl=document.querySelector('.sobre-quote');
+    if(qEl&&d.sobreQ)qEl.innerHTML='“'+d.sobreQ+'”';
     showMsg('mSobre','✓ Salvo!');
   }catch(e){showMsg('mSobre','Erro: '+e.message,'#f44')}
 }
@@ -4017,16 +4072,24 @@ async function saveContato(){
   try{
     const {db,doc,setDoc}=window._FB;
     var wa2=document.getElementById('aCWa');
+    var igUrlEl=document.getElementById('aCIGUrl');
+    var ytEl=document.getElementById('aCYT');
     const d={
       email:document.getElementById('aCEmail').value,
       instagram:document.getElementById('aCIG').value,
+      instagramUrl:igUrlEl?igUrlEl.value:'',
+      youtubeUrl:ytEl?ytEl.value:'',
       cidade:document.getElementById('aCCid').value,
       coords:document.getElementById('aCCoords').value,
       whatsapp:wa2?wa2.value:'',
     };
     await setDoc(doc(db,'config','site'),d,{merge:true});
+    _admCache=null;
     if(d.email)document.getElementById('fEmail').textContent=d.email;
     if(d.instagram)document.getElementById('fIG').textContent=d.instagram;
+    // Atualiza links sociais no footer
+    document.querySelectorAll('.soc-ig').forEach(function(el){if(d.instagramUrl)el.href=d.instagramUrl;});
+    document.querySelectorAll('.soc-yt').forEach(function(el){if(d.youtubeUrl)el.href=d.youtubeUrl;});
     if(d.cidade)document.getElementById('fCidade').textContent=d.cidade;
     if(d.coords)document.getElementById('fCoords').textContent=d.coords;
     showMsg('mContato','✓ Salvo!');
