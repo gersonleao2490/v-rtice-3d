@@ -55,14 +55,14 @@ async function loadSiteData(){
   if(d.sobreN){var el=document.getElementById('sobreN');if(el)el.textContent=d.sobreN;}
   if(d.sobreAt){var el=document.getElementById('sobreAt');if(el)el.textContent=d.sobreAt;}
   if(d.sobreQ){var el=document.querySelector('.sobre-quote');if(el)el.innerHTML='“'+d.sobreQ+'”';}
-  if(d.stat1n){document.getElementById('s1n').dataset.target=d.stat1n;var e=document.getElementById('hs1n');if(e)e.dataset.target=d.stat1n;}
-  if(d.stat1l){document.getElementById('s1l').textContent=d.stat1l;var e=document.getElementById('hs1l');if(e)e.textContent=d.stat1l;}
+  if(d.stat1n) document.getElementById('s1n').dataset.target=d.stat1n;
+  if(d.stat1l) document.getElementById('s1l').textContent=d.stat1l;
   if(d.stat1d) document.getElementById('s1d').textContent=d.stat1d;
-  if(d.stat2n){document.getElementById('s2n').dataset.target=d.stat2n;var e=document.getElementById('hs2n');if(e)e.dataset.target=d.stat2n;}
-  if(d.stat2l){document.getElementById('s2l').textContent=d.stat2l;var e=document.getElementById('hs2l');if(e)e.textContent=d.stat2l;}
+  if(d.stat2n) document.getElementById('s2n').dataset.target=d.stat2n;
+  if(d.stat2l) document.getElementById('s2l').textContent=d.stat2l;
   if(d.stat2d) document.getElementById('s2d').textContent=d.stat2d;
-  if(d.stat3n){document.getElementById('s3n').dataset.target=d.stat3n;var e=document.getElementById('hs3n');if(e)e.dataset.target=d.stat3n;}
-  if(d.stat3l){document.getElementById('s3l').textContent=d.stat3l;var e=document.getElementById('hs3l');if(e)e.textContent=d.stat3l;}
+  if(d.stat3n) document.getElementById('s3n').dataset.target=d.stat3n;
+  if(d.stat3l) document.getElementById('s3l').textContent=d.stat3l;
   if(d.stat3d) document.getElementById('s3d').textContent=d.stat3d;
   if(d.email) document.getElementById('fEmail').textContent=d.email;
   if(d.instagram) document.getElementById('fIG').textContent=d.instagram;
@@ -1874,15 +1874,6 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
 #waFloat{position:fixed;bottom:28px;right:28px;z-index:8900;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,.45);transition:transform .2s,box-shadow .2s;text-decoration:none}
 #waFloat:hover{transform:scale(1.12);box-shadow:0 6px 32px rgba(37,211,102,.65)}
 #waFloat svg{width:28px;height:28px;fill:white}
-/* ── Hero stats strip ────────────────────────────────────────── */
-.hero-stats-strip{background:var(--BG2);border-bottom:1px solid rgba(26,23,20,.07);padding:32px 80px;display:flex;align-items:center;justify-content:center}
-.hs-item{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;text-align:center}
-.hs-n{font-family:var(--serif);font-size:52px;font-weight:200;color:var(--INK);letter-spacing:-.04em;line-height:1}
-.hs-suf{font-family:var(--serif);font-size:30px;font-weight:200;color:var(--O)}
-.hs-l{font-size:9.5px;letter-spacing:3px;text-transform:uppercase;color:var(--TX);font-weight:400}
-.hs-sep{width:1px;height:52px;background:rgba(26,23,20,.1);flex-shrink:0;margin:0 40px}
-@media(max-width:900px){.hero-stats-strip{padding:24px 32px}.hs-n{font-size:38px}.hs-suf{font-size:22px}.hs-sep{margin:0 20px}}
-@media(max-width:600px){.hero-stats-strip{padding:20px 16px}.hs-n{font-size:30px}.hs-sep{margin:0 12px}}
 /* ── Modal gallery nav ───────────────────────────────────────── */
 #modalGalNav{position:absolute;inset:0;display:none;align-items:center;justify-content:space-between;padding:0 12px;pointer-events:none;z-index:5}
 #modalGalNav.on{display:flex}
@@ -2295,24 +2286,6 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
     <span class="marquee-item">Interiores &amp; Fachadas</span>
     <span class="marquee-item">Arquitetura Contemporânea</span>
     <span class="marquee-item">Visualização Editorial</span>
-  </div>
-</div>
-
-<!-- ═══ HERO STATS STRIP ═══ -->
-<div class="hero-stats-strip rv" id="heroStrip">
-  <div class="hs-item">
-    <div><span class="hs-n counter" id="hs1n" data-target="180">0</span><span class="hs-suf">+</span></div>
-    <span class="hs-l" id="hs1l">Projetos entregues</span>
-  </div>
-  <div class="hs-sep"></div>
-  <div class="hs-item">
-    <div><span class="hs-n counter" id="hs2n" data-target="98">0</span><span class="hs-suf">%</span></div>
-    <span class="hs-l" id="hs2l">Satisfação dos clientes</span>
-  </div>
-  <div class="hs-sep"></div>
-  <div class="hs-item">
-    <div><span class="hs-n counter" id="hs3n" data-target="7">0</span><span class="hs-suf">+</span></div>
-    <span class="hs-l" id="hs3l">Anos de prática</span>
   </div>
 </div>
 
