@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <script>try{var _dm=localStorage.getItem('dm');var _pd=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;if(_dm==='1'||(_dm===null&&_pd))document.documentElement.classList.add('dark-mode');}catch(e){}</script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Vértice 3D — Narrativas visuais para arquitetura contemporânea</title>
 <meta name="description" content="Estúdio de visualização arquitetônica para projetos que exigem presença. Imagens concebidas para antecipar valor."/>
 <!-- SEO & Social -->
@@ -533,6 +533,10 @@ body::before{
 }
 .marquee-track:hover{animation-play-state:paused}
 @keyframes marqueeRun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){
+  .marquee-track{animation:none;}
+  .rv,.rv-clip{transition:none !important;opacity:1 !important;clip-path:none !important;}
+}
 .marquee-item{
   font-family:var(--serif);font-size:18px;letter-spacing:.08em;font-weight:300;
   color:rgba(26,23,20,.55);padding:0 32px;
@@ -2772,14 +2776,19 @@ body.dark-mode .dm-moon{opacity:1;}
   pointer-events:none;
 }
 .toast{
-  background:var(--INK);color:#fff;
+  background:#1A1714;color:#F4F0E8;
   padding:14px 20px 14px 16px;border-radius:var(--r-md);
-  font-size:13px;line-height:1.4;max-width:320px;
+  font-size:13px;line-height:1.4;max-width:min(320px,calc(100vw - 32px));
   display:flex;align-items:flex-start;gap:12px;
   pointer-events:all;
-  box-shadow:0 8px 32px rgba(26,23,20,.25);
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
   transform:translateX(120%);opacity:0;
   transition:transform .4s var(--ease),opacity .4s var(--ease);
+}
+@media(max-width:480px){
+  #toastContainer{top:16px;right:12px;left:12px;}
+  .toast{max-width:100%;transform:translateY(-120%);}
+  .toast.show{transform:translateY(0);}
 }
 .toast.show{transform:translateX(0);opacity:1;}
 .toast.success{border-left:3px solid #4CAF50;}
@@ -5349,6 +5358,12 @@ function initDepoSlider(){
     nav.appendChild(d);
   });
   startDepAuto(cards.length);
+  var _dSwipeX=0;
+  track.addEventListener('touchstart',function(e){_dSwipeX=e.touches[0].clientX;},{passive:true});
+  track.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-_dSwipeX;
+    if(Math.abs(dx)>50)moveDepo(dx<0?1:-1);
+  },{passive:true});
 }
 function goDepo(i){
   const track=document.getElementById('depoTrack');
@@ -5404,16 +5419,18 @@ let orcData={tipo:'',servico:'',metragem:'',prazo:'',obs:'',nome:'',phone:'',ema
 const progPcts=['33%','66%','100%'];
 
 function orcNext(step){
-  // Coleta seleções do step atual
+  // Valida antes de avançar
   if(step===2){
     const t=document.querySelector('#opTipo .orc-opt.sel');
     const s=document.querySelector('#opServ .orc-opt.sel');
-    orcData.tipo=t?t.dataset.v:'';
-    orcData.servico=s?s.dataset.v:'';
+    if(!t||!s){toast('Selecione o tipo de projeto e o serviço desejado.','warn','Campo obrigatório');return;}
+    orcData.tipo=t.dataset.v;
+    orcData.servico=s.dataset.v;
   }
   if(step===3){
     orcData.metragem=document.getElementById('oMet').value;
     orcData.prazo=document.getElementById('oPrazo').value;
+    if(!orcData.metragem||!orcData.prazo){toast('Selecione a metragem e o prazo desejado.','warn','Campo obrigatório');return;}
     orcData.obs=document.getElementById('oObs').value;
   }
 
