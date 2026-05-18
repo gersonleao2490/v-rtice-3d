@@ -3145,6 +3145,81 @@ body.dark-mode input::placeholder,body.dark-mode textarea::placeholder{
   .journal-grid{grid-template-columns:repeat(2,1fr) !important;}
   .foot-grid{grid-template-columns:repeat(2,1fr) !important;gap:40px 32px !important;}
 }
+
+/* ═══════════════════════════════════════════════════════════
+   POLISH FINAL — TAP HIGHLIGHT + TOUCH-ACTION + MISC
+═══════════════════════════════════════════════════════════ */
+
+/* Remove tap flash azul/cinza em todos elementos interativos no mobile */
+*{-webkit-tap-highlight-color:transparent;}
+
+/* Before/After handle: bloquear scroll da página ao arrastar */
+.ad-handle-v2,.ad-handle{touch-action:none;}
+#hScrollTrack{touch-action:pan-x;}
+
+/* Garantir que inputs nunca causem zoom no iOS (min 16px) */
+input,textarea,select{font-size:max(16px,1em);}
+
+/* Scroll suave em overflow containers no iOS */
+#hScrollTrack,.dep-outer,.pm-inner,.cmp-panels,.art-body-wrap{
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Focus visible para acessibilidade (teclado) */
+:focus-visible{outline:2px solid var(--O);outline-offset:2px;}
+button:focus:not(:focus-visible),a:focus:not(:focus-visible){outline:none;}
+
+/* Evitar text-size-adjust em rotação */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+
+/* Skeleton loader fade suave */
+.skeleton{
+  background:linear-gradient(90deg,var(--BG2) 25%,var(--BG3) 50%,var(--BG2) 75%);
+  background-size:200% 100%;
+  animation:skeleton-wave 1.4s ease infinite;
+  border-radius:4px;
+}
+@keyframes skeleton-wave{
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
+}
+
+/* Melhorar visibilidade do nav em modo claro quando scrolled */
+#nav.scrolled{backdrop-filter:blur(12px) saturate(1.4);-webkit-backdrop-filter:blur(12px) saturate(1.4);}
+
+/* Garantir que o modal fecha sem deixar scroll travado */
+body.modal-open{overflow:hidden !important;position:fixed;width:100%;}
+
+/* Dark mode: seção dep com texto legível */
+body.dark-mode .dep-card{border-left-color:rgba(245,242,236,.08) !important;}
+body.dark-mode .dep-q{color:rgba(245,242,236,.15) !important;}
+body.dark-mode .dep-txt{color:rgba(245,242,236,.7) !important;}
+body.dark-mode .dep-nm{color:var(--INK) !important;}
+body.dark-mode .dep-co{color:rgba(245,242,236,.45) !important;}
+
+/* Dark mode: journal cards */
+body.dark-mode .journal-card-title{color:var(--INK) !important;}
+body.dark-mode .journal-card-desc{color:rgba(245,242,236,.55) !important;}
+body.dark-mode .journal-card-link{color:var(--O) !important;}
+
+/* Dark mode: porqueNos items */
+body.dark-mode .pqn-title{color:var(--INK) !important;}
+body.dark-mode .pqn-desc{color:rgba(245,242,236,.55) !important;}
+
+/* Dark mode: simulador resultado */
+body.dark-mode .sim-result{background:rgba(232,64,0,.12) !important;border-color:rgba(232,64,0,.3) !important;}
+body.dark-mode .sim-result-range{color:var(--INK) !important;}
+
+/* Dark mode: stats section */
+body.dark-mode #stats{background:var(--BG2) !important;}
+
+/* Mobile: espaço inferior para barra fixa mobileCTA */
+@media(max-width:768px){
+  body{padding-bottom:60px;}
+  body.cmp-active{padding-bottom:124px;}
+  /* Evitar que última seção fique atrás da barra */
+  footer{margin-bottom:0 !important;}
+}
 </style>
 </head>
 <body>
@@ -4660,18 +4735,22 @@ body.dark-mode input::placeholder,body.dark-mode textarea::placeholder{
 function toast(msg,type,title,duration){
   type=type||'info';duration=duration||4000;
   var icons={success:'✓',error:'✗',warn:'!',info:'i'};
+  var c=document.getElementById('toastContainer');
+  if(!c)return;
+  // Limit to 3 visible toasts — remove oldest if exceeded
+  var existing=c.querySelectorAll('.toast');
+  if(existing.length>=3)existing[0].remove();
   var t=document.createElement('div');
   t.className='toast '+type;
   t.innerHTML='<span class="toast-icon">'+icons[type]+'</span>'
     +'<div class="toast-body">'+(title?'<div class="toast-title">'+title+'</div>':'')
     +'<div class="toast-msg">'+msg+'</div></div>'
     +'<button class="toast-close" onclick="this.parentElement.remove()">✕</button>';
-  var c=document.getElementById('toastContainer');
-  if(c)c.appendChild(t);
+  c.appendChild(t);
   requestAnimationFrame(function(){requestAnimationFrame(function(){t.classList.add('show');});});
   setTimeout(function(){
     t.classList.remove('show');
-    setTimeout(function(){t.remove();},400);
+    setTimeout(function(){if(t.parentNode)t.remove();},400);
   },duration);
 }
 /* Confirm modal */
@@ -5122,13 +5201,13 @@ function initPortFilter(){
       document.querySelectorAll('.fBtn').forEach(b=>b.classList.remove('on'));
       this.classList.add('on');
       const f=this.dataset.f;
-      // Horizontal
+      // Horizontal (flex children — restore via '' not 'block')
       document.querySelectorAll('.hCard').forEach(c=>{
-        c.style.display=(f==='all'||c.dataset.cat===f)?'block':'none';
+        c.style.display=(f==='all'||c.dataset.cat===f)?'':'none';
       });
       // Grid
       document.querySelectorAll('.gCard').forEach(c=>{
-        c.style.display=(f==='all'||c.dataset.cat===f)?'block':'none';
+        c.style.display=(f==='all'||c.dataset.cat===f)?'':'none';
       });
       // Update URL hash
       var filterKey=f==='all'?'portfolio':'portfolio/'+f;
@@ -5165,9 +5244,9 @@ function initBeforeAfter(){
   }
 
   line.addEventListener('mousedown',e=>{drag=true;e.preventDefault()});
-  line.addEventListener('touchstart',()=>drag=true,{passive:true});
+  line.addEventListener('touchstart',e=>{drag=true;},{ passive:true });
   window.addEventListener('mousemove',e=>{if(drag)setPos(e.clientX)});
-  window.addEventListener('touchmove',e=>{if(drag)setPos(e.touches[0].clientX)},{passive:true});
+  window.addEventListener('touchmove',e=>{if(drag){e.preventDefault();setPos(e.touches[0].clientX);}},{passive:false});
   window.addEventListener('mouseup',()=>drag=false);
   window.addEventListener('touchend',()=>drag=false);
   wrap.addEventListener('click',e=>setPos(e.clientX));
@@ -5285,11 +5364,22 @@ function moveDepo(dir){
   const n=track.querySelectorAll('.dep-card').length;
   goDepo((depIdx+dir+n)%n);
 }
+var _depListenersAdded=false;
+window.addEventListener('resize',function(){
+  var track=document.getElementById('depoTrack');
+  if(track&&track.querySelectorAll('.dep-card').length)goDepo(depIdx);
+},{ passive:true });
 function startDepAuto(n){
   clearInterval(depAuto);
   depAuto=setInterval(()=>goDepo((depIdx+1)%n),4500);
-  document.getElementById('depoTrack').addEventListener('mouseenter',()=>clearInterval(depAuto));
-  document.getElementById('depoTrack').addEventListener('mouseleave',()=>startDepAuto(n));
+  if(!_depListenersAdded){
+    _depListenersAdded=true;
+    var track=document.getElementById('depoTrack');
+    if(track){
+      track.addEventListener('mouseenter',()=>clearInterval(depAuto));
+      track.addEventListener('mouseleave',()=>{clearInterval(depAuto);depAuto=setInterval(()=>goDepo((depIdx+1)%n),4500);});
+    }
+  }
 }
 function buildDepoCard(item){
   return `<div class="dep-card">
