@@ -4,19 +4,19 @@
 <meta charset="UTF-8"/>
 <script>try{var _dm=localStorage.getItem('dm');var _pd=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;if(_dm==='1'||(_dm===null&&_pd))document.documentElement.classList.add('dark-mode');}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>Vértice 3D — Narrativas visuais para arquitetura contemporânea</title>
-<meta name="description" content="Estúdio de visualização arquitetônica para projetos que exigem presença. Imagens concebidas para antecipar valor."/>
+<title>Vértice 3D — Visualização Arquitetônica de Alto Padrão</title>
+<meta name="description" content="Estúdio de visualização arquitetônica de alto padrão. Renders e vídeos 3D que revelam o projeto antes da obra."/>
 <!-- SEO & Social -->
 <link rel="canonical" href="https://gersonleao2490.github.io/v-rtice-3d/"/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="Vértice 3D — Visualização Arquitetônica de Alto Padrão"/>
-<meta property="og:description" content="Estúdio de visualização arquitetônica para projetos que exigem presença. Renders fotorrealistas, Tour 360° e Vídeo 3D."/>
+<meta property="og:description" content="Renders e vídeos 3D de alto padrão para arquitetura contemporânea."/>
 <meta property="og:image" content="https://gersonleao2490.github.io/v-rtice-3d/og-image.jpg"/>
 <meta property="og:url" content="https://gersonleao2490.github.io/v-rtice-3d/"/>
 <meta property="og:locale" content="pt_BR"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Vértice 3D — Visualização Arquitetônica"/>
-<meta name="twitter:description" content="Renders fotorrealistas, Tour 360° e Vídeo 3D para arquitetura contemporânea."/>
+<meta name="twitter:description" content="Renders e vídeos 3D para arquitetura contemporânea."/>
 <meta name="robots" content="index, follow"/>
 <meta name="author" content="Vértice 3D"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -45,7 +45,7 @@ const storage=getStorage(app);
 window._FB={db,storage,doc,getDoc,setDoc,collection,getDocs,addDoc,deleteDoc,updateDoc,query,orderBy,ref,uploadBytes,uploadBytesResumable,getDownloadURL,deleteObject};
 
 window.addEventListener('DOMContentLoaded',async()=>{
-  try{ await loadSiteData(); await loadPortfolio(); await loadDepoimentos(); }
+  try{ await loadSiteData(); await loadPortfolio(); }
   catch(e){ console.warn("Firebase não configurado — dados padrão ativos.",e.message); }
 });
 
@@ -69,21 +69,10 @@ async function loadSiteData(){
   if(d.sobreN){var el=document.getElementById('sobreN');if(el)el.textContent=d.sobreN;}
   if(d.sobreAt){var el=document.getElementById('sobreAt');if(el)el.textContent=d.sobreAt;}
   if(d.sobreQ){var el=document.querySelector('.sobre-quote');if(el)el.innerHTML='“'+d.sobreQ+'”';}
-  if(d.stat1n) document.getElementById('s1n').dataset.target=d.stat1n;
-  if(d.stat1l) document.getElementById('s1l').textContent=d.stat1l;
-  if(d.stat1d) document.getElementById('s1d').textContent=d.stat1d;
-  if(d.stat2n) document.getElementById('s2n').dataset.target=d.stat2n;
-  if(d.stat2l) document.getElementById('s2l').textContent=d.stat2l;
-  if(d.stat2d) document.getElementById('s2d').textContent=d.stat2d;
-  if(d.stat3n) document.getElementById('s3n').dataset.target=d.stat3n;
-  if(d.stat3l) document.getElementById('s3l').textContent=d.stat3l;
-  if(d.stat3d) document.getElementById('s3d').textContent=d.stat3d;
   if(d.email) document.getElementById('fEmail').textContent=d.email;
   if(d.instagram) document.getElementById('fIG').textContent=d.instagram;
   if(d.instagramUrl) document.querySelectorAll('.soc-ig').forEach(function(el){el.href=d.instagramUrl;});
   if(d.youtubeUrl) document.querySelectorAll('.soc-yt').forEach(function(el){el.href=d.youtubeUrl;});
-  if(d.cidade) document.getElementById('fCidade').textContent=d.cidade;
-  if(d.coords) document.getElementById('fCoords').textContent=d.coords;
   // Tour 360° — tem prioridade total sobre imagem estática
   if(d.tour360Url){
     initTour360(d.tour360Url);
@@ -3226,10 +3215,121 @@ body.dark-mode #stats{background:var(--BG2) !important;}
 @media(max-width:768px){
   body{padding-bottom:60px;}
   body.cmp-active{padding-bottom:124px;}
-  /* Evitar que última seção fique atrás da barra */
-  footer{margin-bottom:0 !important;}
 }
+
+/* ════════════════════════════════════════════════
+   REDESIGN PREMIUM MINIMAL — 2026 (overrides finais)
+   Menos é mais: respiro, paleta neutra, foco no render
+════════════════════════════════════════════════ */
+:root{ --vx-accent:#9c7a4d; --vx-ink:#1A1714; --vx-cream:#F4F0E8; }
+body.dark-mode{ --vx-accent:#c9a87c; }
+
+/* Respiro entre seções */
+section{padding:200px 80px}
+@media(max-width:900px){section{padding:128px 40px}}
+@media(max-width:600px){section{padding:100px 22px}}
+
+/* Acento bronze — substitui o laranja comercial */
+.s-eye,.hero-eyebrow{color:var(--vx-accent)!important}
+.s-eye::before,.hero-eyebrow::before{background:var(--vx-accent)!important;opacity:.85!important}
+.s-title em,.s-title .it,.hero-title .accent{color:var(--vx-accent)!important}
+/* HERO cinematográfico — texto sempre legível sobre a mídia (vídeo/render) */
+#heroBg::after{background:linear-gradient(95deg,rgba(14,12,10,.82) 0%,rgba(14,12,10,.5) 42%,rgba(14,12,10,.12) 72%,transparent 100%)!important}
+body.dark-mode #heroBg::after{background:linear-gradient(95deg,rgba(8,7,6,.86) 0%,rgba(8,7,6,.55) 42%,rgba(8,7,6,.14) 72%,transparent 100%)!important}
+#hero .hero-title{color:#F4F0E8!important}
+#hero .hero-title .accent{color:#e9d9bf!important}
+#hero .hero-eyebrow{color:#d8c5a8!important}
+#hero .hero-eyebrow::before{background:#d8c5a8!important;opacity:.9!important}
+#hero .hero-sub{color:rgba(244,240,232,.82)!important}
+#hero .btn-O{background:#F4F0E8!important;border-color:#F4F0E8!important;color:#1A1714!important}
+#hero .btn-O::before{background:#e4ddcf!important}
+#hero .btn-ghost{border-color:rgba(244,240,232,.45)!important;color:#F4F0E8!important;background:transparent!important}
+#hero .btn-ghost:hover{border-color:#F4F0E8!important;color:#F4F0E8!important}
+#hero .hero-scroll span{color:rgba(244,240,232,.55)!important}
+#hero .scroll-track{background:rgba(244,240,232,.2)!important}
+.scroll-track::after{background:#d8c5a8!important}
+
+/* CTA primário → tinta sólida, alto contraste (à prova de dark mode) */
+.btn-O,.nav-cta{background:#1A1714!important;border-color:#1A1714!important;color:#F4F0E8!important;box-shadow:none!important}
+.btn-O::before{background:#34302a!important}
+.btn-O:hover,.nav-cta:hover{transform:translateY(-2px)!important;box-shadow:0 14px 32px rgba(20,17,14,.22)!important}
+body.dark-mode .btn-O,body.dark-mode .nav-cta{background:#F4F0E8!important;border-color:#F4F0E8!important;color:#1A1714!important}
+body.dark-mode .btn-O::before{background:#e4ddcf!important}
+.btn-ghost:hover{border-color:#1A1714!important;color:#1A1714!important;background:transparent!important}
+body.dark-mode .btn-ghost:hover{border-color:#F4F0E8!important;color:#F4F0E8!important}
+
+/* Filtros do portfólio */
+.fBtn.on,.fBtn:hover{color:#1A1714!important;border-bottom-color:var(--vx-accent)!important}
+body.dark-mode .fBtn.on,body.dark-mode .fBtn:hover{color:#F4F0E8!important}
+
+/* Portfólio — protagonismo da imagem, nomes em serifa */
+.hCard-name{font-family:var(--serif)!important;font-weight:300!important;font-size:24px!important;letter-spacing:0!important}
+.port-head{margin-bottom:60px!important;align-items:flex-end}
+
+/* SERVIÇOS — minimal, sem ícones/tags/prazos */
+.srv-grid-min{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:64px;background:rgba(26,23,20,.08)}
+body.dark-mode .srv-grid-min{background:rgba(244,240,232,.1)}
+.srv-item{background:var(--BG);padding:52px 40px 60px}
+body.dark-mode .srv-item{background:var(--BK)}
+.srv-item h3{font-family:var(--serif);font-weight:300;font-size:clamp(24px,2.4vw,32px);color:var(--INK);letter-spacing:-.01em;margin-bottom:16px}
+.srv-item p{font-size:14.5px;line-height:1.85;color:var(--TX);max-width:34ch}
+@media(max-width:760px){.srv-grid-min{grid-template-columns:1fr}.srv-item{padding:38px 26px}}
+
+/* PROCESSO — 3 etapas */
+.proc-head{margin-bottom:64px}
+.proc-steps-min{display:grid;grid-template-columns:repeat(3,1fr);gap:52px}
+.proc-step-min{display:flex;flex-direction:column;gap:14px}
+.proc-step-min .proc-num{font-family:var(--serif-it);font-size:38px;color:var(--vx-accent);line-height:1}
+.proc-step-min .proc-num span{font-style:italic}
+.proc-step-title{font-family:var(--serif);font-weight:400;font-size:22px;color:var(--INK);letter-spacing:-.01em}
+.proc-step-desc{font-size:14px;line-height:1.8;color:var(--TX);max-width:32ch}
+@media(max-width:760px){.proc-steps-min{grid-template-columns:1fr;gap:38px}}
+
+/* ESTÚDIO — declaração curta e elegante */
+#sobre{display:block!important}
+.sobre-min{max-width:940px;margin:0 auto;text-align:center}
+.sobre-min .s-eye{display:inline-flex;justify-content:center;margin-bottom:32px}
+.sobre-statement{font-family:var(--serif);font-weight:300;font-size:clamp(23px,3.1vw,40px);line-height:1.42;color:var(--INK);letter-spacing:-.01em}
+
+/* CONTATO / ORÇAMENTO — formulário limpo */
+.orc-inner-min{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;max-width:1180px;margin:0 auto}
+.orc-left .s-sub{max-width:38ch}
+.orc-contacts{display:flex;gap:28px;margin-top:36px;flex-wrap:wrap}
+.orc-contacts a{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--INK);border-bottom:1px solid var(--vx-accent);padding-bottom:4px;transition:opacity .3s}
+.orc-contacts a:hover{opacity:.6}
+.orc-form{display:flex;flex-direction:column;gap:20px}
+.orc-form .orc-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.orc-inp{display:flex;flex-direction:column;gap:8px}
+.orc-inp label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--TX2)}
+.orc-inp input,.orc-inp select,.orc-inp textarea{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(26,23,20,.2);padding:11px 0;font-family:var(--sans);font-size:15px;color:var(--INK);transition:border-color .3s}
+body.dark-mode .orc-inp input,body.dark-mode .orc-inp select,body.dark-mode .orc-inp textarea{border-bottom-color:rgba(244,240,232,.22);color:#F4F0E8}
+.orc-inp input:focus,.orc-inp select:focus,.orc-inp textarea:focus{outline:none;border-bottom-color:var(--vx-accent)}
+.orc-inp textarea{resize:vertical;min-height:64px}
+.orc-inp select{appearance:none;-webkit-appearance:none;cursor:pointer}
+body.dark-mode .orc-inp select option{color:#1A1714}
+.orc-form .btn-O{align-self:flex-start;margin-top:10px;border:none;cursor:pointer}
+.orc-info{font-size:11px;line-height:1.7;color:var(--TX2);margin-top:6px}
+#orcMsg{font-size:13px;margin-top:10px}
+@media(max-width:860px){.orc-inner-min{grid-template-columns:1fr;gap:46px}}
+@media(max-width:520px){.orc-form .orc-row{grid-template-columns:1fr}}
+
+/* FOOTER minimal */
+footer{padding:96px 80px 56px!important}
+.foot-min{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap;padding-bottom:48px;border-bottom:1px solid rgba(26,23,20,.1)}
+body.dark-mode .foot-min{border-color:rgba(244,240,232,.12)}
+.foot-contact{display:flex;flex-direction:column;gap:10px;text-align:right}
+.foot-contact p,.foot-contact a{font-size:14px;color:var(--TX);letter-spacing:.01em}
+.foot-contact a:hover{color:var(--INK)}
+.foot-bottom-min{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:34px;flex-wrap:wrap}
+.foot-copy{font-size:11px;letter-spacing:1px;color:var(--TX2)}
+.foot-priv{font-size:11px;letter-spacing:1px;color:var(--TX2);transition:color .3s}
+.foot-priv:hover{color:var(--INK)}
+@media(max-width:600px){footer{padding:64px 24px 40px!important}.foot-contact{text-align:left}.foot-min{flex-direction:column;gap:24px}}
+@media(max-width:768px){footer{margin-bottom:0 !important;}}
 </style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"Vértice 3D","description":"Estúdio de visualização arquitetônica de alto padrão.","url":"https://gersonleao2490.github.io/v-rtice-3d/","image":"https://gersonleao2490.github.io/v-rtice-3d/og-image.jpg","areaServed":"BR","knowsAbout":["Renderização arquitetônica","Visualização 3D","Vídeo 3D"]}
+</script>
 </head>
 <body>
 <div id="scrollProg"></div>
@@ -3260,11 +3360,6 @@ body.dark-mode #stats{background:var(--BG2) !important;}
 <a id="waFloat" href="https://wa.me/" class="wa-href" target="_blank" rel="noopener" aria-label="WhatsApp">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
-
-<!-- CURSOR -->
-<div id="cur"></div>
-<div id="curR"></div>
-<div id="curL"></div>
 
 <!-- LOADER -->
 <div id="loader">
@@ -3298,11 +3393,10 @@ body.dark-mode #stats{background:var(--BG2) !important;}
   <ul class="nav-links">
     <li><a href="#portSection">Portfólio</a></li>
     <li><a href="#servicos">Serviços</a></li>
-    <li><a href="#tourSection" id="navTour360" style="display:none">Tour 360°</a></li>
-    <li><a href="#sobre">Sobre</a></li>
-    <li><a href="#dep">Clientes</a></li>
+    <li><a href="#processo">Processo</a></li>
+    <li><a href="#orc">Contato</a></li>
   </ul>
-  <a href="#orc" class="nav-cta">Orçamento</a>
+  <a href="#orc" class="nav-cta">Solicitar Proposta</a>
   <button id="dmToggle" onclick="toggleDark()" aria-label="Alternar modo escuro" title="Modo escuro">
   <svg class="dm-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
   <svg class="dm-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="position:absolute"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -3316,263 +3410,34 @@ body.dark-mode #stats{background:var(--BG2) !important;}
   <ul class="fm-list">
     <li class="fm-item"><a href="#portSection" onclick="toggleMenu()">Portfólio</a></li>
     <li class="fm-item"><a href="#servicos" onclick="toggleMenu()">Serviços</a></li>
-    <li class="fm-item" id="menuTour360" style="display:none"><a href="#tourSection" onclick="toggleMenu()">Tour 360°</a></li>
-    <li class="fm-item"><a href="#sobre" onclick="toggleMenu()">Sobre</a></li>
-    <li class="fm-item"><a href="#dep" onclick="toggleMenu()">Clientes</a></li>
-    <li class="fm-item"><a href="#orc" onclick="toggleMenu()">Orçamento</a></li>
+    <li class="fm-item"><a href="#processo" onclick="toggleMenu()">Processo</a></li>
+    <li class="fm-item"><a href="#orc" onclick="toggleMenu()">Contato</a></li>
   </ul>
   <div class="fm-social">
-    <a href="#">Instagram</a>
-    <a href="#">LinkedIn</a>
-    <a href="#" class="wa-href">WhatsApp</a>
+    <a href="#" class="soc-ig" target="_blank" rel="noopener">Instagram</a>
+    <a href="#" class="wa-href" target="_blank" rel="noopener">WhatsApp</a>
   </div>
 </div>
 
 <!-- ═══ HERO ═══ -->
 <section id="hero">
-  <div class="hero-depth-far" id="heroDepthFar"></div>
   <div id="heroBg"></div>
-  <div class="hero-depth-mid" id="heroDepthMid"></div>
-  <canvas id="heroCanvas"></canvas>
   <div class="hero-content" id="heroContent">
-    <div id="socialCounter"><span id="scNum">47</span> pessoas visitaram hoje</div>
-    <div class="hero-eyebrow">Estúdio de Visualização Arquitetônica</div>
+    <div class="hero-eyebrow">Visualização Arquitetônica de Alto Padrão</div>
     <h1 class="hero-title">
-      <span class="line"><span id="hl1">Onde o</span></span>
-      <span class="line"><span id="hl2" class="accent">projeto</span></span>
-      <span class="line"><span id="hl3">ganha vida.</span></span>
+      <span class="line"><span id="hl1">O projeto,</span></span>
+      <span class="line"><span id="hl2" class="accent">antes</span></span>
+      <span class="line"><span id="hl3">da obra.</span></span>
     </h1>
-    <p class="hero-sub" id="heroSub">Narrativas visuais para arquitetura contemporânea. Imagens concebidas para antecipar valor — projetadas para quem não admite o ordinário.</p>
+    <p class="hero-sub" id="heroSub">Renders e vídeos que revelam o projeto em sua melhor forma.</p>
     <div class="hero-btns">
-      <a href="#portSection" class="btn-O"><span>Ver Portfólio</span></a>
-      <a href="#orc" class="btn-ghost">Solicitar Proposta</a>
+      <a href="#orc" class="btn-O"><span>Solicitar Proposta</span></a>
+      <a href="#portSection" class="btn-ghost">Ver Portfólio</a>
     </div>
   </div>
   <div class="hero-scroll">
     <div class="scroll-track"></div>
     <span>Rolar</span>
-  </div>
-  <div class="hero-year">Est. 2018</div>
-</section>
-
-<!-- MARQUEE editorial -->
-<div class="marquee-wrap">
-  <div class="marquee-track" id="mqTrack">
-    <span class="marquee-item">Renderização Fotorrealista</span>
-    <span class="marquee-item">Direção de Arte</span>
-    <span class="marquee-item">Composição Cinematográfica</span>
-    <span class="marquee-item">Vídeo 3D</span>
-    <span class="marquee-item">Tour Virtual 360°</span>
-    <span class="marquee-item">Interiores &amp; Fachadas</span>
-    <span class="marquee-item">Arquitetura Contemporânea</span>
-    <span class="marquee-item">Visualização Editorial</span>
-    <span class="marquee-item">Renderização Fotorrealista</span>
-    <span class="marquee-item">Direção de Arte</span>
-    <span class="marquee-item">Composição Cinematográfica</span>
-    <span class="marquee-item">Vídeo 3D</span>
-    <span class="marquee-item">Tour Virtual 360°</span>
-    <span class="marquee-item">Interiores &amp; Fachadas</span>
-    <span class="marquee-item">Arquitetura Contemporânea</span>
-    <span class="marquee-item">Visualização Editorial</span>
-  </div>
-</div>
-
-<!-- ═══ STATS ═══ -->
-<div id="stats">
-  <div class="stat-cell rv">
-    <span class="stat-num counter" id="s1n" data-target="180">0</span><span class="stat-plus">+</span>
-    <span class="stat-label" id="s1l">Projetos entregues</span>
-    <span class="stat-desc" id="s1d">Empreendimentos que fecharam vendas antes da obra começar.</span>
-  </div>
-  <div class="stat-cell rv rv-d1">
-    <span class="stat-num counter" id="s2n" data-target="95">0</span><span class="stat-plus">+</span>
-    <span class="stat-label" id="s2l">Clientes recorrentes</span>
-    <span class="stat-desc" id="s2d">Construtoras, escritórios e incorporadoras que voltam.</span>
-  </div>
-  <div class="stat-cell rv rv-d2">
-    <span class="stat-num counter" id="s3n" data-target="7">0</span><span class="stat-plus">+</span>
-    <span class="stat-label" id="s3l">Anos de prática</span>
-    <span class="stat-desc" id="s3d">Construindo referência em visualização arquitetônica.</span>
-  </div>
-</div>
-
-<!-- ═══ PROCESSO DE TRABALHO ═══ -->
-<section id="processo">
-  <div class="proc-head rv">
-    <div class="s-eye">Metodologia</div>
-    <h2 class="s-title">Do briefing ao<br><em>pixel final.</em></h2>
-    <p class="s-sub">Cada projeto segue um processo editorial rigoroso — do primeiro contato à entrega do arquivo final, com revisões incluídas em cada etapa.</p>
-  </div>
-  <div class="proc-steps">
-    <div class="proc-step rv">
-      <div class="proc-num"><span>01</span></div>
-      <div class="proc-step-icon">Briefing</div>
-      <div class="proc-step-title">Entendemos o projeto</div>
-      <p class="proc-step-desc">Análise de plantas, referências visuais e intenção de comunicação do empreendimento.</p>
-    </div>
-    <div class="proc-step rv rv-d1">
-      <div class="proc-num"><span>02</span></div>
-      <div class="proc-step-icon">Modelagem</div>
-      <div class="proc-step-title">Construímos em 3D</div>
-      <p class="proc-step-desc">Modelagem tridimensional precisa com materiais, luz e escala reais do projeto.</p>
-    </div>
-    <div class="proc-step rv rv-d2">
-      <div class="proc-num"><span>03</span></div>
-      <div class="proc-step-icon">Renderização</div>
-      <div class="proc-step-title">Render fotorrealista</div>
-      <p class="proc-step-desc">Processamento com V-Ray, Lumion ou D5 Render — iluminação natural e atmosfera precisas.</p>
-    </div>
-    <div class="proc-step rv rv-d3">
-      <div class="proc-num"><span>04</span></div>
-      <div class="proc-step-icon">Entrega</div>
-      <div class="proc-step-title">Arquivo final</div>
-      <p class="proc-step-desc">Alta resolução, formatos adaptados para uso em marketing, lançamento e comercialização.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SERVIÇOS ═══ -->
-<section id="servicos">
-  <div class="rv">
-    <div class="s-eye">O que fazemos</div>
-    <h2 class="s-title">Serviços para quem<br><em>não admite o ordinário.</em></h2>
-    <p class="s-sub" style="margin-top:16px">Cada entrega é concebida como peça editorial — com direção de arte, luz e narrativa visual pensadas para o seu público.</p>
-  </div>
-  <div class="srv-grid-new">
-    <div class="srv-card-new rv">
-      <div class="srv-card-num">01</div>
-      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-      <div class="srv-name">Renderização Exterior</div>
-      <p class="srv-desc">Fachadas, implantações e perspectivas externas com luz natural e atmosfera reais. Do térreo à vista aérea — cada ângulo composto para vender o empreendimento.</p>
-      <div class="srv-tags"><span class="srv-tag">V-Ray</span><span class="srv-tag">D5 Render</span><span class="srv-tag">3ds Max</span></div>
-      <div class="srv-prazo">Prazo: 7–15 dias</div>
-    </div>
-    <div class="srv-card-new rv rv-d1">
-      <div class="srv-card-num">02</div>
-      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-      <div class="srv-name">Renderização Interior</div>
-      <p class="srv-desc">Ambientes que comunicam estilo de vida — não apenas especificação técnica. Iluminação artificial, materiais nobres e composição editorial para cada cômodo.</p>
-      <div class="srv-tags"><span class="srv-tag">V-Ray</span><span class="srv-tag">Lumion</span><span class="srv-tag">Pós-produção</span></div>
-      <div class="srv-prazo">Prazo: 5–12 dias</div>
-    </div>
-    <div class="srv-card-new rv rv-d2">
-      <div class="srv-card-num">03</div>
-      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
-      <div class="srv-name">Vídeo 3D</div>
-      <p class="srv-desc">Animações cinematográficas para lançamentos e apresentações. Do walk-through interno ao flythrough aéreo — com trilha, voice-over e edição final incluídos.</p>
-      <div class="srv-tags"><span class="srv-tag">Animação</span><span class="srv-tag">Lumion</span><span class="srv-tag">After Effects</span></div>
-      <div class="srv-prazo">Prazo: 15–30 dias</div>
-    </div>
-    <div class="srv-card-new rv rv-d1">
-      <div class="srv-card-num">04</div>
-      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
-      <div class="srv-name">Tour Virtual 360°</div>
-      <p class="srv-desc">Experiência imersiva da edificação antes da construção. O cliente navega por todos os ambientes no celular, tablet ou óculos VR — sem sair do lugar.</p>
-      <div class="srv-tags"><span class="srv-tag">360°</span><span class="srv-tag">VR Ready</span><span class="srv-tag">Mobile</span></div>
-      <div class="srv-prazo">Prazo: 10–20 dias</div>
-    </div>
-    <div class="srv-card-new rv rv-d2">
-      <div class="srv-card-num">05</div>
-      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
-      <div class="srv-name">Implantação Aérea</div>
-      <p class="srv-desc">Vista de drone simulada com contexto urbano real. Integração do empreendimento ao entorno existente — vizinhança, vias, verde e pontos de referência.</p>
-      <div class="srv-tags"><span class="srv-tag">Drone View</span><span class="srv-tag">GIS</span><span class="srv-tag">Contexto real</span></div>
-      <div class="srv-prazo">Prazo: 8–14 dias</div>
-    </div>
-    <div class="srv-card-new rv rv-d3">
-      <div class="srv-card-num">06</div>
-      <div class="srv-icon-new"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
-      <div class="srv-name">Direção de Arte</div>
-      <p class="srv-desc">Para empreendimentos que exigem identidade visual completa: paleta de cor, moodboard editorial, guia de imagem e supervisão de toda a comunicação visual do lançamento.</p>
-      <div class="srv-tags"><span class="srv-tag">Editorial</span><span class="srv-tag">Branding</span><span class="srv-tag">Estratégia</span></div>
-      <div class="srv-prazo">Prazo: sob consulta</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SOBRE ═══ -->
-<section id="sobre">
-  <div class="sobre-vis">
-    <div class="sobre-img-wrap" id="sobreImgWrap">
-      <div class="sobre-img-placeholder">
-        <!-- Composição editorial abstrata — três camadas arquitetônicas -->
-        <svg class="sobre-img-svg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Horizonte / linha do solo -->
-          <line x1="0" y1="370" x2="400" y2="370" stroke="rgba(232,64,0,.18)" stroke-width=".7"/>
-          <!-- Volume principal — fachada vertical -->
-          <rect x="78" y="120" width="158" height="250" stroke="rgba(26,23,20,.18)" stroke-width=".7" fill="rgba(232,64,0,.025)"/>
-          <!-- Linhas verticais editorais -->
-          <line x1="120" y1="120" x2="120" y2="370" stroke="rgba(26,23,20,.08)" stroke-width=".5"/>
-          <line x1="158" y1="120" x2="158" y2="370" stroke="rgba(26,23,20,.08)" stroke-width=".5"/>
-          <line x1="196" y1="120" x2="196" y2="370" stroke="rgba(26,23,20,.08)" stroke-width=".5"/>
-          <!-- Linhas horizontais editorais -->
-          <line x1="78" y1="180" x2="236" y2="180" stroke="rgba(26,23,20,.08)" stroke-width=".5"/>
-          <line x1="78" y1="240" x2="236" y2="240" stroke="rgba(26,23,20,.08)" stroke-width=".5"/>
-          <line x1="78" y1="300" x2="236" y2="300" stroke="rgba(26,23,20,.08)" stroke-width=".5"/>
-          <!-- Volume secundário em profundidade -->
-          <polygon points="236,150 320,180 320,370 236,370" stroke="rgba(26,23,20,.12)" stroke-width=".5" fill="rgba(232,64,0,.015)"/>
-          <!-- Vértice / triângulo da marca, sutil -->
-          <polygon points="200,40 310,90 90,90" stroke="rgba(232,64,0,.45)" stroke-width=".8" fill="none"/>
-          <!-- Pontos editoriais -->
-          <circle cx="200" cy="40" r="2.5" fill="#E84000"/>
-          <circle cx="310" cy="90" r="1.8" fill="rgba(232,64,0,.6)"/>
-          <circle cx="90" cy="90" r="1.8" fill="rgba(232,64,0,.6)"/>
-          <!-- Sol/luz indireta -->
-          <circle cx="320" cy="100" r="40" fill="url(#sungrad)" opacity=".45"/>
-          <defs>
-            <radialGradient id="sungrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#E84000" stop-opacity=".25"/>
-              <stop offset="100%" stop-color="#E84000" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <!-- Régua editorial vertical -->
-          <line x1="30" y1="120" x2="30" y2="370" stroke="rgba(232,64,0,.35)" stroke-width=".5"/>
-          <line x1="26" y1="120" x2="34" y2="120" stroke="rgba(232,64,0,.5)" stroke-width=".5"/>
-          <line x1="26" y1="370" x2="34" y2="370" stroke="rgba(232,64,0,.5)" stroke-width=".5"/>
-          <!-- Régua editorial horizontal inferior -->
-          <line x1="78" y1="430" x2="320" y2="430" stroke="rgba(232,64,0,.3)" stroke-width=".5"/>
-        </svg>
-        <span class="sobre-img-label">Composição arquitetônica · estúdio</span>
-      </div>
-    </div>
-    <!-- Floating metric cards -->
-    <div class="sobre-float sobre-float-tl rv">
-      <span class="sf-n">+180</span>
-      <span class="sf-l">Projetos entregues</span>
-    </div>
-    <div class="sobre-float sobre-float-br rv">
-      <span class="sf-icon">🏆</span>
-      <div>
-        <span class="sf-n">98%</span>
-        <span class="sf-l">Satisfação</span>
-      </div>
-    </div>
-    <div class="sobre-accent">
-      <span class="an" id="sobreN">6</span>
-      <span class="at" id="sobreAt">Anos de estúdio</span>
-    </div>
-    <div class="sobre-float sobre-float-mid rv">
-      <span class="sf-icon">⚡</span>
-      <div>
-        <span class="sf-n">48h</span>
-        <span class="sf-l">Prazo médio de resposta</span>
-      </div>
-    </div>
-  </div>
-  <div class="sobre-content">
-    <div class="s-eye rv">Sobre o estúdio</div>
-    <h2 class="s-title rv rv-d1">Precisão<br><em>que vende.</em></h2>
-    <p class="sobre-quote rv rv-d2">"Cada pixel é uma decisão de design. Cada render, uma promessa visual."</p>
-    <p class="sobre-desc rv rv-d3" id="sobreTexto">
-      A Vértice 3D é um estúdio dedicado à visualização arquitetônica de alto padrão. Traduzimos plantas, modelos e intenções em imagens que comunicam qualidade antes da obra existir — para construtoras, incorporadoras, arquitetos e investidores que vendem uma ideia com precisão visual impecável.
-    </p>
-    <ul class="sobre-list rv rv-d4">
-      <li><div class="sl-dot"></div>Renderização fotorrealista com V-Ray, Lumion e D5 Render</li>
-      <li><div class="sl-dot"></div>Direção de arte editorial para arquitetura contemporânea</li>
-      <li><div class="sl-dot"></div>Entrega pontual com revisões incluídas em todos os pacotes</li>
-      <li><div class="sl-dot"></div>Do interior íntimo à implantação de grande escala</li>
-    </ul>
-    <a href="#orc" class="btn-O rv" style="align-self:flex-start;margin-top:16px"><span>Solicitar Proposta</span></a>
   </div>
 </section>
 
@@ -3580,658 +3445,176 @@ body.dark-mode #stats{background:var(--BG2) !important;}
 <section id="portSection">
   <div class="port-head">
     <div>
-      <div class="s-eye rv">Curadoria de projetos</div>
+      <div class="s-eye rv">Projetos</div>
       <h2 class="s-title rv rv-d1">Portfólio<em>.</em></h2>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px">
-      <div class="filter-row rv rv-d2" id="filterRow">
-        <button class="fBtn on" data-f="all">Todos</button>
-        <button class="fBtn" data-f="residencial">Residencial</button>
-        <button class="fBtn" data-f="comercial">Comercial</button>
-        <button class="fBtn" data-f="interiores">Interiores</button>
-        <button class="fBtn" data-f="video">Vídeo 3D</button>
-      </div>
-      <button class="pm-trigger rv rv-d3" onclick="openPMode()">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="1" width="5" height="5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="8" width="5" height="5" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="5" height="5" stroke="currentColor" stroke-width="1.2"/></svg>
-        Modo Apresentação
-      </button>
+    <div class="filter-row rv rv-d2" id="filterRow">
+      <button class="fBtn on" data-f="all">Todos</button>
+      <button class="fBtn" data-f="residencial">Residencial</button>
+      <button class="fBtn" data-f="comercial">Comercial</button>
+      <button class="fBtn" data-f="interiores">Interiores</button>
     </div>
   </div>
 
-  <!-- Horizontal scroll (desktop) -->
+  <!-- Scroll horizontal (desktop) -->
   <div class="h-port-outer rv" style="position:relative">
     <div id="portScrollHint" class="port-scroll-hint" style="display:none">Deslize para ver mais →</div>
     <div id="hScrollTrack">
-      <!-- Placeholders padrão -->
-      <div class="hCard" data-cat="residencial" onclick="openModal('Residência alto padrão','residencial','Projeto residencial com iluminação natural dramática e acabamentos nobres. V-Ray + 3ds Max.','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#1a0800,#2d1200)"><span>Residencial</span></div>
-        <button class="hCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-0','Residência Alto Padrão','residencial','Projeto residencial com iluminação natural dramática e acabamentos nobres.')"></button>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Residencial</div><div class="hCard-name">Residência Alto Padrão</div></div>
+      <!-- Placeholders neutros — substituídos pelos projetos reais via painel -->
+      <div class="hCard" data-cat="residencial" onclick="openModal('Projeto Residencial','residencial','','')">
+        <div class="hPh" style="background:linear-gradient(160deg,#2b2620,#3c352b)"><span>Residencial</span></div>
+        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Residencial</div><div class="hCard-name">Projeto Residencial</div></div>
       </div>
-      <div class="hCard" data-cat="interiores" onclick="openModal('Suíte contemporânea','interiores','Renderização de interiores com paleta neutra e iluminação cênica. Lumion 12.','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#0d0d10,#1a1825)"><span>Interiores</span></div>
-        <button class="hCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-1','Suite Contemporânea','interiores','Renderização de interiores com paleta neutra e iluminação cênica. Lumion 12.')"></button>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Interiores</div><div class="hCard-name">Suite Contemporânea</div></div>
+      <div class="hCard" data-cat="interiores" onclick="openModal('Projeto de Interiores','interiores','','')">
+        <div class="hPh" style="background:linear-gradient(160deg,#26211c,#332c24)"><span>Interiores</span></div>
+        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Interiores</div><div class="hCard-name">Projeto de Interiores</div></div>
       </div>
-      <div class="hCard" data-cat="comercial" onclick="openModal('Torre corporativa','comercial','Fachada envidraçada com reflexos de céu. Renderização exterior — D5 Render.','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#030d1a,#0a1e30)"><span>Comercial</span></div>
-        <button class="hCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-2','Torre Corporativa','comercial','Fachada envidraçada com reflexos de céu. Renderização exterior — D5 Render.')"></button>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Comercial</div><div class="hCard-name">Torre Corporativa</div></div>
+      <div class="hCard" data-cat="comercial" onclick="openModal('Projeto Comercial','comercial','','')">
+        <div class="hPh" style="background:linear-gradient(160deg,#222019,#302b22)"><span>Comercial</span></div>
+        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Comercial</div><div class="hCard-name">Projeto Comercial</div></div>
       </div>
-      <div class="hCard" data-cat="residencial" onclick="openModal('Casa de campo','residencial','Integração total ao ambiente natural. Cerrado brasileiro como pano de fundo.','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#071206,#102010)"><span>Residencial</span></div>
-        <button class="hCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-3','Casa de Campo','residencial','Integração total ao ambiente natural. Cerrado brasileiro como pano de fundo.')"></button>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Residencial</div><div class="hCard-name">Casa de Campo</div></div>
-      </div>
-      <div class="hCard" data-cat="video" onclick="openModal('Animação de empreendimento','video','Vídeo 3D completo para lançamento. 2 min de percurso cinematográfico pelo empreendimento.','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#1a0000,#300000)">
-          <svg width="44" height="44" viewBox="0 0 44 44" opacity=".2"><polygon points="16,10 38,22 16,34" fill="white"/></svg>
-          <span>Vídeo 3D</span>
-        </div>
-        <button class="hCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-4','Animação Empreendimento','video','Vídeo 3D completo para lançamento. 2 min de percurso cinematográfico.')"></button>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Vídeo 3D</div><div class="hCard-name">Animação Empreendimento</div></div>
-      </div>
-      <div class="hCard" data-cat="interiores" onclick="openModal('Loft industrial','interiores','Tijolo aparente, concreto e iluminação pendente. Atmosfera urbana e sofisticada.','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#141414,#242424)"><span>Interiores</span></div>
-        <button class="hCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-5','Loft Industrial','interiores','Tijolo aparente, concreto e iluminação pendente. Atmosfera urbana e sofisticada.')"></button>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Interiores</div><div class="hCard-name">Loft Industrial</div></div>
+      <div class="hCard" data-cat="residencial" onclick="openModal('Projeto Residencial','residencial','','')">
+        <div class="hPh" style="background:linear-gradient(160deg,#2a251f,#39322a)"><span>Residencial</span></div>
+        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Residencial</div><div class="hCard-name">Projeto Residencial</div></div>
       </div>
     </div>
   </div>
-  <div class="h-scroll-hint">Arraste para percorrer a curadoria</div>
+  <div class="h-scroll-hint">Arraste para percorrer os projetos</div>
   <div id="portScrollDots"></div>
 
   <!-- Grid (mobile) -->
   <div id="portfolioGrid">
-    <div class="gCard wide" data-cat="residencial" onclick="openModal('Residência alto padrão','residencial','Projeto residencial com iluminação natural dramática.','')">
-      <div class="gPh" style="background:linear-gradient(160deg,#1a0800,#2d1200)"></div>
-      <button class="gCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-0','Residência Alto Padrão','residencial','Projeto residencial com iluminação natural dramática.')"></button>
-      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Residencial</div><div class="gCard-name">Residência Alto Padrão</div></div>
+    <div class="gCard wide" data-cat="residencial" onclick="openModal('Projeto Residencial','residencial','','')">
+      <div class="gPh" style="background:linear-gradient(160deg,#2b2620,#3c352b)"></div>
+      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Residencial</div><div class="gCard-name">Projeto Residencial</div></div>
     </div>
-    <div class="gCard" data-cat="interiores" onclick="openModal('Suíte contemporânea','interiores','Renderização de interiores com paleta neutra.','')">
-      <div class="gPh" style="background:linear-gradient(160deg,#0d0d10,#1a1825)"></div>
-      <button class="gCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-1','Suite Contemporânea','interiores','Renderização de interiores com paleta neutra e iluminação cênica.')"></button>
-      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Interiores</div><div class="gCard-name">Suite Contemporânea</div></div>
+    <div class="gCard" data-cat="interiores" onclick="openModal('Projeto de Interiores','interiores','','')">
+      <div class="gPh" style="background:linear-gradient(160deg,#26211c,#332c24)"></div>
+      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Interiores</div><div class="gCard-name">Projeto de Interiores</div></div>
     </div>
-    <div class="gCard" data-cat="comercial" onclick="openModal('Torre corporativa','comercial','Fachada envidraçada com reflexos de céu.','')">
-      <div class="gPh" style="background:linear-gradient(160deg,#030d1a,#0a1e30)"></div>
-      <button class="gCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-2','Torre Corporativa','comercial','Fachada envidraçada com reflexos de céu. Renderização exterior.')"></button>
-      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Comercial</div><div class="gCard-name">Torre Corporativa</div></div>
-    </div>
-    <div class="gCard" data-cat="video" onclick="openModal('Animação de empreendimento','video','Vídeo 3D completo para lançamento.','')">
-      <div class="gPh" style="background:linear-gradient(160deg,#1a0000,#300000);display:flex;align-items:center;justify-content:center">
-        <svg width="40" height="40" viewBox="0 0 40 40" opacity=".2"><polygon points="14,8 36,20 14,32" fill="white"/></svg>
-      </div>
-      <button class="gCard-cmp" title="Comparar projeto" onclick="toggleCompareSt(event,'st-4','Animação Empreendimento','video','Vídeo 3D completo para lançamento. 2 min de percurso cinematográfico.')"></button>
-      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Vídeo 3D</div><div class="gCard-name">Animação Empreendimento</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ POR QUE NÓS ═══ -->
-<section id="porqueNos">
-  <div class="rv">
-    <div class="s-eye">Diferenciais</div>
-    <h2 class="s-title">Por que o mercado<br><em>escolhe a Vértice.</em></h2>
-  </div>
-  <div class="pqn-grid">
-    <div class="pqn-left rv">
-      <p class="s-sub">Cada detalhe é intencional. Da câmera à paleta de luz — trabalhamos com a precisão de um diretor de arte, não de um operador de software.</p>
-      <div class="pqn-items">
-        <div class="pqn-item">
-          <div class="pqn-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-          <div class="pqn-item-body"><h4>Qualidade editorial</h4><p>Composição cinematográfica com estudo de luz, perspectiva e narrativa visual — não apenas render técnico.</p></div>
-        </div>
-        <div class="pqn-item">
-          <div class="pqn-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div class="pqn-item-body"><h4>Revisões inclusas</h4><p>Todas as rodadas de ajuste incluídas no projeto — sem cobrança extra por revisões dentro do escopo.</p></div>
-        </div>
-        <div class="pqn-item">
-          <div class="pqn-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-          <div class="pqn-item-body"><h4>Prazo garantido</h4><p>Cronograma acordado e respeitado. Projetos de lançamento têm prioridade de entrega sem perda de qualidade.</p></div>
-        </div>
-      </div>
-    </div>
-    <div class="pqn-right rv rv-d1">
-      <div class="pqn-software">
-        <div class="pqn-sw-title">Software &amp; tecnologia</div>
-        <div class="pqn-sw-list">
-          <div class="pqn-sw-item">
-            <span class="pqn-sw-badge">V-Ray</span>
-            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:95%"></div></div>
-          </div>
-          <div class="pqn-sw-item">
-            <span class="pqn-sw-badge">Lumion</span>
-            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:90%"></div></div>
-          </div>
-          <div class="pqn-sw-item">
-            <span class="pqn-sw-badge">D5 Render</span>
-            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:85%"></div></div>
-          </div>
-          <div class="pqn-sw-item">
-            <span class="pqn-sw-badge">3ds Max</span>
-            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:88%"></div></div>
-          </div>
-          <div class="pqn-sw-item">
-            <span class="pqn-sw-badge">Photoshop</span>
-            <div class="pqn-sw-bar"><div class="pqn-sw-fill" style="--w:92%"></div></div>
-          </div>
-        </div>
-      </div>
-      <div class="pqn-cert">
-        <div class="pqn-cert-icon">🏆</div>
-        <div class="pqn-cert-text">
-          <h4>+180 projetos entregues</h4>
-          <p>Construtoras, escritórios e incorporadoras que voltam — 95% de clientes recorrentes</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ ANTES / DEPOIS ═══ -->
-<section id="ad">
-  <div class="s-eye rv">Transformação visual</div>
-  <h2 class="s-title rv rv-d1">ANTES &amp;<br>DEPOIS</h2>
-  <p class="s-sub rv rv-d2">Da planta ao fotorrealismo. Arraste o divisor para revelar a composição final.</p>
-  <div class="ad-inner rv rv-d3">
-    <div class="ad-wrap" id="adWrap">
-      <div class="ad-side ad-before">
-        <div class="ad-ph">
-          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-            <rect x="6" y="6" width="44" height="44" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-dasharray="4,4"/>
-            <line x1="6" y1="28" x2="50" y2="28" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-            <line x1="28" y1="6" x2="28" y2="50" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-            <rect x="14" y="18" width="28" height="20" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-          </svg>
-          <span>Planta Baixa</span>
-        </div>
-      </div>
-      <div class="ad-side ad-after" id="adAfter">
-        <div class="ad-ph">
-          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-            <polygon points="28,4 52,52 4,52" fill="rgba(232,64,0,.15)" stroke="rgba(232,64,0,.4)" stroke-width="1.5"/>
-            <polygon points="28,16 44,44 12,44" fill="rgba(232,64,0,.08)" stroke="rgba(232,64,0,.2)" stroke-width="1"/>
-          </svg>
-          <span>Renderização Final</span>
-        </div>
-      </div>
-      <div class="ad-line" id="adLine">
-        <div class="ad-handle-v2" id="adHandle" title="Arraste para comparar">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 5l-5 7 5 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M16 5l5 7-5 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-      </div>
-      <div class="ad-tag b">ANTES</div>
-      <div class="ad-tag a">DEPOIS</div>
+    <div class="gCard" data-cat="comercial" onclick="openModal('Projeto Comercial','comercial','','')">
+      <div class="gPh" style="background:linear-gradient(160deg,#222019,#302b22)"></div>
+      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Comercial</div><div class="gCard-name">Projeto Comercial</div></div>
     </div>
   </div>
 </section>
 
 <!-- ═══ SERVIÇOS ═══ -->
-<section id="srv">
-  <div class="s-eye rv">O Que Fazemos</div>
-  <h2 class="s-title rv rv-d1">SERVIÇOS</h2>
-  <div class="srv-grid">
-    <div class="srv-card rv">
-      <div class="srv-n">I</div>
-      <div class="srv-ico">01—</div>
-      <div class="srv-t">Renderização<br>fotorrealista</div>
-      <p class="srv-d">Imagens de alta resolução para fachadas, interiores e vistas de implantação. Composição cinematográfica, materiais físicamente baseados, luz indireta — cada decisão visual com intenção.</p>
+<section id="servicos">
+  <div class="rv">
+    <div class="s-eye">Serviços</div>
+    <h2 class="s-title">O que fazemos<em>.</em></h2>
+  </div>
+  <div class="srv-grid-min">
+    <div class="srv-item rv">
+      <h3>Renderização Exterior</h3>
+      <p>Fachadas e implantações com luz natural e atmosfera reais.</p>
     </div>
-    <div class="srv-card rv rv-d1">
-      <div class="srv-n">II</div>
-      <div class="srv-ico">02—</div>
-      <div class="srv-t">Vídeo 3D<br>cinematográfico</div>
-      <p class="srv-d">Percurso externo, passeio interno, voo de drone virtual. Narrativa cinematográfica para lançamentos e apresentações que precisam de presença real.</p>
+    <div class="srv-item rv rv-d1">
+      <h3>Renderização Interior</h3>
+      <p>Ambientes que comunicam o estilo de vida do projeto.</p>
     </div>
-    <div class="srv-card rv rv-d2">
-      <div class="srv-n">III</div>
-      <div class="srv-ico">03—</div>
-      <div class="srv-t">Tour virtual<br>360°</div>
-      <p class="srv-d">Experiência imersiva para navegar pelo projeto antes da obra. Compatível com VR e qualquer dispositivo — apresente em qualquer reunião, com a discrição que o cliente espera.</p>
-      <a id="srvTour360Btn" href="#tourSection" style="display:none;margin-top:24px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--O);border-bottom:1px solid var(--O);padding-bottom:2px;transition:opacity .3s">Explorar o tour →</a>
-    </div>
-    <div class="srv-card rv rv-d3">
-      <div class="srv-n">IV</div>
-      <div class="srv-ico">04—</div>
-      <div class="srv-t">Implantação<br>animada</div>
-      <p class="srv-d">Vista aérea do empreendimento contextualizado ao terreno e ao entorno urbano. Ideal para incorporadoras, prefeituras e apresentações a investidores.</p>
+    <div class="srv-item rv rv-d2">
+      <h3>Vídeo 3D</h3>
+      <p>Percursos em movimento para apresentar o projeto.</p>
     </div>
   </div>
 </section>
 
 <!-- ═══ PROCESSO ═══ -->
-<section id="proc">
-  <div class="proc-inner">
-    <div class="proc-sticky">
-      <div class="s-eye rv">Método de trabalho</div>
-      <h2 class="s-title rv rv-d1">Processo<br><em>silencioso.</em></h2>
-      <p class="s-sub rv rv-d2">Do briefing à entrega — uma cadência clara em cada etapa.</p>
-      <div class="proc-visual rv rv-d3" style="margin-top:36px">
-        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" opacity=".12">
-          <polygon points="30,4 56,52 4,52" stroke="white" stroke-width="1.5" fill="none"/>
-          <circle cx="30" cy="30" r="14" stroke="white" stroke-width="1" fill="none" stroke-dasharray="3,3"/>
-        </svg>
-        <span>Processo visual</span>
-      </div>
+<section id="processo">
+  <div class="proc-head rv">
+    <div class="s-eye">Processo</div>
+    <h2 class="s-title">Do briefing à entrega<em>.</em></h2>
+  </div>
+  <div class="proc-steps-min">
+    <div class="proc-step-min rv">
+      <div class="proc-num"><span>01</span></div>
+      <div class="proc-step-title">Briefing</div>
+      <p class="proc-step-desc">Plantas, referências e objetivos do projeto.</p>
     </div>
-    <div class="proc-steps">
-      <div class="proc-step rv">
-        <div class="ps-num">01</div>
-        <div>
-          <div class="ps-t">Briefing e alinhamento</div>
-          <p class="ps-d">Recebemos plantas, referências e objetivos. Mapeamos expectativas, prazos e definimos escopo completo antes de qualquer linha ser modelada.</p>
-        </div>
-      </div>
-      <div class="proc-step rv rv-d1">
-        <div class="ps-num">02</div>
-        <div>
-          <div class="ps-t">Modelagem volumétrica</div>
-          <p class="ps-d">Construção do modelo tridimensional fiel ao projeto, com todos os detalhes construtivos, esquadrias, volumes e proporções corretas.</p>
-        </div>
-      </div>
-      <div class="proc-step rv rv-d2">
-        <div class="ps-num">03</div>
-        <div>
-          <div class="ps-t">Materiais e luz</div>
-          <p class="ps-d">Aplicação de texturas físicamente baseadas (PBR), materiais premium e iluminação realista — sol, ambiente, artificial — para criar a atmosfera exata desejada.</p>
-        </div>
-      </div>
-      <div class="proc-step rv rv-d3">
-        <div class="ps-num">04</div>
-        <div>
-          <div class="ps-t">Preview e ajustes</div>
-          <p class="ps-d">Enviamos um preview para aprovação antes do render final. Ajustamos ângulos, iluminação e detalhes com base no retorno — sem custo extra.</p>
-        </div>
-      </div>
-      <div class="proc-step rv rv-d4">
-        <div class="ps-num">05</div>
-        <div>
-          <div class="ps-t">Entrega final</div>
-          <p class="ps-d">Arquivos em alta resolução (4K+), formatos solicitados, dentro do prazo combinado. Revisões incluídas até a aprovação total.</p>
-        </div>
-      </div>
+    <div class="proc-step-min rv rv-d1">
+      <div class="proc-num"><span>02</span></div>
+      <div class="proc-step-title">Preview</div>
+      <p class="proc-step-desc">Prévia para aprovação, com revisões definidas.</p>
+    </div>
+    <div class="proc-step-min rv rv-d2">
+      <div class="proc-num"><span>03</span></div>
+      <div class="proc-step-title">Entrega</div>
+      <p class="proc-step-desc">Imagens em alta resolução, prontas para apresentação e divulgação.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══ LUPA — detalhe de qualidade ═══ -->
-<section id="lupa">
-  <div class="lupa-inner">
-    <div>
-      <div class="s-eye rv">Qualidade em detalhe</div>
-      <h2 class="s-title rv rv-d1">Qualidade<br><em>em detalhe.</em></h2>
-      <p class="s-sub rv rv-d2">Aproxime o cursor para inspecionar o nível de detalhe. É na precisão silenciosa do material e da luz que reside o trabalho.</p>
-      <ul class="lupa-bullets rv rv-d3">
-        <li>Materiais PBR fotorrealistas</li>
-        <li>Iluminação global com cálculo físico</li>
-        <li>Resolução 4K · sem artefatos · sem ruído</li>
-      </ul>
-    </div>
-    <div class="lupa-wrap rv rv-d1" id="lupaWrap">
-      <div class="lupa-base-ph" id="lupaBasePh">
-        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" opacity=".18">
-          <polygon points="40,6 74,68 6,68" stroke="white" stroke-width="1.5" fill="none"/>
-          <circle cx="40" cy="44" r="18" stroke="white" stroke-width="1" fill="none"/>
-        </svg>
-        <span>Render fotorrealista 4K</span>
-      </div>
-      <div class="lupa-glass" id="lupaGlass">
-        <div class="lupa-glass-ph" id="lupaGlassImg"></div>
-      </div>
-      <div class="lupa-label">Aproxime para ampliar</div>
-    </div>
-  </div>
-  <p class="lupa-hint rv rv-d4" style="text-align:right;margin-top:10px">Clique duas vezes para tela cheia</p>
-</section>
-
-<!-- LUPA FULLSCREEN -->
-<div id="lupaFS">
-  <div id="lupaFSImg"></div>
-  <button id="lupaFSClose" onclick="closeLupaFS()">✕</button>
-</div>
-
-<!-- ═══ DEPOIMENTOS ═══ -->
-<section id="dep">
-  <div class="s-eye rv">O que dizem de nós</div>
-  <h2 class="s-title rv rv-d1">Clientes<em>.</em></h2>
-  <div class="dep-outer">
-    <div style="overflow:hidden">
-      <div id="depoTrack">
-        <div class="dep-card">
-          <div class="dep-q">"</div>
-          <p class="dep-txt">As imagens superaram todas as nossas expectativas. Fechamos 40% das unidades do lançamento em 3 semanas — antes de qualquer obra. A Vértice entregou em tempo recorde e com qualidade impecável.</p>
-          <div class="dep-author">
-            <div class="dep-av">R</div>
-            <div><span class="dep-nm">Ricardo Andrade</span><span class="dep-co">Incorporadora Andrade & Filhos</span></div>
-          </div>
-        </div>
-        <div class="dep-card">
-          <div class="dep-q">"</div>
-          <p class="dep-txt">Trabalho com a Vértice há 4 anos. Cada projeto é tratado com cuidado absurdo nos detalhes. Clientes chegam no escritório genuinamente emocionados com as imagens.</p>
-          <div class="dep-author">
-            <div class="dep-av">M</div>
-            <div><span class="dep-nm">Marina Costa</span><span class="dep-co">Studio MC Arquitetura</span></div>
-          </div>
-        </div>
-        <div class="dep-card">
-          <div class="dep-q">"</div>
-          <p class="dep-txt">O tour virtual que a Vértice produziu foi um diferencial enorme na captação. Apresentamos o projeto para investidores em São Paulo sem precisar viajar.</p>
-          <div class="dep-author">
-            <div class="dep-av">F</div>
-            <div><span class="dep-nm">Fernando Lopes</span><span class="dep-co">Construbase Engenharia</span></div>
-          </div>
-        </div>
-        <div class="dep-card">
-          <div class="dep-q">"</div>
-          <p class="dep-txt">Enviamos o projeto na segunda-feira. Na sexta tínhamos as renders prontas — e lindas. Profissionalismo e pontualidade raros no mercado. Recomendo sem hesitar.</p>
-          <div class="dep-author">
-            <div class="dep-av">P</div>
-            <div><span class="dep-nm">Patricia Nunes</span><span class="dep-co">PN Projetos Corporativos</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="dep-nav" id="depNav"></div>
-    <div class="dep-arrows">
-      <button class="dep-arr" onclick="moveDepo(-1)">←</button>
-      <button class="dep-arr" onclick="moveDepo(1)">→</button>
-    </div>
+<!-- ═══ ESTÚDIO ═══ -->
+<section id="sobre">
+  <div class="sobre-min rv">
+    <div class="s-eye">Estúdio</div>
+    <p class="sobre-statement" id="sobreTexto">Traduzimos projetos em imagens que comunicam qualidade antes da obra existir — para arquitetos, construtoras e incorporadoras.</p>
   </div>
 </section>
 
-<!-- ═══ CLIENTES ═══ -->
-<div id="clientesLogos" class="rv">
-  <div class="cl-head">
-    <p>Construtoras, incorporadoras e escritórios que confiam na Vértice 3D</p>
-  </div>
-  <div class="cl-track-wrap">
-    <div class="cl-track">
-      <span class="cl-item">Brookfield</span>
-      <span class="cl-item">MRV</span>
-      <span class="cl-item">Tenda</span>
-      <span class="cl-item">Cyrela</span>
-      <span class="cl-item">Tegra</span>
-      <span class="cl-item">Even</span>
-      <span class="cl-item">Helbor</span>
-      <span class="cl-item">EZTec</span>
-      <!-- Segunda cópia para loop infinito -->
-      <span aria-hidden="true"><span class="cl-item">Brookfield</span>
-      <span class="cl-item">MRV</span>
-      <span class="cl-item">Tenda</span>
-      <span class="cl-item">Cyrela</span>
-      <span class="cl-item">Tegra</span>
-      <span class="cl-item">Even</span>
-      <span class="cl-item">Helbor</span>
-      <span class="cl-item">EZTec</span></span>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ JOURNAL ═══ -->
-<section id="journal">
-  <div class="rv">
-    <div class="s-eye">Conteúdo</div>
-    <h2 class="s-title">Perspectivas sobre<br><em>arquitetura e imagem.</em></h2>
-    <p class="s-sub" style="margin-top:16px">Artigos sobre visualização, mercado imobiliário e o papel da imagem na venda de projetos.</p>
-  </div>
-  <div class="journal-grid">
-    <div class="journal-card rv" role="button" tabindex="0" onclick="openArticle('render-vs-ia')" onkeydown="if(event.key==='Enter')openArticle('render-vs-ia')">
-      <div class="journal-card-img" style="background-color:var(--BG3)">
-        <span class="journal-card-cat">Mercado</span>
-      </div>
-      <div class="journal-card-body">
-        <div class="journal-card-date">Maio 2025</div>
-        <div class="journal-card-title">Render vs IA: quando contratar um estúdio?</div>
-        <p class="journal-card-desc">Entenda por que projetos de alto padrão ainda exigem direção de arte humana — e como a IA pode auxiliar sem substituir.</p>
-        <span class="journal-card-link" style="cursor:pointer">Ler artigo →</span>
-      </div>
-    </div>
-    <div class="journal-card rv rv-d1" role="button" tabindex="0" onclick="openArticle('vray-lumion-d5')" onkeydown="if(event.key==='Enter')openArticle('vray-lumion-d5')">
-      <div class="journal-card-img" style="background-color:var(--BG3)">
-        <span class="journal-card-cat">Técnico</span>
-      </div>
-      <div class="journal-card-body">
-        <div class="journal-card-date">Abril 2025</div>
-        <div class="journal-card-title">V-Ray, Lumion ou D5? O guia definitivo</div>
-        <p class="journal-card-desc">Comparativo técnico entre os três principais softwares de renderização arquitetônica: casos de uso, velocidade e qualidade final.</p>
-        <span class="journal-card-link" style="cursor:pointer">Ler artigo →</span>
-      </div>
-    </div>
-    <div class="journal-card rv rv-d2" role="button" tabindex="0" onclick="openArticle('render-vende')" onkeydown="if(event.key==='Enter')openArticle('render-vende')">
-      <div class="journal-card-img" style="background-color:var(--BG3)">
-        <span class="journal-card-cat">Negócios</span>
-      </div>
-      <div class="journal-card-body">
-        <div class="journal-card-date">Março 2025</div>
-        <div class="journal-card-title">Como o render vende antes da obra existir</div>
-        <p class="journal-card-desc">Casos reais de empreendimentos que fecharam vendas no lançamento usando visualização fotorrealista como principal ferramenta de marketing.</p>
-        <span class="journal-card-link" style="cursor:pointer">Ler artigo →</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SIMULADOR DE ORÇAMENTO ═══ -->
-<section id="simulador">
-  <div class="sim-wrap">
-    <div class="sim-head rv">
-      <div class="s-eye">Estimativa</div>
-      <h2 class="s-title">Quanto custa o<br><em>seu projeto?</em></h2>
-      <p class="s-sub" style="margin-top:16px">Responda 3 perguntas e receba uma estimativa personalizada — sem compromisso.</p>
-    </div>
-    <div class="sim-progress">
-      <div class="sim-prog-dot done" id="spd1"></div>
-      <div class="sim-prog-dot" id="spd2"></div>
-      <div class="sim-prog-dot" id="spd3"></div>
-    </div>
-    <div class="sim-steps">
-      <div class="sim-step active" id="sstep1">
-        <div class="sim-step-label">Pergunta 1 de 3</div>
-        <div class="sim-step-q">Qual tipo de projeto?</div>
-        <div class="sim-opts">
-          <button class="sim-opt" onclick="simPick(1,'Residencial unifamiliar')">Residencial</button>
-          <button class="sim-opt" onclick="simPick(1,'Empreendimento vertical')">Vertical / Empreendimento</button>
-          <button class="sim-opt" onclick="simPick(1,'Interior / Área comum')">Interiores</button>
-          <button class="sim-opt" onclick="simPick(1,'Comercial / Corporativo')">Comercial</button>
-        </div>
-      </div>
-      <div class="sim-step" id="sstep2">
-        <div class="sim-step-label">Pergunta 2 de 3</div>
-        <div class="sim-step-q">Quantas imagens finais?</div>
-        <div class="sim-opts">
-          <button class="sim-opt" onclick="simPick(2,'1 a 3 imagens')">1 – 3 imagens</button>
-          <button class="sim-opt" onclick="simPick(2,'4 a 8 imagens')">4 – 8 imagens</button>
-          <button class="sim-opt" onclick="simPick(2,'9 ou mais imagens')">9+ imagens</button>
-          <button class="sim-opt" onclick="simPick(2,'Vídeo ou Tour 360°')">Vídeo / Tour 360°</button>
-        </div>
-      </div>
-      <div class="sim-step" id="sstep3">
-        <div class="sim-step-label">Pergunta 3 de 3</div>
-        <div class="sim-step-q">Qual a urgência?</div>
-        <div class="sim-opts">
-          <button class="sim-opt" onclick="simPick(3,'Sem urgência — até 30 dias')">Sem urgência (30+ dias)</button>
-          <button class="sim-opt" onclick="simPick(3,'Médio prazo — 15 dias')">Médio prazo (15 dias)</button>
-          <button class="sim-opt" onclick="simPick(3,'Urgente — menos de 10 dias')">Urgente (menos de 10 dias)</button>
-        </div>
-      </div>
-    </div>
-    <div class="sim-result" id="simResult">
-      <div class="sim-result-label">Estimativa para o seu projeto</div>
-      <div class="sim-result-range" id="simRange">—</div>
-      <div class="sim-result-sub" id="simSub">Com base nas suas respostas, essa é a faixa estimada.<br>Valores finais dependem de detalhes específicos do projeto.</div>
-      <a href="#orc" class="btn-O" style="display:inline-flex;margin-top:8px"><span>Solicitar proposta detalhada →</span></a>
-      <br><button class="sim-restart" onclick="simReset()">↩ Recomeçar</button>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ ORÇAMENTO ═══ -->
+<!-- ═══ CONTATO / ORÇAMENTO ═══ -->
 <section id="orc">
-  <div class="orc-inner">
+  <div class="orc-inner-min">
     <div class="orc-left">
-      <div class="s-eye rv">Vamos conversar</div>
-      <h2 class="s-title rv rv-d1">Solicite<br><em>uma proposta.</em></h2>
-      <p class="s-sub rv rv-d2">Recebemos seu projeto com a discrição que ele merece. Retorno em até 2 horas úteis.</p>
-      <div class="orc-promise rv rv-d3">
-        <div class="orc-promise-item">Análise prévia do projeto antes da proposta</div>
-        <div class="orc-promise-item">Retorno em até 2 horas úteis</div>
-        <div class="orc-promise-item">Proposta dedicada — sem valores genéricos</div>
-        <div class="orc-promise-item">Revisões inclusas em todos os pacotes</div>
-        <div class="orc-promise-item">Sigilo absoluto sobre os detalhes do projeto</div>
+      <div class="s-eye rv">Contato</div>
+      <h2 class="s-title rv rv-d1">Solicite uma proposta<em>.</em></h2>
+      <p class="s-sub rv rv-d2">Conte sobre o projeto. Retornamos com uma proposta dedicada.</p>
+      <div class="orc-contacts rv rv-d3">
+        <a class="wa-href" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="soc-ig" href="#" target="_blank" rel="noopener">Instagram</a>
       </div>
     </div>
-    <div class="rv rv-d1">
-      <!-- Progress bar -->
-      <div class="orc-prog"><div class="orc-prog-fill" id="orcProgFill" style="width:33%"></div></div>
-      <!-- Step nav -->
-      <div class="orc-steps-nav">
-        <div class="orc-sn on" id="sn1">Projeto</div>
-        <div class="orc-sn" id="sn2">Detalhes</div>
-        <div class="orc-sn" id="sn3">Contato</div>
+    <form class="orc-form rv rv-d1" onsubmit="submitOrc();return false;">
+      <div class="orc-row">
+        <div class="orc-inp"><label>Nome</label><input type="text" id="oNome" name="name" autocomplete="name" placeholder="Seu nome" style="font-size:16px"/></div>
+        <div class="orc-inp"><label>WhatsApp</label><input type="tel" id="oPhone" name="tel" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" style="font-size:16px"/></div>
       </div>
-
-      <!-- Step 1: Tipo -->
-      <div class="orc-step-panel on" id="sp1">
-        <div class="orc-q">Qual o tipo do projeto?</div>
-        <div class="orc-opts" id="opTipo">
-          <button class="orc-opt" data-v="Residencial">Residencial</button>
-          <button class="orc-opt" data-v="Comercial">Comercial</button>
-          <button class="orc-opt" data-v="Corporativo">Corporativo</button>
-          <button class="orc-opt" data-v="Interiores">Interiores</button>
-          <button class="orc-opt" data-v="Empreendimento">Empreendimento</button>
+      <div class="orc-inp"><label>E-mail</label><input type="email" id="oEmail" name="email" autocomplete="email" inputmode="email" placeholder="voce@email.com" style="font-size:16px"/></div>
+      <div class="orc-row">
+        <div class="orc-inp"><label>Tipo de projeto</label>
+          <select id="oTipo"><option value="">Selecione</option><option>Residencial</option><option>Comercial</option><option>Interiores</option></select>
         </div>
-        <div class="orc-q" style="margin-top:20px">Qual serviço deseja?</div>
-        <div class="orc-opts" id="opServ">
-          <button class="orc-opt" data-v="Renderização Estática">Renderização</button>
-          <button class="orc-opt" data-v="Vídeo 3D">Vídeo 3D</button>
-          <button class="orc-opt" data-v="Tour Virtual">Tour virtual</button>
-          <button class="orc-opt" data-v="Implantação">Implantação</button>
-          <button class="orc-opt" data-v="Pacote Completo">Pacote completo</button>
-        </div>
-        <div class="orc-btns">
-          <span></span>
-          <button class="btn-O" onclick="orcNext(2)"><span>Próximo →</span></button>
+        <div class="orc-inp"><label>Serviço</label>
+          <select id="oServ"><option value="">Selecione</option><option>Renderização</option><option>Vídeo 3D</option></select>
         </div>
       </div>
-
-      <!-- Step 2: Detalhes -->
-      <div class="orc-step-panel" id="sp2">
-        <div class="orc-q">Detalhes do projeto</div>
-        <div class="orc-inp">
-          <label>Metragem aproximada</label>
-          <select id="oMet">
-            <option value="">Selecione...</option>
-            <option>Até 100m²</option>
-            <option>100 a 300m²</option>
-            <option>300 a 1.000m²</option>
-            <option>Acima de 1.000m²</option>
-          </select>
+      <div class="orc-row">
+        <div class="orc-inp"><label>Metragem</label>
+          <select id="oMet"><option value="">Selecione</option><option>Até 100m²</option><option>100 a 300m²</option><option>300 a 1.000m²</option><option>Acima de 1.000m²</option></select>
         </div>
-        <div class="orc-inp">
-          <label>Prazo desejado</label>
-          <select id="oPrazo">
-            <option value="">Selecione...</option>
-            <option>Urgente (até 3 dias)</option>
-            <option>Padrão (5 a 7 dias)</option>
-            <option>Sem pressa (+ de 10 dias)</option>
-          </select>
-        </div>
-        <div class="orc-inp">
-          <label>Observações adicionais</label>
-          <textarea id="oObs" rows="4" placeholder="Referências, materiais específicos, ângulos preferidos, objetivo da renderização..." style="font-size:16px"></textarea>
-        </div>
-        <div class="orc-btns">
-          <button class="btn-ghost" onclick="orcNext(1)">← Voltar</button>
-          <button class="btn-O" onclick="orcNext(3)"><span>Próximo →</span></button>
+        <div class="orc-inp"><label>Prazo desejado</label>
+          <select id="oPrazo"><option value="">Selecione</option><option>Sem pressa</option><option>Padrão</option><option>Urgente</option></select>
         </div>
       </div>
-
-      <!-- Step 3: Contato -->
-      <div class="orc-step-panel" id="sp3">
-        <div class="orc-q">Seus dados de contato</div>
-        <div class="orc-row">
-          <div class="orc-inp"><label>Nome completo</label><input type="text" id="oNome" name="name" autocomplete="name" inputmode="text" placeholder="João Silva" style="font-size:16px"/></div>
-          <div class="orc-inp"><label>WhatsApp</label><input type="tel" id="oPhone" name="tel" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" style="font-size:16px"/></div>
-        </div>
-        <div class="orc-inp"><label>E-mail</label><input type="email" id="oEmail" name="email" autocomplete="email" inputmode="email" placeholder="joao@empresa.com.br" style="font-size:16px"/></div>
-        <div class="orc-inp"><label>Empresa / Escritório (opcional)</label><input type="text" id="oEmpresa" name="organization" autocomplete="organization" inputmode="text" placeholder="Construtora XYZ" style="font-size:16px"/></div>
-        <div class="orc-btns">
-          <button class="btn-ghost" onclick="orcNext(2)">← Voltar</button>
-          <button class="btn-O" onclick="submitOrc()"><span>Enviar Solicitação ✓</span></button>
-        </div>
-        <p class="orc-info">Suas informações são tratadas com sigilo total e utilizadas exclusivamente para elaboração do orçamento. Não compartilhamos dados com terceiros.</p>
-        <div id="orcMsg"></div>
-      </div>
-    </div>
+      <div class="orc-inp"><label>Mensagem (opcional)</label><textarea id="oObs" rows="3" placeholder="Detalhes do projeto, referências, prazos..." style="font-size:16px"></textarea></div>
+      <button type="submit" class="btn-O" id="orcSubmitBtn"><span>Solicitar Proposta</span></button>
+      <p class="orc-info">Seus dados são tratados com sigilo e usados apenas para contato sobre o projeto.</p>
+      <div id="orcMsg"></div>
+    </form>
   </div>
 </section>
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
-  <div class="foot-grid">
-    <div class="foot-brand">
-      <div class="foot-logo">
-        <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
-          <polygon points="20,2 38,36 2,36" fill="none" stroke="#C9A87C" stroke-width="1.2"/>
-          <polygon points="20,10 31,30 9,30" fill="none" stroke="rgba(201,168,124,.5)" stroke-width=".8"/>
-        </svg>
-        VÉRTICE 3D
-      </div>
-      <p class="foot-desc">Estúdio de visualização arquitetônica. Imagens concebidas para antecipar valor.</p>
-      <p class="foot-coords" id="fCoords">23°33'S 46°38'O — Brasil</p>
+  <div class="foot-min">
+    <div class="foot-logo">
+      <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
+        <polygon points="20,2 38,36 2,36" fill="none" stroke="#C9A87C" stroke-width="1.2"/>
+        <polygon points="20,10 31,30 9,30" fill="none" stroke="rgba(201,168,124,.5)" stroke-width=".8"/>
+      </svg>
+      VÉRTICE 3D
     </div>
-    <div class="foot-col">
-      <h4>Serviços</h4>
-      <ul>
-        <li><a href="#srv">Renderização fotorrealista</a></li>
-        <li><a href="#srv">Vídeo 3D cinematográfico</a></li>
-        <li><a href="#tourSection">Tour virtual 360°</a></li>
-        <li><a href="#srv">Implantação animada</a></li>
-      </ul>
-    </div>
-    <div class="foot-col">
-      <h4>Estúdio</h4>
-      <ul>
-        <li><a href="#sobre">Sobre Nós</a></li>
-        <li><a href="#portSection">Portfólio</a></li>
-        <li><a href="#proc">Processo</a></li>
-        <li><a href="#dep">Depoimentos</a></li>
-      </ul>
-    </div>
-    <div class="foot-col">
-      <h4>Contato</h4>
+    <div class="foot-contact">
       <p id="fEmail">contato@vertice3d.com.br</p>
-      <p id="fIG">@vertice3d</p>
-      <p id="fCidade">Brasil</p>
+      <a id="fIG" class="soc-ig" href="#" target="_blank" rel="noopener">@vertice3d</a>
+      <a class="wa-href" href="#" target="_blank" rel="noopener">WhatsApp</a>
     </div>
   </div>
-  <div class="foot-bottom">
-    <p class="foot-copy">© <span id="footYear">2025</span> Vértice 3D. Todos os direitos reservados.</p>
-    <div class="foot-social">
-      <a href="#" class="soc-btn soc-ig" target="_blank" rel="noopener">ig</a>
-      <a href="#" class="soc-btn">in</a>
-      <a href="#" class="soc-btn soc-yt" target="_blank" rel="noopener">yt</a>
-    </div>
-  </div>
-  <div class="nl-wrap rv">
-    <div class="nl-text">
-      <h4>Projetos em primeira mão</h4>
-      <p>Receba inspirações e cases antes de todo mundo — sem spam.</p>
-    </div>
-    <form class="nl-form" onsubmit="nlSubmit(event)">
-      <input class="nl-input" type="email" id="nlEmail" placeholder="seu@email.com" required autocomplete="email" inputmode="email" style="font-size:16px"/>
-      <button class="nl-btn" type="submit">Inscrever</button>
-      <span class="nl-ok" id="nlOk">✓ Inscrito com sucesso!</span>
-    </form>
-  </div>
-  <div class="foot-extra">
-    <p class="foot-extra-line">© <span class="footYear2">2025</span> Vértice 3D — Narrativas visuais para arquitetura contemporânea</p>
-    <p class="foot-extra-line">Seg–Sex 09h–18h | Sob agendamento</p>
-    <p class="foot-extra-line"><span id="fCNPJ"></span></p>
+  <div class="foot-bottom-min">
+    <p class="foot-copy">© <span id="footYear">2025</span> Vértice 3D</p>
+    <a href="#" class="foot-priv" onclick="reopenLgpd();return false;">Privacidade</a>
   </div>
 </footer>
 
@@ -4799,36 +4182,30 @@ function ldTick(){
 }
 ldRaf=requestAnimationFrame(ldTick);
 
-window.addEventListener('load',()=>{
+var _ldDone=false;
+function _dismissLoader(){
+  if(_ldDone)return;_ldDone=true;
   cancelAnimationFrame(ldRaf);
-  document.getElementById('ldPct').textContent='100%';
-  setTimeout(()=>{
-    document.getElementById('loader').classList.add('out');
-    document.getElementById('heroBg').classList.add('loaded');
+  var p=document.getElementById('ldPct');if(p)p.textContent='100%';
+  setTimeout(function(){
+    var l=document.getElementById('loader');if(l)l.classList.add('out');
+    var hb=document.getElementById('heroBg');if(hb)hb.classList.add('loaded');
     initAll();
-  },500);
-});
+  },400);
+}
+window.addEventListener('load',_dismissLoader);
+// Fallback: nunca travar atrás de vídeo/imagem pesada (importante no 4G)
+setTimeout(_dismissLoader,3500);
 
 function initAll(){
-  initCursor();
-  initHero3D();
-  initHeroParallax();
-  initHeroTypoScroll();
   initReveal();
   initScrollProg();
-  initCounters();
-  initDepoSlider();
-  initBeforeAfter();
   initPortFilter();
   applyHashFilter();
   initHScroll();
-  initLupa();
-  initLupaFS();
-  initProcSticky();
   initMagnetic();
   initPortScrollHint();
   initHeroMobileOpt();
-  initSwBars();
   initFormAutosave();
 }
 
@@ -5456,32 +4833,35 @@ document.querySelectorAll('.orc-opts').forEach(group=>{
 });
 
 async function submitOrc(){
-  const nome=document.getElementById('oNome').value;
-  const phone=document.getElementById('oPhone').value;
-  const email=document.getElementById('oEmail').value;
+  function gv(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+  var nome=gv('oNome'),phone=gv('oPhone'),email=gv('oEmail');
+  var msg=document.getElementById('orcMsg');
   if(!nome||!phone||!email){
-    document.getElementById('orcMsg').style.color='#ff4444';
-    document.getElementById('orcMsg').textContent='Preencha nome, telefone e e-mail.';
+    if(msg){msg.style.color='#c0392b';msg.textContent='Preencha nome, WhatsApp e e-mail.';}
     return;
   }
-  orcData.nome=nome;orcData.phone=phone;orcData.email=email;
-  orcData.empresa=document.getElementById('oEmpresa').value;
-  orcData.data=new Date().toISOString();
-
-  const btn=document.querySelector('#sp3 .btn-O');
-  btn.querySelector('span').textContent='Enviando...';
+  var emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if(!emailOk){ if(msg){msg.style.color='#c0392b';msg.textContent='Verifique o endereço de e-mail.';} return; }
+  var lead={
+    nome:nome, phone:phone, email:email,
+    tipo:gv('oTipo'), servico:gv('oServ'),
+    metragem:gv('oMet'), prazo:gv('oPrazo'), obs:gv('oObs'),
+    data:new Date().toISOString()
+  };
+  var btn=document.getElementById('orcSubmitBtn');
+  var span=btn?btn.querySelector('span'):null;
+  if(span)span.textContent='Enviando...';
+  if(btn)btn.disabled=true;
   try{
     const {db,collection,addDoc}=window._FB;
-    await addDoc(collection(db,'leads'),orcData);
-    clearFormAutosave();
-    document.getElementById('orcMsg').style.color='#4CAF50';
-    document.getElementById('orcMsg').textContent='✓ Solicitação recebida! Retornaremos em até 2 horas.';
-    btn.querySelector('span').textContent='Enviado ✓';
-    btn.disabled=true;
+    await addDoc(collection(db,'leads'),lead);
+    if(typeof clearFormAutosave==='function')clearFormAutosave();
+    if(msg){msg.style.color='#2e7d32';msg.textContent='✓ Solicitação recebida. Em breve entraremos em contato.';}
+    if(span)span.textContent='Enviado ✓';
   }catch(e){
-    document.getElementById('orcMsg').style.color='#ff4444';
-    document.getElementById('orcMsg').textContent='Erro — entre em contato via WhatsApp.';
-    btn.querySelector('span').textContent='Enviar Solicitação ✓';
+    if(msg){msg.style.color='#c0392b';msg.textContent='Erro ao enviar — fale com a gente pelo WhatsApp.';}
+    if(span)span.textContent='Solicitar Proposta';
+    if(btn)btn.disabled=false;
   }
 }
 
@@ -5659,7 +5039,6 @@ function buildHCard(item,idx){
   var hasGal=item.galeria&&item.galeria.length>1;
   return `<div class="hCard" data-cat="${item.categoria||'residencial'}" onclick="openModalIdx(${idx||0})">
     ${media}
-    <button class="hCard-cmp" title="Comparar projeto" onclick="toggleCompare(event,${idx||0})"></button>
     <div class="hCard-overlay"></div>
     <div class="hCard-info"><div class="hCard-cat">${item.categoria||''}</div><div class="hCard-name">${item.nome}</div>${hasGal?'<div style="font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.5);margin-top:4px">'+item.galeria.length+' fotos</div>':''}</div>
     <div class="hCard-cta">Ver projeto →</div>
@@ -5678,7 +5057,6 @@ function buildGCard(item,idx){
   }
   return `<div class="gCard" data-cat="${item.categoria||'residencial'}" onclick="openModalIdx(${idx||0})">
     ${media}
-    <button class="gCard-cmp" title="Comparar projeto" onclick="toggleCompare(event,${idx||0})"></button>
     <div class="gCard-overlay"></div>
     <div class="gCard-info"><div class="gCard-cat">${item.categoria||''}</div><div class="gCard-name">${item.nome}</div></div>
     <div class="gCard-cta">Ver projeto →</div>
@@ -7034,6 +6412,10 @@ function lgpdInit(){
   },2500);
 }
 function lgpdAccept(){localStorage.setItem('lgpd_ok','all');lgpdClose();}
+function reopenLgpd(){
+  var b=document.getElementById('lgpdBanner');
+  if(b){b.style.display='';b.classList.add('show');document.body.classList.add('lgpd-active');}
+}
 function lgpdClose(){
   var b=document.getElementById('lgpdBanner');
   if(b){b.classList.remove('show');setTimeout(function(){b.style.display='none';},500);}
