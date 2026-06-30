@@ -157,9 +157,14 @@ async function loadDepoimentos(){
 }
 
 function renderPortfolio(items){
-  window._portItemsArr=items;
   // Improvement 15 — filter out inactive items for public view
-  const visible=items.filter(i=>i.ativo!==false);
+  var visible=items.filter(i=>i.ativo!==false);
+  // Projetos de teste ("teste", "teste4"...) vão para o fim — nunca viram destaque inicial
+  visible.sort(function(a,b){
+    var at=/^\s*teste/i.test(a.nome||'')?1:0, bt=/^\s*teste/i.test(b.nome||'')?1:0;
+    return at-bt;
+  });
+  window._portItemsArr=visible;
   const hScroll=document.getElementById('hScrollTrack');
   const grid=document.getElementById('portfolioGrid');
   hScroll.innerHTML='';
@@ -3438,6 +3443,133 @@ body.dark-mode .orc-inp input,body.dark-mode .orc-inp select,body.dark-mode .orc
 body.dark-mode .orc-inp input::placeholder,body.dark-mode .orc-inp textarea::placeholder{color:#9a9285!important}
 body.dark-mode .orc-inp input:focus,body.dark-mode .orc-inp select:focus,body.dark-mode .orc-inp textarea:focus{border-color:#c9a87c!important;box-shadow:0 0 0 3px rgba(201,168,124,.18)!important}
 body.dark-mode .orc-info{color:#cfc8ba!important;opacity:1!important;border-top-color:rgba(244,240,232,.08)!important}
+
+/* ════════════════════════════════════════════════
+   PATCH MOBILE-FIRST 2026 — acabamento premium editorial
+════════════════════════════════════════════════ */
+:root{ --hair:rgba(26,23,20,.12); --hair-soft:rgba(26,23,20,.07); }
+body.dark-mode{ --hair:rgba(244,240,232,.14); --hair-soft:rgba(244,240,232,.08); }
+
+/* 1+2 — Menos flutuantes, sem barra laranja */
+#mobileCTA{display:none!important}
+#waFloat{width:50px!important;height:50px!important;bottom:20px!important;right:18px!important;box-shadow:0 6px 20px rgba(0,0,0,.18)!important;z-index:900!important}
+#waFloat svg{width:22px!important;height:22px!important}
+#aBtn{opacity:.4!important;width:34px!important;height:34px!important;z-index:880!important}
+#aBtn:hover{opacity:1!important}
+@media(max-width:768px){#aBtn{display:none!important}}
+
+/* LGPD — discreto, sem laranja */
+#lgpdBanner{padding:13px 32px!important;gap:18px!important;background:rgba(18,15,12,.96)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.lgpd-text{font-size:11.5px!important;color:rgba(244,240,232,.6)!important;max-width:640px!important}
+.lgpd-text a{color:#c9a87c!important}
+.lgpd-ok{background:#F4F0E8!important;color:#1A1714!important;padding:9px 20px!important;font-size:10px!important}
+.lgpd-ok:hover{background:#e6ddcd!important}
+.lgpd-skip{border-color:rgba(244,240,232,.22)!important;color:rgba(244,240,232,.55)!important;padding:9px 16px!important;font-size:10px!important}
+@media(max-width:600px){
+  #lgpdBanner{padding:13px 18px!important;gap:10px!important}
+  .lgpd-btns{width:100%;gap:10px!important}
+  .lgpd-ok,.lgpd-skip{flex:1;text-align:center}
+}
+
+/* 3 — Header mobile compacto e elegante */
+@media(max-width:768px){
+  #nav{padding:12px 22px!important;background:rgba(244,240,232,.86)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important;border-bottom:1px solid var(--hair-soft)!important}
+  #nav.scrolled{padding:10px 22px!important}
+  body.dark-mode #nav{background:rgba(14,12,10,.9)!important}
+  .nav-logo{font-size:12.5px!important;letter-spacing:3px!important}
+  .nav-logo svg{width:19px!important}
+  section{scroll-margin-top:60px!important}
+}
+
+/* 6 — Desktop: menos vazio, melhor ritmo */
+section{padding:132px 80px}
+#servicos{padding:112px 80px}
+#processo{padding:100px 80px}
+#sobre{padding:96px 80px}
+.proc-head,.port-head{margin-bottom:50px!important}
+
+/* 4 — Hero mobile controlado e premium */
+@media(max-width:768px){
+  #hero{height:84svh!important;min-height:0!important;padding:90px 26px 40px!important}
+  #heroBg::after{background:linear-gradient(180deg,rgba(12,10,8,.5) 0%,rgba(12,10,8,.2) 38%,rgba(12,10,8,.82) 100%)!important}
+  #heroBg video{filter:saturate(.82) brightness(.9)}
+  .hero-content{padding-bottom:0!important}
+  .hero-eyebrow{margin-bottom:16px!important}
+  .hero-sub{margin-bottom:28px!important;font-size:14px!important;max-width:300px}
+  .hero-btns{gap:12px!important}
+}
+@media(max-width:600px){
+  #hero{height:80svh!important;padding:84px 22px 32px!important}
+  .hero-title{font-size:clamp(40px,12.5vw,60px)!important;line-height:1!important;margin-bottom:22px!important}
+  .hero-btns .btn-O,.hero-btns .btn-ghost{padding:14px 26px!important;font-size:10px!important}
+}
+
+/* 5 — Portfólio mobile editorial */
+@media(max-width:760px){
+  .port-head{flex-direction:column;align-items:flex-start!important;gap:16px!important}
+  .filter-row{flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:none;-webkit-overflow-scrolling:touch;width:100%;padding:2px 24px 8px 0!important;margin:0!important}
+  .filter-row::-webkit-scrollbar{display:none}
+  .fBtn{flex-shrink:0!important}
+}
+@media(max-width:600px){
+  #portSection{padding-left:18px!important;padding-right:18px!important}
+  #portfolioGrid{grid-template-columns:1fr!important;grid-auto-rows:auto!important;gap:18px!important;margin-top:44px!important}
+  .gCard{grid-column:auto!important;grid-row:auto!important;aspect-ratio:4/5!important;border-radius:16px!important}
+  .gCard-info{opacity:1!important;transform:none!important;padding:18px!important}
+  .gCard-overlay{opacity:1!important;background:linear-gradient(to top,rgba(10,9,8,.8) 0%,rgba(10,9,8,.04) 58%,transparent 100%)!important}
+  .gCard-name{font-size:19px!important}
+  .gCard-cat{font-size:8.5px!important}
+}
+
+/* 7+8 — Serviços editorial leve (Tour 360° visível) */
+.srv-grid-min{background:none!important;gap:6px 44px!important;border:none!important;margin-top:48px!important}
+.srv-item{background:none!important;border-top:1px solid var(--hair)!important;padding:28px 0 12px!important}
+.srv-item h3{font-size:clamp(20px,1.7vw,25px)!important;margin-bottom:12px!important}
+.srv-item p{font-size:13.5px!important;color:var(--TX)!important;max-width:30ch}
+.srv-badge{display:inline-block;margin-top:14px;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#9c7a4d;border:1px solid rgba(156,122,77,.45);border-radius:999px;padding:4px 12px}
+body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
+@media(max-width:1000px){.srv-grid-min{grid-template-columns:repeat(2,1fr)!important}}
+@media(max-width:560px){
+  .srv-grid-min{grid-template-columns:1fr!important;gap:0!important}
+  .srv-item{padding:24px 0 10px!important}
+  .srv-item p{max-width:none}
+}
+
+/* 9 — Processo: números editoriais (sem círculo pesado) */
+.proc-step-min .proc-num{width:auto!important;height:auto!important;border:none!important;background:none!important;border-radius:0!important;margin-bottom:6px!important;font-size:clamp(26px,2.3vw,32px)!important}
+.proc-step-min .proc-num::after{display:none!important}
+.proc-steps-min{gap:40px!important}
+@media(max-width:760px){
+  .proc-steps-min{grid-template-columns:1fr!important;gap:0!important}
+  .proc-step-min{flex-direction:row!important;align-items:baseline;gap:18px!important;padding:22px 0!important;border-bottom:1px solid var(--hair)}
+  .proc-step-min:last-child{border-bottom:none}
+  .proc-step-min .proc-num{font-size:22px!important;flex:0 0 auto;min-width:28px}
+  .proc-step-title{font-size:18px!important}
+  .proc-step-desc{font-size:13px!important;max-width:none}
+}
+
+/* Estúdio — menos vazio */
+.sobre-min{max-width:840px!important}
+.sobre-statement{font-size:clamp(21px,2.6vw,32px)!important;line-height:1.42!important}
+@media(max-width:600px){.sobre-statement{font-size:20px!important;line-height:1.46!important}}
+
+/* 10 — Formulário mobile, nada coberto pelo flutuante */
+@media(max-width:860px){.orc-inner-min{gap:40px!important}}
+@media(max-width:600px){
+  #orc{padding-bottom:90px!important}
+  .orc-form .orc-row{grid-template-columns:1fr!important}
+  .orc-form .btn-O{width:100%!important;justify-content:center;text-align:center}
+  .orc-inp input,.orc-inp select,.orc-inp textarea{padding:13px 15px!important}
+}
+
+/* 11 — Footer mobile elegante */
+@media(max-width:600px){
+  footer{padding:54px 24px 40px!important}
+  .foot-min{flex-direction:column;gap:20px!important;padding-bottom:32px!important}
+  .foot-contact{text-align:left!important;gap:8px!important}
+  .foot-contact p,.foot-contact a{font-size:13px!important}
+  .foot-bottom-min{margin-top:24px!important;flex-direction:row;flex-wrap:wrap;gap:10px}
+}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"Vértice 3D","description":"Estúdio de visualização arquitetônica de alto padrão.","url":"https://gersonleao2490.github.io/v-rtice-3d/","image":"https://gersonleao2490.github.io/v-rtice-3d/og-image.jpg","areaServed":"BR","knowsAbout":["Renderização arquitetônica","Visualização 3D","Vídeo 3D"]}
@@ -3635,9 +3767,10 @@ body.dark-mode .orc-info{color:#cfc8ba!important;opacity:1!important;border-top-
       <h3>Vídeo 3D</h3>
       <p>Percursos em movimento para apresentar o projeto.</p>
     </div>
-    <div class="srv-item rv rv-d3">
+    <div class="srv-item srv-item-tour rv rv-d3">
       <h3>Tour 360°</h3>
       <p>Experiências imersivas para apresentação de ambientes e empreendimentos.</p>
+      <span class="srv-badge">Imersivo · 360°</span>
     </div>
   </div>
 </section>
@@ -3738,19 +3871,6 @@ body.dark-mode .orc-info{color:#cfc8ba!important;opacity:1!important;border-top-
     <a href="#" class="foot-priv" onclick="reopenLgpd();return false;">Privacidade</a>
   </div>
 </footer>
-
-<!-- WHATSAPP -->
-<a href="https://wa.me/5500000000000" class="wa-float wa-href" target="_blank" rel="noopener">
-  <svg viewBox="0 0 32 32" fill="white"><path d="M16 2C8.27 2 2 8.27 2 16c0 2.45.66 4.75 1.8 6.73L2 30l7.5-1.76A13.93 13.93 0 0016 30c7.73 0 14-6.27 14-14S23.73 2 16 2zm7.1 19.89c-.3.84-1.77 1.6-2.44 1.7-.63.09-1.43.13-2.31-.15-.53-.17-1.21-.4-2.08-.78-3.65-1.58-6.03-5.26-6.21-5.5-.18-.25-1.47-1.96-1.47-3.74 0-1.78.93-2.65 1.26-3.01.33-.36.72-.45.96-.45.24 0 .48.01.69.01.22 0 .52-.08.81.62.3.72 1.02 2.5 1.11 2.68.09.18.15.4.03.63-.12.24-.18.39-.36.6-.18.22-.38.49-.54.66-.18.18-.37.38-.16.74.21.36.94 1.55 2.02 2.51 1.39 1.24 2.56 1.62 2.92 1.8.36.18.57.15.78-.09.21-.24.9-1.05 1.14-1.41.24-.36.48-.3.81-.18.33.12 2.1.99 2.46 1.17.36.18.6.27.69.42.09.15.09.87-.21 1.71z"/></svg>
-</a>
-
-<!-- MOBILE CTA -->
-<div id="mobileCTA">
-  <a class="wa-href" href="#" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;width:100%;justify-content:center">
-    <span>Solicitar orçamento</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-  </a>
-</div>
 
 <!-- ADMIN BTN -->
 <button id="aBtn" onclick="openAdmin()" title="Admin">⚙</button>
@@ -6502,6 +6622,20 @@ function lgpdClose(){
   if(!localStorage.getItem('lgpd_ok'))localStorage.setItem('lgpd_ok','essential');
 }
 lgpdInit();
+
+/* WhatsApp flutuante some quando o formulário de contato está à vista
+   (evita cobrir o botão; lá já existe link de WhatsApp) */
+(function(){
+  var wa=document.getElementById('waFloat'),orc=document.getElementById('orc');
+  if(!wa||!orc||!('IntersectionObserver' in window))return;
+  new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      wa.style.transition='opacity .35s ease';
+      wa.style.opacity=e.isIntersecting?'0':'';
+      wa.style.pointerEvents=e.isIntersecting?'none':'';
+    });
+  },{threshold:.2}).observe(orc);
+})();
 
 /* ── Dark Mode ─────────────────────────────────── */
 function toggleDark(){
