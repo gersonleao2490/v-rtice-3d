@@ -157,23 +157,14 @@ async function loadDepoimentos(){
 }
 
 function renderPortfolio(items){
-  // Improvement 15 — filter out inactive items for public view
   var visible=items.filter(i=>i.ativo!==false);
   // Projetos de teste ("teste", "teste4"...) vão para o fim — nunca viram destaque inicial
   visible.sort(function(a,b){
     var at=/^\s*teste/i.test(a.nome||'')?1:0, bt=/^\s*teste/i.test(b.nome||'')?1:0;
     return at-bt;
   });
-  window._portItemsArr=visible;
-  const hScroll=document.getElementById('hScrollTrack');
-  const grid=document.getElementById('portfolioGrid');
-  hScroll.innerHTML='';
-  grid.innerHTML='';
-  visible.forEach((item,idx)=>{
-    hScroll.innerHTML+=buildHCard(item,idx);
-    grid.innerHTML+=buildGCard(item,idx);
-  });
-  initPortFilter();
+  window._cinemaAll=visible;
+  if(typeof window._buildCinema==='function')window._buildCinema();
 }
 
 window._loadPortfolio=loadPortfolio;
@@ -3570,6 +3561,63 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
   .foot-contact p,.foot-contact a{font-size:13px!important}
   .foot-bottom-min{margin-top:24px!important;flex-direction:row;flex-wrap:wrap;gap:10px}
 }
+
+/* ════════════════════════════════════════════════
+   PORTFÓLIO CINEMÁTICO 2026 — fundo preto, scroll pinned
+════════════════════════════════════════════════ */
+#portSection{background:#0a0908!important;color:#F4F0E8;padding:120px 0 0!important;overflow:visible!important}
+#portSection .port-head{padding:0 80px;margin-bottom:34px!important;align-items:flex-end}
+#portSection .s-eye{color:#c9a87c!important}
+#portSection .s-eye::before{background:#c9a87c!important;opacity:.85!important}
+#portSection .s-title{color:#F6F1E8!important}
+#portSection .s-title em,#portSection .s-title .it{color:#c9a87c!important}
+#portSection .fBtn{border-color:rgba(244,240,232,.2)!important;color:rgba(244,240,232,.55)!important;background:transparent!important}
+#portSection .fBtn.on,#portSection .fBtn:hover{border-color:#c9a87c!important;color:#F4F0E8!important;background:rgba(201,168,124,.12)!important}
+
+/* Desktop: palco pinned */
+#portCinema{position:relative;width:100%}
+.cine-stage{position:sticky;top:0;height:100svh;overflow:hidden}
+.cine-layers{position:absolute;inset:0}
+.cine-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;will-change:transform,opacity,filter;cursor:pointer}
+.cine-card{position:relative;width:min(1180px,86vw);height:78svh;border-radius:16px;overflow:hidden;background:#15110d;box-shadow:0 50px 120px rgba(0,0,0,.6)}
+.cine-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+.cine-ph{background:linear-gradient(160deg,#221d18,#2f2820)}
+.cine-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,7,6,.86) 0%,rgba(8,7,6,.12) 46%,rgba(8,7,6,.35) 100%);transition:opacity .15s linear}
+.cine-txt{position:absolute;left:48px;right:48px;bottom:44px;z-index:2;max-width:640px}
+.cine-cat{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#d8c5a8;margin-bottom:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.cine-badge{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#0a0908;background:#c9a87c;border-radius:999px;padding:3px 11px;font-weight:500}
+.cine-title{font-family:var(--serif);font-weight:300;font-size:clamp(32px,4vw,60px);line-height:1.02;color:#F8F4EC;letter-spacing:-.02em}
+.cine-desc{font-size:14px;line-height:1.7;color:rgba(244,240,232,.66);margin-top:14px;max-width:460px}
+.cine-open{display:inline-block;margin-top:20px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#c9a87c;border-bottom:1px solid rgba(201,168,124,.5);padding-bottom:3px}
+.cine-card:hover .cine-img{transform:scale(1.045)!important}
+.cine-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(244,240,232,.4);font-family:var(--serif-it);font-style:italic;font-size:18px}
+.cine-ui{position:absolute;top:50%;right:38px;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;align-items:flex-end;gap:18px;pointer-events:none}
+.cine-counter{font-family:var(--serif);font-size:14px;color:rgba(244,240,232,.7);letter-spacing:1px}
+.cine-counter .cine-sep{margin:0 6px;color:rgba(244,240,232,.3)}
+.cine-dots{display:flex;flex-direction:column;gap:9px}
+.cine-dot{width:6px;height:6px;border-radius:50%;background:rgba(244,240,232,.22);transition:all .35s}
+.cine-dot.on{background:#c9a87c;transform:scale(1.4)}
+.cine-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:50;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(244,240,232,.38);pointer-events:none}
+
+/* Mobile: painéis */
+#portMobile{display:none}
+@media(max-width:900px){
+  #portCinema{display:none!important}
+  #portMobile{display:block;padding:6px 0 4px}
+  #portSection{padding-top:92px!important}
+  #portSection .port-head{padding:0 22px}
+}
+.pm-panel{position:relative;height:84svh;margin:0 16px 16px;border-radius:18px;overflow:hidden;background:#15110d;cursor:pointer;will-change:opacity,transform}
+.pm-panel-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pm-panel-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,7,6,.82) 0%,rgba(8,7,6,.04) 52%,rgba(8,7,6,.2) 100%)}
+.pm-panel-txt{position:absolute;left:22px;right:22px;bottom:24px;z-index:2}
+.pm-panel-cat{font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;color:#d8c5a8;margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pm-panel-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#0a0908;background:#c9a87c;border-radius:999px;padding:3px 9px;font-weight:500}
+.pm-panel-title{font-family:var(--serif);font-weight:300;font-size:27px;color:#F8F4EC;letter-spacing:-.01em;line-height:1.05}
+.pm-panel .cine-empty{position:absolute}
+
+/* Hero — menos cara de vídeo-teste */
+#heroBg video{filter:saturate(.86) brightness(.92) contrast(1.04)}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"Vértice 3D","description":"Estúdio de visualização arquitetônica de alto padrão.","url":"https://gersonleao2490.github.io/v-rtice-3d/","image":"https://gersonleao2490.github.io/v-rtice-3d/og-image.jpg","areaServed":"BR","knowsAbout":["Renderização arquitetônica","Visualização 3D","Vídeo 3D"]}
@@ -3705,46 +3753,23 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
     </div>
   </div>
 
-  <!-- Scroll horizontal (desktop) -->
-  <div class="h-port-outer rv" style="position:relative">
-    <div id="portScrollHint" class="port-scroll-hint" style="display:none">Deslize para ver mais →</div>
-    <div id="hScrollTrack">
-      <!-- Placeholders neutros — substituídos pelos projetos reais via painel -->
-      <div class="hCard" data-cat="residencial" onclick="openModal('Projeto Residencial','residencial','','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#2b2620,#3c352b)"><span>Residencial</span></div>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Residencial</div><div class="hCard-name">Projeto Residencial</div></div>
+  <!-- DESKTOP: portfólio cinematográfico (scroll pinned) -->
+  <div id="portCinema">
+    <div class="cine-stage">
+      <div class="cine-layers" id="cineLayers">
+        <div class="cine-layer"><div class="cine-card"><div class="cine-img cine-ph"></div><div class="cine-ov"></div></div></div>
       </div>
-      <div class="hCard" data-cat="interiores" onclick="openModal('Projeto de Interiores','interiores','','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#26211c,#332c24)"><span>Interiores</span></div>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Interiores</div><div class="hCard-name">Projeto de Interiores</div></div>
+      <div class="cine-ui">
+        <div class="cine-counter"><span id="cineNum">01</span><span class="cine-sep">/</span><span id="cineTotal">01</span></div>
+        <div class="cine-dots" id="cineDots"></div>
       </div>
-      <div class="hCard" data-cat="comercial" onclick="openModal('Projeto Comercial','comercial','','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#222019,#302b22)"><span>Comercial</span></div>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Comercial</div><div class="hCard-name">Projeto Comercial</div></div>
-      </div>
-      <div class="hCard" data-cat="residencial" onclick="openModal('Projeto Residencial','residencial','','')">
-        <div class="hPh" style="background:linear-gradient(160deg,#2a251f,#39322a)"><span>Residencial</span></div>
-        <div class="hCard-overlay"></div><div class="hCard-info"><div class="hCard-cat">Residencial</div><div class="hCard-name">Projeto Residencial</div></div>
-      </div>
+      <div class="cine-hint">Role para explorar</div>
     </div>
   </div>
-  <div class="h-scroll-hint">Arraste para percorrer os projetos</div>
-  <div id="portScrollDots"></div>
 
-  <!-- Grid (mobile) -->
-  <div id="portfolioGrid">
-    <div class="gCard wide" data-cat="residencial" onclick="openModal('Projeto Residencial','residencial','','')">
-      <div class="gPh" style="background:linear-gradient(160deg,#2b2620,#3c352b)"></div>
-      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Residencial</div><div class="gCard-name">Projeto Residencial</div></div>
-    </div>
-    <div class="gCard" data-cat="interiores" onclick="openModal('Projeto de Interiores','interiores','','')">
-      <div class="gPh" style="background:linear-gradient(160deg,#26211c,#332c24)"></div>
-      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Interiores</div><div class="gCard-name">Projeto de Interiores</div></div>
-    </div>
-    <div class="gCard" data-cat="comercial" onclick="openModal('Projeto Comercial','comercial','','')">
-      <div class="gPh" style="background:linear-gradient(160deg,#222019,#302b22)"></div>
-      <div class="gCard-overlay"></div><div class="gCard-info"><div class="gCard-cat">Comercial</div><div class="gCard-name">Projeto Comercial</div></div>
-    </div>
+  <!-- MOBILE: painéis quase tela cheia -->
+  <div id="portMobile">
+    <div class="pm-panel in"><div class="pm-panel-img cine-ph"></div><div class="pm-panel-ov"></div></div>
   </div>
 </section>
 
@@ -4442,11 +4467,8 @@ function initAll(){
   initCursor();
   initReveal();
   initScrollProg();
-  initPortFilter();
-  applyHashFilter();
-  initHScroll();
+  initCinema();
   initMagnetic();
-  initPortScrollHint();
   initHeroMobileOpt();
   initFormAutosave();
 }
@@ -5220,6 +5242,148 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight')pmMove(1);
   if(e.key==='ArrowLeft')pmMove(-1);
 });
+
+/* ════════════════════════════════════════════════
+   PORTFÓLIO CINEMÁTICO — pinned scroll (desktop) + painéis (mobile)
+════════════════════════════════════════════════ */
+window._cineFilter=window._cineFilter||'all';
+function _cineEsc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function _cineList(){
+  var all=window._cinemaAll||[];
+  var f=window._cineFilter||'all';
+  var list=all.filter(function(it){return f==='all'||((it.categoria||'').toLowerCase()===f);});
+  return list.slice(0,7);
+}
+function _cineDesc(it){
+  var d=(it.descricao||'').trim();
+  if(!d||/^\s*teste/i.test(it.nome||'')||d.length<4)return '';
+  return d.length>148?d.slice(0,146)+'…':d;
+}
+function _cineMedia(it,cls){
+  var cover=it.imagem||((it.galeria&&it.galeria[0])||'');
+  var v=it.video||'';
+  if(cover)return '<img class="'+cls+'" src="'+cover+'" alt="'+_cineEsc(it.nome||'Projeto')+'" loading="lazy"/>';
+  if(v)return '<video class="'+cls+'" src="'+v+'" muted loop playsinline autoplay></video>';
+  return '<div class="'+cls+' cine-ph"></div>';
+}
+function _cineBadge(it,cls){
+  var c=(it.categoria||'').toLowerCase();
+  if(c==='video'||c==='tour'||c==='360')return '<span class="'+cls+'">Imersivo · 360°</span>';
+  return '';
+}
+function buildCineLayer(it,i){
+  var desc=_cineDesc(it);
+  return '<div class="cine-layer" data-i="'+i+'" onclick="openModalIdx('+i+')">'
+    +'<div class="cine-card">'+_cineMedia(it,'cine-img')+'<div class="cine-ov"></div>'
+    +'<div class="cine-txt">'
+    +'<div class="cine-cat">'+_cineEsc(it.categoria||'Projeto')+_cineBadge(it,'cine-badge')+'</div>'
+    +'<div class="cine-title">'+_cineEsc(it.nome||'')+'</div>'
+    +(desc?'<p class="cine-desc">'+_cineEsc(desc)+'</p>':'')
+    +'<span class="cine-open">Ver projeto →</span>'
+    +'</div></div></div>';
+}
+function buildMobilePanel(it,i){
+  return '<div class="pm-panel" data-i="'+i+'" onclick="openModalIdx('+i+')">'
+    +_cineMedia(it,'pm-panel-img')+'<div class="pm-panel-ov"></div>'
+    +'<div class="pm-panel-txt">'
+    +'<div class="pm-panel-cat">'+_cineEsc(it.categoria||'Projeto')+_cineBadge(it,'pm-panel-badge')+'</div>'
+    +'<div class="pm-panel-title">'+_cineEsc(it.nome||'')+'</div>'
+    +'</div></div>';
+}
+window._buildCinema=function(){
+  var list=_cineList();
+  window._portItemsArr=list;
+  var layers=document.getElementById('cineLayers');
+  var mob=document.getElementById('portMobile');
+  var cine=document.getElementById('portCinema');
+  var N=list.length;
+  if(!N){
+    if(layers)layers.innerHTML='<div class="cine-empty">Em breve, novos projetos nesta categoria.</div>';
+    if(mob)mob.innerHTML='<div class="cine-empty">Em breve, novos projetos nesta categoria.</div>';
+    if(cine)cine.style.height='100svh';
+    var t0=document.getElementById('cineTotal');if(t0)t0.textContent='00';
+    var n0=document.getElementById('cineNum');if(n0)n0.textContent='00';
+    var d0=document.getElementById('cineDots');if(d0)d0.innerHTML='';
+    return;
+  }
+  if(layers)layers.innerHTML=list.map(buildCineLayer).join('');
+  if(mob)mob.innerHTML=list.map(buildMobilePanel).join('');
+  if(cine)cine.style.height=(N>1?(100+(N-1)*88):100)+'svh';
+  var tot=document.getElementById('cineTotal');if(tot)tot.textContent=('0'+N).slice(-2);
+  var dots=document.getElementById('cineDots');
+  if(dots){var h='';for(var k=0;k<N;k++)h+='<span class="cine-dot'+(k===0?' on':'')+'"></span>';dots.innerHTML=h;}
+  updateCinema();
+  updateMobile();
+};
+function updateCinema(){
+  var cine=document.getElementById('portCinema');
+  if(!cine||!cine.offsetParent)return;            // escondido no mobile → ignora
+  var layers=document.getElementById('cineLayers');
+  if(!layers)return;
+  var L=layers.children,N=L.length;
+  if(!N||L[0].classList.contains('cine-empty'))return;
+  var vh=window.innerHeight;
+  var total=cine.offsetHeight-vh;
+  var r=cine.getBoundingClientRect();
+  var scrolled=Math.min(Math.max(-r.top,0),Math.max(total,1));
+  var p=total>0?(scrolled/total)*(N-1):0;
+  for(var i=0;i<N;i++){
+    var d=i-p,ad=Math.abs(d),adc=Math.min(ad,1),el=L[i];
+    var scale=1-adc*0.13;
+    var x=d>0?Math.min(d,1)*5:0;
+    var y=d<0?d*9:0;
+    var op=d>=0?Math.max(1-d*0.8,0):Math.max(1+d*1.25,0);
+    if(ad>1.7)op=0;
+    var blur=adc*3,ov=adc*0.62;
+    el.style.opacity=String(op);
+    el.style.transform='translate3d('+x+'vw,'+y+'vh,0) scale('+scale.toFixed(3)+')';
+    el.style.filter=blur>0.25?'blur('+blur.toFixed(1)+'px)':'none';
+    el.style.zIndex=String(Math.round(100-ad*12));
+    el.style.pointerEvents=ad<0.5?'auto':'none';
+    var ovEl=el.querySelector('.cine-ov');if(ovEl)ovEl.style.opacity=String(ov);
+    var txt=el.querySelector('.cine-txt');if(txt)txt.style.opacity=String(Math.max(1-ad*1.7,0));
+    var img=el.querySelector('.cine-img');if(img)img.style.transform='scale('+(1.07-adc*0.05).toFixed(3)+') translateY('+(d*-2).toFixed(1)+'%)';
+  }
+  var active=Math.max(0,Math.min(N-1,Math.round(p)));
+  var num=document.getElementById('cineNum');if(num)num.textContent=('0'+(active+1)).slice(-2);
+  var dots=document.getElementById('cineDots');
+  if(dots){var dd=dots.children;for(var j=0;j<dd.length;j++)dd[j].classList.toggle('on',j===active);}
+}
+function updateMobile(){
+  var mob=document.getElementById('portMobile');
+  if(!mob||!mob.offsetParent)return;   // escondido no desktop
+  var ps=mob.querySelectorAll('.pm-panel');
+  if(!ps.length)return;
+  var vh=window.innerHeight,vc=vh/2;
+  for(var i=0;i<ps.length;i++){
+    var r=ps[i].getBoundingClientRect();
+    var t=Math.min(Math.abs((r.top+r.height/2)-vc)/vh,1);
+    ps[i].style.opacity=String(Math.max(1-t*0.82,0.16));
+    ps[i].style.transform='scale('+(1-t*0.055).toFixed(3)+')';
+  }
+}
+function initCinema(){
+  document.querySelectorAll('#filterRow .fBtn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#filterRow .fBtn').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      window._cineFilter=(b.dataset.f||'all');
+      if(window._buildCinema)window._buildCinema();
+      var cine=document.getElementById('portCinema');
+      if(cine&&cine.offsetParent&&window.matchMedia('(min-width:901px)').matches){
+        window.scrollTo({top:cine.getBoundingClientRect().top+window.scrollY-1,behavior:'smooth'});
+      }
+    });
+  });
+  var ticking=false;
+  window.addEventListener('scroll',function(){
+    if(ticking)return;ticking=true;
+    requestAnimationFrame(function(){updateCinema();updateMobile();ticking=false;});
+  },{passive:true});
+  window.addEventListener('resize',function(){updateCinema();updateMobile();},{passive:true});
+  if(window._cinemaAll&&window._buildCinema)window._buildCinema();
+  updateCinema();updateMobile();
+}
 
 /* ════════════════════════════════════════════════
    BUILDERS
