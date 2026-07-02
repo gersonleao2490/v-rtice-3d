@@ -3574,37 +3574,33 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
 #portSection .fBtn{border-color:rgba(244,240,232,.2)!important;color:rgba(244,240,232,.55)!important;background:transparent!important}
 #portSection .fBtn.on,#portSection .fBtn:hover{border-color:#c9a87c!important;color:#F4F0E8!important;background:rgba(201,168,124,.12)!important}
 
-/* Desktop: cenas grandes alternadas (estável, sempre visível) */
+/* Desktop: PINNED cinema seguro (current sempre dominante, nunca preto) */
 .cine-ph{background:linear-gradient(160deg,#221d18,#2f2820)}
-#galDesktop{display:block}
-.gal-scene{display:grid;grid-template-columns:60% 40%;align-items:center;gap:0;min-height:86svh;padding:36px 80px;position:relative;cursor:pointer}
-.gal-scene:nth-child(even){grid-template-columns:40% 60%}
-.gal-scene:nth-child(even) .gal-media{order:2}
-.gal-scene:nth-child(even) .gal-info{order:1;padding:0 70px 0 0}
-.gal-media{position:relative;height:74svh;border-radius:16px;overflow:hidden;background:#15110d;box-shadow:0 40px 100px rgba(0,0,0,.5)}
-.gal-img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover;will-change:transform}
-.gal-ov{position:absolute;inset:0;background:linear-gradient(105deg,rgba(8,7,6,.3),transparent 55%);pointer-events:none}
-.gal-info{padding:0 0 0 70px}
-.gal-index{font-family:var(--serif);color:#c9a87c;font-size:15px;letter-spacing:2px;margin-bottom:22px}
-.gal-index span{color:rgba(244,240,232,.35);margin-left:2px}
-.gal-cat{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#d8c5a8;margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.gal-badge{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#0a0908;background:#c9a87c;border-radius:999px;padding:3px 11px;font-weight:500}
-.gal-title{font-family:var(--serif);font-weight:300;font-size:clamp(38px,4.4vw,68px);line-height:1;color:#F6F1E8;letter-spacing:-.02em;margin-bottom:20px}
-.gal-desc{font-size:14.5px;line-height:1.75;color:rgba(244,240,232,.62);max-width:42ch;margin-bottom:26px}
-.gal-open{display:inline-block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#c9a87c;border-bottom:1px solid rgba(201,168,124,.5);padding-bottom:3px;transition:color .3s}
-.gal-scene:hover .gal-open{color:#F4F0E8}
-.gal-next{display:flex;align-items:center;gap:14px;margin-top:44px;opacity:.72;transition:opacity .3s}
-.gal-scene:hover .gal-next{opacity:1}
-.gal-next-img{width:82px;height:58px;object-fit:cover;border-radius:8px;flex:0 0 auto}
-.gal-next-tx{display:flex;flex-direction:column;gap:3px}
-.gal-next-lb{font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(244,240,232,.4)}
-.gal-next-nm{font-family:var(--serif);font-size:15px;color:rgba(244,240,232,.8)}
-.gal-empty{min-height:56svh;display:flex;align-items:center;justify-content:center;color:rgba(244,240,232,.42);font-family:var(--serif-it);font-style:italic;font-size:19px;padding:0 24px;text-align:center}
+#portCinema{position:relative;width:100%}
+.cine-stage{position:absolute;top:0;left:0;right:0;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.cine-track{position:absolute;inset:0}
+.cine-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;will-change:transform,opacity,filter}
+.cine-card{position:relative;width:min(1340px,84vw);height:84svh;border-radius:16px;overflow:hidden;background:#15110d;box-shadow:0 60px 140px rgba(0,0,0,.6);cursor:pointer}
+.cine-img{position:absolute;left:0;top:-6%;width:100%;height:112%;object-fit:cover;will-change:transform}
+.cine-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,7,6,.8) 0%,rgba(8,7,6,.08) 44%,rgba(8,7,6,.22) 100%);pointer-events:none}
+.cine-dark{position:absolute;inset:0;background:#080706;opacity:0;pointer-events:none}
+.cine-txt{position:absolute;left:44px;right:44px;bottom:42px;z-index:4;max-width:640px;will-change:opacity}
+.cine-cat{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#d8c5a8;margin-bottom:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.cine-badge{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#0a0908;background:#c9a87c;border-radius:999px;padding:3px 11px;font-weight:500}
+.cine-title{font-family:var(--serif);font-weight:300;font-size:clamp(40px,4.8vw,74px);line-height:1;color:#F6F1E8;letter-spacing:-.02em;margin-bottom:16px}
+.cine-desc{font-size:14.5px;line-height:1.7;color:rgba(244,240,232,.66);max-width:44ch;margin-bottom:22px}
+.cine-open{display:inline-block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#c9a87c;border-bottom:1px solid rgba(201,168,124,.5);padding-bottom:3px;transition:color .3s}
+.cine-card:hover .cine-open{color:#F4F0E8}
+.cine-ui{position:absolute;bottom:34px;right:46px;z-index:20;text-align:right;pointer-events:none}
+.cine-count{font-family:var(--serif);font-size:15px;color:rgba(244,240,232,.72);letter-spacing:1px}
+.cine-count i{font-style:normal;color:rgba(244,240,232,.3);margin:0 5px}
+.cine-next-hint{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(244,240,232,.42);margin-top:8px;min-height:11px}
+.cine-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(244,240,232,.42);font-family:var(--serif-it);font-style:italic;font-size:19px;padding:0 24px;text-align:center}
 
 /* Mobile: painéis grandes, sempre visíveis */
 #galMobile{display:none}
 @media(max-width:900px){
-  #galDesktop{display:none!important}
+  #portCinema{display:none!important}
   #galMobile{display:block;padding:4px 0 8px}
   #portSection{padding-top:92px!important;padding-bottom:20px!important}
   #portSection .port-head{padding:0 22px}
@@ -3647,15 +3643,10 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
   .fBtn{padding:7px 14px!important;font-size:10px!important;letter-spacing:1.5px!important}
 }
 
-/* Portfólio desktop — menos vazio morto, mais cinematográfico */
+/* Portfólio desktop — título compacto acima do palco pinned */
 @media(min-width:901px){
-  #portSection{padding-top:104px!important}
-  #portSection .port-head{margin-bottom:6px!important}
-  .gal-scene{min-height:82svh;padding:22px 80px}
-  .gal-scene:first-child{padding-top:6px}
-  .gal-media{height:76svh}
-  .gal-next{margin-top:38px;opacity:.6}
-  .gal-next:hover{opacity:1}
+  #portSection{padding-top:100px!important;padding-bottom:0!important}
+  #portSection .port-head{margin-bottom:0!important}
 }
 
 /* Portfólio mobile — mais caro, respiro dos filtros, overlay leve */
@@ -3807,9 +3798,17 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
     </div>
   </div>
 
-  <!-- DESKTOP: galeria editorial estável (cenas grandes alternadas) -->
-  <div id="galDesktop">
-    <article class="gal-scene"><div class="gal-media"><div class="gal-img cine-ph"></div><div class="gal-ov"></div></div><div class="gal-info"><div class="gal-title">Carregando projetos…</div></div></article>
+  <!-- DESKTOP: portfólio pinned/scrollytelling (compositor seguro 3 estados) -->
+  <div id="portCinema">
+    <div class="cine-stage">
+      <div class="cine-track" id="cineTrack">
+        <div class="cine-layer"><div class="cine-card"><div class="cine-img cine-ph"></div><div class="cine-ov"></div></div></div>
+      </div>
+      <div class="cine-ui">
+        <div class="cine-count"><span id="cineNum">01</span><i>/</i><span id="cineTot">01</span></div>
+        <div class="cine-next-hint" id="cineNextHint"></div>
+      </div>
+    </div>
   </div>
 
   <!-- MOBILE: painéis grandes, sempre visíveis -->
@@ -5325,24 +5324,16 @@ function _galBadge(it,cls){
   if(c==='video'||c==='tour'||c==='360')return '<span class="'+(cls||'gal-badge')+'">Tour 360° · Imersivo</span>';
   return '';
 }
-function buildGalScene(it,i,N,nextIt){
+function buildCineLayer(it,i){
   var desc=_galDesc(it);
-  var next='';
-  if(nextIt){
-    next='<div class="gal-next" onclick="event.stopPropagation();var n=this.closest(\'.gal-scene\').nextElementSibling;if(n)n.scrollIntoView({behavior:\'smooth\',block:\'center\'})">'
-      +_galMedia(nextIt,'gal-next-img')
-      +'<div class="gal-next-tx"><span class="gal-next-lb">Próximo</span><span class="gal-next-nm">'+_galEsc(nextIt.nome||'')+'</span></div></div>';
-  }
-  return '<article class="gal-scene" data-i="'+i+'" onclick="openModalIdx('+i+')">'
-    +'<div class="gal-media">'+_galMedia(it,'gal-img')+'<div class="gal-ov"></div></div>'
-    +'<div class="gal-info">'
-    +'<div class="gal-index">'+('0'+(i+1)).slice(-2)+'<span>/'+('0'+N).slice(-2)+'</span></div>'
-    +'<div class="gal-cat">'+_galEsc(it.categoria||'Projeto')+_galBadge(it,'gal-badge')+'</div>'
-    +'<h3 class="gal-title">'+_galEsc(it.nome||'')+'</h3>'
-    +(desc?'<p class="gal-desc">'+_galEsc(desc)+'</p>':'')
-    +'<span class="gal-open">Ver projeto →</span>'
-    +next
-    +'</div></article>';
+  return '<div class="cine-layer" data-i="'+i+'" onclick="openModalIdx('+i+')">'
+    +'<div class="cine-card">'+_galMedia(it,'cine-img')+'<div class="cine-ov"></div><div class="cine-dark"></div>'
+    +'<div class="cine-txt">'
+    +'<div class="cine-cat">'+_galEsc(it.categoria||'Projeto')+_galBadge(it,'cine-badge')+'</div>'
+    +'<h3 class="cine-title">'+_galEsc(it.nome||'')+'</h3>'
+    +(desc?'<p class="cine-desc">'+_galEsc(desc)+'</p>':'')
+    +'<span class="cine-open">Ver projeto →</span>'
+    +'</div></div></div>';
 }
 function buildGalMPanel(it,i){
   return '<article class="gal-m-panel" data-i="'+i+'" onclick="openModalIdx('+i+')">'
@@ -5352,30 +5343,88 @@ function buildGalMPanel(it,i){
 }
 window._buildGallery=function(){
   var list=_galList();
-  window._portItemsArr=list;                       // índice do modal = lista exibida
-  var d=document.getElementById('galDesktop');
+  window._portItemsArr=list;                        // índice do modal = lista exibida
+  window._cineItems=list;
+  var d=document.getElementById('cineTrack');
   var m=document.getElementById('galMobile');
+  var cine=document.getElementById('portCinema');
   var N=list.length;
   if(!N){
-    var msg='<div class="gal-empty">Em breve, novos projetos nesta categoria.</div>';
+    var msg='<div class="cine-empty">Em breve, novos projetos nesta categoria.</div>';
     if(d)d.innerHTML=msg; if(m)m.innerHTML=msg;
+    if(cine)cine.style.height='100svh';
+    var t0=document.getElementById('cineTot');if(t0)t0.textContent='00';
+    var n0=document.getElementById('cineNum');if(n0)n0.textContent='00';
+    var h0=document.getElementById('cineNextHint');if(h0)h0.textContent='';
     return;
   }
-  if(d)d.innerHTML=list.map(function(it,i){return buildGalScene(it,i,N,list[i+1]);}).join('');
+  if(d)d.innerHTML=list.map(buildCineLayer).join('');
   if(m)m.innerHTML=list.map(buildGalMPanel).join('');
-  updateGalleryParallax();
+  if(cine)cine.style.height=(100+(N-1)*95)+'svh';   // altura proporcional aos projetos
+  var tot=document.getElementById('cineTot');if(tot)tot.textContent=('0'+N).slice(-2);
+  updateCinema();
+  updateMobile();
 };
-function updateGalleryParallax(){
+/* COMPOSITOR SEGURO: papel fixo por posição (prev/current/next).
+   current = floor(progress) e NUNCA fica abaixo de 0.82 → sempre há dono. */
+function updateCinema(){
+  var cine=document.getElementById('portCinema');
+  if(!cine||!cine.offsetParent)return;              // mobile: pinned oculto
+  var track=document.getElementById('cineTrack');
+  if(!track)return;
+  var L=track.children,N=L.length;
+  if(!N||L[0].classList.contains('cine-empty'))return;
+  var vh=window.innerHeight;
+  var total=cine.offsetHeight-vh;
+  var r=cine.getBoundingClientRect();
+  // Pin manual (position:sticky quebra com overflow-x:hidden nos ancestrais)
+  var stage=track.parentNode;
+  if(r.top>0){stage.style.position='absolute';stage.style.top='0';stage.style.bottom='auto';}
+  else if(r.bottom<vh){stage.style.position='absolute';stage.style.top='auto';stage.style.bottom='0';}
+  else{stage.style.position='fixed';stage.style.top='0';stage.style.bottom='auto';}
+  var scrolled=Math.min(Math.max(-r.top,0),Math.max(total,1));
+  var progress=total>0?(scrolled/total)*(N-1):0;
+  var ci=Math.max(0,Math.min(Math.floor(progress),N-1));
+  var lp=progress-ci;                               // 0..1 dentro da etapa
+  for(var i=0;i<N;i++){
+    var el=L[i],rel=i-ci,op,ty,sc,z,blur,dk,pe,txo,imgp;
+    if(rel<-1||rel>1){op=0;ty=0;sc=0.9;z=0;blur=0;dk=1;pe='none';txo=0;imgp=0;}
+    else if(rel===-1){                              // previous — decorativo, ao fundo
+      op=Math.max(0.28*(1-lp),0);ty=-7;sc=0.9;z=1;blur=4;dk=0.5;pe='none';txo=0;imgp=0;
+    } else if(rel===0){                             // current — SEMPRE dominante
+      op=1-lp*0.18;ty=-lp*5;sc=1-lp*0.05;z=2;blur=lp*1.8;dk=lp*0.34;pe=(lp<0.55?'auto':'none');
+      txo=Math.max(1-lp*1.7,0);imgp=-lp*3;
+    } else {                                        // next — entra por baixo, cobrindo
+      var et=Math.max(0,Math.min((lp-0.30)/0.70,1));
+      op=et;ty=(1-et)*62;sc=0.92+et*0.08;z=3;blur=(1-et)*1.2;dk=(1-et)*0.12;pe=(lp>=0.55?'auto':'none');
+      txo=Math.max((lp-0.62)/0.38,0);imgp=(1-et)*3;
+    }
+    el.style.opacity=String(op);
+    el.style.transform='translate3d(0,'+ty+'vh,0) scale('+sc.toFixed(3)+')';
+    el.style.filter=blur>0.2?'blur('+blur.toFixed(1)+'px)':'none';
+    el.style.zIndex=String(z);
+    el.style.pointerEvents=pe;
+    var dkEl=el.querySelector('.cine-dark');if(dkEl)dkEl.style.opacity=String(dk);
+    var txt=el.querySelector('.cine-txt');if(txt)txt.style.opacity=String(Math.min(txo,1));
+    var img=el.querySelector('.cine-img');if(img)img.style.transform='translateY('+imgp.toFixed(1)+'%)';
+  }
+  var active=lp>0.5?Math.min(ci+1,N-1):ci;
+  var num=document.getElementById('cineNum');if(num)num.textContent=('0'+(active+1)).slice(-2);
+  var hint=document.getElementById('cineNextHint');
+  if(hint){var nx=(window._cineItems||[])[active+1];hint.textContent=nx?('Próximo — '+(nx.nome||'')):'';}
+}
+function updateMobile(){
+  var m=document.getElementById('galMobile');
+  if(!m||!m.offsetParent)return;                    // desktop: mobile oculto
+  var ps=m.querySelectorAll('.gal-m-panel');
+  if(!ps.length||ps[0].classList.contains('cine-empty'))return;
   var vh=window.innerHeight,vc=vh/2;
-  var imgs=document.querySelectorAll('#galDesktop .gal-img, #galMobile .gal-m-img');
-  for(var i=0;i<imgs.length;i++){
-    var host=imgs[i].parentNode;
-    if(!host)continue;
-    var r=host.getBoundingClientRect();
-    if(r.bottom<-120||r.top>vh+120)continue;       // fora da tela → pula (perf)
-    var rel=((r.top+r.height/2)-vc)/vh;             // -1 (acima) .. 1 (abaixo)
-    if(rel>1)rel=1; if(rel<-1)rel=-1;
-    imgs[i].style.transform='translateY('+(rel*5).toFixed(2)+'%)';
+  for(var i=0;i<ps.length;i++){
+    var r=ps[i].getBoundingClientRect();
+    var t=Math.min(Math.abs((r.top+r.height/2)-vc)/vh,1);
+    ps[i].style.transform='scale('+(1-t*0.05).toFixed(3)+')';   // sempre visível (sem fade)
+    var img=ps[i].querySelector('.gal-m-img');
+    if(img){var rel=((r.top+r.height/2)-vc)/vh;if(rel>1)rel=1;if(rel<-1)rel=-1;img.style.transform='translateY('+(rel*4).toFixed(1)+'%)';}
   }
 }
 function initGallery(){
@@ -5392,11 +5441,11 @@ function initGallery(){
   var ticking=false;
   window.addEventListener('scroll',function(){
     if(ticking)return;ticking=true;
-    requestAnimationFrame(function(){updateGalleryParallax();ticking=false;});
+    requestAnimationFrame(function(){updateCinema();updateMobile();if(window._updateWaFloat)window._updateWaFloat();ticking=false;});
   },{passive:true});
-  window.addEventListener('resize',function(){updateGalleryParallax();},{passive:true});
+  window.addEventListener('resize',function(){updateCinema();updateMobile();},{passive:true});
   if(window._cinemaAll&&window._buildGallery)window._buildGallery();
-  updateGalleryParallax();
+  updateCinema();updateMobile();
 }
 
 /* ════════════════════════════════════════════════
