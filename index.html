@@ -2024,7 +2024,7 @@ footer{background:var(--INK) !important;border-top-color:rgba(245,242,236,.06) !
   .pm-close-btn{top:12px;right:12px;width:40px;height:40px;}
 }
 /* ── Scroll progress bar ─────────────────────────────────────── */
-#scrollProg{position:fixed;top:0;left:0;height:3px;background:var(--O);z-index:9999;width:0;pointer-events:none;transition:width .08s linear}
+#scrollProg{position:fixed;top:0;left:0;height:1px;background:var(--vx-accent);opacity:.55;z-index:9999;width:0;pointer-events:none;transition:width .08s linear}
 /* ── WhatsApp float button ───────────────────────────────────── */
 #waFloat{position:fixed;bottom:28px;right:28px;z-index:8900;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,.45);transition:transform .2s,box-shadow .2s;text-decoration:none}
 #waFloat:hover{transform:scale(1.12);box-shadow:0 6px 32px rgba(37,211,102,.65)}
@@ -3619,6 +3619,59 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
 
 /* Hero — menos cara de vídeo-teste */
 #heroBg video{filter:saturate(.86) brightness(.92) contrast(1.04)}
+
+/* ════════════════════════════════════════════════
+   POLISH PREMIUM FINAL 2026
+════════════════════════════════════════════════ */
+@media(max-width:768px){#scrollProg{display:none!important}}
+
+/* Header mobile — nunca cobrir título das seções */
+@media(max-width:768px){
+  section,#portSection,#servicos,#processo,#orc,#sobre{scroll-margin-top:74px!important}
+  #portSection{padding-top:100px!important}
+}
+
+/* LGPD mobile — compacto, safe-area, sem cobrir cards */
+@media(max-width:600px){
+  #lgpdBanner{flex-direction:row!important;align-items:center!important;flex-wrap:wrap!important;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))!important;gap:8px!important}
+  .lgpd-text{font-size:10.5px!important;line-height:1.45!important;flex:1 1 100%!important;max-width:none!important}
+  .lgpd-btns{width:auto!important;margin-left:auto!important;gap:8px!important}
+  .lgpd-ok,.lgpd-skip{flex:0 0 auto!important;padding:7px 14px!important;font-size:9.5px!important}
+}
+
+/* Filtros mobile — chips menores, scroll edge-to-edge sem corte */
+@media(max-width:760px){
+  #portSection .port-head{gap:14px!important}
+  .filter-row{margin:0 -22px!important;width:calc(100% + 44px)!important;padding:0 22px 8px!important;-ms-overflow-style:none}
+  .filter-row::after{content:'';flex:0 0 8px}
+  .fBtn{padding:7px 14px!important;font-size:10px!important;letter-spacing:1.5px!important}
+}
+
+/* Portfólio desktop — menos vazio morto, mais cinematográfico */
+@media(min-width:901px){
+  #portSection{padding-top:104px!important}
+  #portSection .port-head{margin-bottom:6px!important}
+  .gal-scene{min-height:82svh;padding:22px 80px}
+  .gal-scene:first-child{padding-top:6px}
+  .gal-media{height:76svh}
+  .gal-next{margin-top:38px;opacity:.6}
+  .gal-next:hover{opacity:1}
+}
+
+/* Portfólio mobile — mais caro, respiro dos filtros, overlay leve */
+@media(max-width:900px){
+  #galMobile{padding-top:14px!important}
+  .gal-m-panel{height:72svh;margin:0 16px 20px}
+  .gal-m-panel:first-child{margin-top:6px}
+  .gal-m-ov{background:linear-gradient(to top,rgba(8,7,6,.66) 0%,rgba(8,7,6,0) 46%)!important}
+  .gal-m-title{font-size:24px}
+}
+
+/* Modal mobile — botão fechar menor/elegante */
+@media(max-width:768px){
+  .pm-close-btn{width:38px!important;height:38px!important;font-size:15px!important;top:12px!important;right:12px!important;background:rgba(0,0,0,.5)!important;border:1px solid rgba(255,255,255,.22)!important}
+  .pm-body{padding:18px 20px 26px!important}
+}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"Vértice 3D","description":"Estúdio de visualização arquitetônica de alto padrão.","url":"https://gersonleao2490.github.io/v-rtice-3d/","image":"https://gersonleao2490.github.io/v-rtice-3d/og-image.jpg","areaServed":"BR","knowsAbout":["Renderização arquitetônica","Visualização 3D","Vídeo 3D"]}
@@ -3643,7 +3696,7 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
 
 <!-- LGPD -->
 <div id="lgpdBanner" role="dialog" aria-label="Aviso de privacidade">
-  <p class="lgpd-text">Este site utiliza dados de navegação para melhorar sua experiência e analisar o tráfego. Ao continuar, você concorda com nossa <a href="#" onclick="return false">Política de Privacidade</a> em conformidade com a LGPD (Lei 13.709/2018).</p>
+  <p class="lgpd-text">Usamos cookies para melhorar sua experiência. Ao continuar, você concorda com a <a href="#" onclick="return false">Política de Privacidade</a> (LGPD).</p>
   <div class="lgpd-btns">
     <button class="lgpd-skip" onclick="lgpdClose()">Apenas essenciais</button>
     <button class="lgpd-ok" onclick="lgpdAccept()">Aceitar e continuar</button>
@@ -5106,7 +5159,9 @@ function _pmSetMedia(html){
 function openModal(nome,cat,desc,img,video,galeria){
   document.getElementById('mTitle').textContent=nome;
   document.getElementById('mTag').textContent=(cat||'').toUpperCase();
-  document.getElementById('mDesc').textContent=desc||'Projeto de visualização arquitetônica de alto padrão.';
+  var _md=(desc||'').trim();
+  if(!_md||_md.length<4||/^(teste|test)\s*\d*$/i.test(_md))_md='';
+  document.getElementById('mDesc').textContent=_md||'Projeto de visualização arquitetônica de alto padrão.';
   _modalGaleria=galeria||[];
   _modalGalIdx=0;
   var imgEl=document.getElementById('mImgEl');
@@ -5126,6 +5181,8 @@ function openModal(nome,cat,desc,img,video,galeria){
   modal.style.display='flex';
   requestAnimationFrame(function(){requestAnimationFrame(function(){modal.classList.add('open');});});
   document.body.style.overflow='hidden';
+  document.body.classList.add('modal-open');
+  if(window._updateWaFloat)window._updateWaFloat();
 }
 function showModalGalImg(idx){
   if(!_modalGaleria.length)return;
@@ -5140,6 +5197,8 @@ function closeModal(){
   // Aguarda a transição reversa do clip-path antes de esconder
   setTimeout(()=>{modal.style.display='none'},900);
   document.body.style.overflow='';
+  document.body.classList.remove('modal-open');
+  if(window._updateWaFloat)window._updateWaFloat();
 }
 
 /* ════════════════════════════════════════════════
@@ -5251,7 +5310,7 @@ function _galList(){
 }
 function _galDesc(it){
   var d=(it.descricao||'').trim();
-  if(!d||d.length<4)return '';
+  if(!d||d.length<4||/^(teste|test)\s*\d*$/i.test(d))return '';   // nunca mostrar "teste"
   return d.length>150?d.slice(0,148)+'…':d;
 }
 function _galMedia(it,cls){
@@ -6742,18 +6801,23 @@ function lgpdClose(){
 }
 lgpdInit();
 
-/* WhatsApp flutuante some quando o formulário de contato está à vista
-   (evita cobrir o botão; lá já existe link de WhatsApp) */
+/* WhatsApp flutuante: some no Portfólio (imagem é protagonista) e com modal aberto.
+   Visível em Hero/Serviços/Processo/Estúdio/Contato/Footer. */
 (function(){
-  var wa=document.getElementById('waFloat'),orc=document.getElementById('orc');
-  if(!wa||!orc||!('IntersectionObserver' in window))return;
-  new IntersectionObserver(function(es){
-    es.forEach(function(e){
-      wa.style.transition='opacity .35s ease';
-      wa.style.opacity=e.isIntersecting?'0':'';
-      wa.style.pointerEvents=e.isIntersecting?'none':'';
-    });
-  },{threshold:.2}).observe(orc);
+  var wa=document.getElementById('waFloat');
+  if(!wa)return;
+  wa.style.transition='opacity .4s ease';
+  function centered(el){if(!el)return false;var r=el.getBoundingClientRect();var vh=window.innerHeight||0;return r.top<=vh*0.5&&r.bottom>=vh*0.45;}
+  function upd(){
+    var hide=document.body.classList.contains('modal-open')||centered(document.getElementById('portSection'));
+    wa.style.opacity=hide?'0':'';
+    wa.style.pointerEvents=hide?'none':'';
+  }
+  window._updateWaFloat=upd;
+  var t=false;
+  window.addEventListener('scroll',function(){if(t)return;t=true;requestAnimationFrame(function(){upd();t=false;});},{passive:true});
+  window.addEventListener('resize',upd,{passive:true});
+  upd();
 })();
 
 /* ── Dark Mode ─────────────────────────────────── */
@@ -6933,21 +6997,10 @@ document.addEventListener('keydown',function(e){
   }
 });
 
-/* ── Exit Intent ──────────────────────────────── */
-var _exitShown=false;
-function exitClose(){
-  var p=document.getElementById('exitPopup');
-  if(p){p.classList.remove('show');setTimeout(function(){p.style.display='none';},400);}
-  sessionStorage.setItem('exit_shown','1');
-}
-document.addEventListener('mouseleave',function(e){
-  if(e.clientY<=0&&!_exitShown&&!sessionStorage.getItem('exit_shown')){
-    _exitShown=true;
-    var p=document.getElementById('exitPopup');
-    if(p){p.style.display='flex';requestAnimationFrame(function(){p.classList.add('show');});}
-  }
+/* Exit-intent popup removido (fora do briefing premium). Esc fecha o modal de projeto. */
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){var m=document.getElementById('projModal');if(m&&m.classList.contains('open')&&typeof closeModal==='function')closeModal();}
 });
-document.addEventListener('keydown',function(e){if(e.key==='Escape')exitClose();});
 
 /* ── Admin: Processo ────────────────────────── */
 async function saveProcesso(){
@@ -7116,20 +7169,6 @@ async function nlSubmit(e){
   <div class="art-body" id="artBody"></div>
 </div>
 
-<!-- EXIT INTENT -->
-<div id="exitPopup" onclick="if(event.target===this)exitClose()">
-  <div class="exit-box">
-    <button class="exit-close" onclick="exitClose()" aria-label="Fechar">✕</button>
-    <div class="exit-eyebrow">Antes de ir</div>
-    <h3 class="exit-title">Veja como transformamos projetos em vendas</h3>
-    <p class="exit-sub">Mais de 180 projetos entregues para construtoras e incorporadoras. Solicite uma proposta sem compromisso.</p>
-    <div class="exit-btns">
-      <a class="btn-O wa-href" href="#" target="_blank" rel="noopener"><span>Falar no WhatsApp</span></a>
-      <a class="btn-ghost" href="#portfolio" onclick="exitClose()">Ver portfólio</a>
-    </div>
-    <button class="exit-dismiss" onclick="exitClose()">Não, obrigado</button>
-  </div>
-</div>
 
 <!-- COMPARADOR BAR -->
 <div id="cmpBar">
