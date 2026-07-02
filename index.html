@@ -3574,27 +3574,33 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
 #portSection .fBtn{border-color:rgba(244,240,232,.2)!important;color:rgba(244,240,232,.55)!important;background:transparent!important}
 #portSection .fBtn.on,#portSection .fBtn:hover{border-color:#c9a87c!important;color:#F4F0E8!important;background:rgba(201,168,124,.12)!important}
 
-/* Desktop: PINNED cinema seguro (current sempre dominante, nunca preto) */
+/* Desktop: PINNED cinema seguro — composição EDITORIAL (imagem + coluna de texto) */
 .cine-ph{background:linear-gradient(160deg,#221d18,#2f2820)}
 #portCinema{position:relative;width:100%}
 .cine-stage{position:absolute;top:0;left:0;right:0;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .cine-track{position:absolute;inset:0}
 .cine-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;will-change:transform,opacity,filter}
-.cine-card{position:relative;width:min(1340px,84vw);height:84svh;border-radius:16px;overflow:hidden;background:#15110d;box-shadow:0 60px 140px rgba(0,0,0,.6);cursor:pointer}
-.cine-img{position:absolute;left:0;top:-6%;width:100%;height:112%;object-fit:cover;will-change:transform}
-.cine-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,7,6,.8) 0%,rgba(8,7,6,.08) 44%,rgba(8,7,6,.22) 100%);pointer-events:none}
+.cine-inner{width:min(1780px,93vw);display:grid;grid-template-columns:2fr 1fr;gap:clamp(36px,3.4vw,64px);align-items:center}
+.cine-card{position:relative;height:76svh;border-radius:10px;overflow:hidden;background:#15110d;box-shadow:0 50px 120px rgba(0,0,0,.55);cursor:pointer}
+.cine-img{position:absolute;left:0;top:-6%;width:100%;height:112%;object-fit:cover;will-change:transform;filter:contrast(1.05) saturate(1.03)}
+.cine-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,7,6,.26),transparent 40%);pointer-events:none}
 .cine-dark{position:absolute;inset:0;background:#080706;opacity:0;pointer-events:none}
-.cine-txt{position:absolute;left:44px;right:44px;bottom:42px;z-index:4;max-width:640px;will-change:opacity}
-.cine-cat{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#d8c5a8;margin-bottom:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.cine-editorial{position:relative;max-width:440px;will-change:opacity}
+.cine-index{font-family:var(--serif);font-size:15px;letter-spacing:1px;color:#c9a87c;margin-bottom:26px;display:flex;align-items:center;gap:14px}
+.cine-index::before{content:'';width:36px;height:1px;background:#c9a87c;opacity:.55}
+.cine-index span{color:rgba(244,240,232,.32);font-size:13px}
+.cine-cat{font-size:10.5px;letter-spacing:3px;text-transform:uppercase;color:#d8c5a8;margin-bottom:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .cine-badge{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#0a0908;background:#c9a87c;border-radius:999px;padding:3px 11px;font-weight:500}
-.cine-title{font-family:var(--serif);font-weight:300;font-size:clamp(40px,4.8vw,74px);line-height:1;color:#F6F1E8;letter-spacing:-.02em;margin-bottom:16px}
-.cine-desc{font-size:14.5px;line-height:1.7;color:rgba(244,240,232,.66);max-width:44ch;margin-bottom:22px}
+.cine-title{font-family:var(--serif);font-weight:300;font-size:clamp(38px,3.5vw,60px);line-height:1.02;color:#F6F1E8;letter-spacing:-.02em;margin-bottom:18px}
+.cine-desc{font-size:14.5px;line-height:1.75;color:rgba(244,240,232,.6);max-width:40ch;margin-bottom:24px}
 .cine-open{display:inline-block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#c9a87c;border-bottom:1px solid rgba(201,168,124,.5);padding-bottom:3px;transition:color .3s}
-.cine-card:hover .cine-open{color:#F4F0E8}
-.cine-ui{position:absolute;bottom:34px;right:46px;z-index:20;text-align:right;pointer-events:none}
-.cine-count{font-family:var(--serif);font-size:15px;color:rgba(244,240,232,.72);letter-spacing:1px}
-.cine-count i{font-style:normal;color:rgba(244,240,232,.3);margin:0 5px}
-.cine-next-hint{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(244,240,232,.42);margin-top:8px;min-height:11px}
+.cine-editorial:hover .cine-open{color:#F4F0E8}
+.cine-next{display:flex;align-items:center;gap:15px;margin-top:46px;padding-top:24px;border-top:1px solid rgba(244,240,232,.1);cursor:pointer;transition:opacity .3s}
+.cine-next:hover{opacity:.72}
+.cine-next-img{width:90px;height:62px;object-fit:cover;border-radius:6px;flex:0 0 auto}
+.cine-next-tx{display:flex;flex-direction:column;gap:4px}
+.cine-next-lb{font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(244,240,232,.42)}
+.cine-next-nm{font-family:var(--serif);font-size:16px;color:rgba(244,240,232,.82);line-height:1}
 .cine-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(244,240,232,.42);font-family:var(--serif-it);font-style:italic;font-size:19px;padding:0 24px;text-align:center}
 
 /* Mobile: painéis grandes, sempre visíveis */
@@ -3654,7 +3660,7 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
   #galMobile{padding-top:14px!important}
   .gal-m-panel{height:72svh;margin:0 16px 20px}
   .gal-m-panel:first-child{margin-top:6px}
-  .gal-m-ov{background:linear-gradient(to top,rgba(8,7,6,.66) 0%,rgba(8,7,6,0) 46%)!important}
+  .gal-m-ov{background:linear-gradient(to top,rgba(8,7,6,.62) 0%,rgba(8,7,6,0) 50%)!important}
   .gal-m-title{font-size:24px}
 }
 
@@ -3802,11 +3808,7 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
   <div id="portCinema">
     <div class="cine-stage">
       <div class="cine-track" id="cineTrack">
-        <div class="cine-layer"><div class="cine-card"><div class="cine-img cine-ph"></div><div class="cine-ov"></div></div></div>
-      </div>
-      <div class="cine-ui">
-        <div class="cine-count"><span id="cineNum">01</span><i>/</i><span id="cineTot">01</span></div>
-        <div class="cine-next-hint" id="cineNextHint"></div>
+        <div class="cine-layer"><div class="cine-inner"><div class="cine-card"><div class="cine-img cine-ph"></div><div class="cine-ov"></div></div><div class="cine-editorial"><div class="cine-title">Carregando…</div></div></div></div>
       </div>
     </div>
   </div>
@@ -5324,15 +5326,24 @@ function _galBadge(it,cls){
   if(c==='video'||c==='tour'||c==='360')return '<span class="'+(cls||'gal-badge')+'">Tour 360° · Imersivo</span>';
   return '';
 }
-function buildCineLayer(it,i){
+function buildCineLayer(it,i,N,nextIt){
   var desc=_galDesc(it);
+  var nextHtml='';
+  if(nextIt){
+    nextHtml='<div class="cine-next" onclick="event.stopPropagation();window.scrollBy({top:Math.round(window.innerHeight*0.95),behavior:\'smooth\'})">'
+      +_galMedia(nextIt,'cine-next-img')
+      +'<div class="cine-next-tx"><span class="cine-next-lb">Próximo</span><span class="cine-next-nm">'+_galEsc(nextIt.nome||'')+'</span></div></div>';
+  }
   return '<div class="cine-layer" data-i="'+i+'" onclick="openModalIdx('+i+')">'
-    +'<div class="cine-card">'+_galMedia(it,'cine-img')+'<div class="cine-ov"></div><div class="cine-dark"></div>'
-    +'<div class="cine-txt">'
+    +'<div class="cine-inner">'
+    +'<div class="cine-card">'+_galMedia(it,'cine-img')+'<div class="cine-ov"></div><div class="cine-dark"></div></div>'
+    +'<div class="cine-editorial">'
+    +'<div class="cine-index">'+('0'+(i+1)).slice(-2)+'<span>/ '+('0'+N).slice(-2)+'</span></div>'
     +'<div class="cine-cat">'+_galEsc(it.categoria||'Projeto')+_galBadge(it,'cine-badge')+'</div>'
     +'<h3 class="cine-title">'+_galEsc(it.nome||'')+'</h3>'
     +(desc?'<p class="cine-desc">'+_galEsc(desc)+'</p>':'')
     +'<span class="cine-open">Ver projeto →</span>'
+    +nextHtml
     +'</div></div></div>';
 }
 function buildGalMPanel(it,i){
@@ -5358,7 +5369,7 @@ window._buildGallery=function(){
     var h0=document.getElementById('cineNextHint');if(h0)h0.textContent='';
     return;
   }
-  if(d)d.innerHTML=list.map(buildCineLayer).join('');
+  if(d)d.innerHTML=list.map(function(it,i){return buildCineLayer(it,i,N,list[i+1]);}).join('');
   if(m)m.innerHTML=list.map(buildGalMPanel).join('');
   if(cine)cine.style.height=(100+(N-1)*95)+'svh';   // altura proporcional aos projetos
   var tot=document.getElementById('cineTot');if(tot)tot.textContent=('0'+N).slice(-2);
@@ -5390,7 +5401,7 @@ function updateCinema(){
     var el=L[i],rel=i-ci,op,ty,sc,z,blur,dk,pe,txo,imgp;
     if(rel<-1||rel>1){op=0;ty=0;sc=0.9;z=0;blur=0;dk=1;pe='none';txo=0;imgp=0;}
     else if(rel===-1){                              // previous — decorativo, ao fundo
-      op=Math.max(0.28*(1-lp),0);ty=-7;sc=0.9;z=1;blur=4;dk=0.5;pe='none';txo=0;imgp=0;
+      op=Math.max(0.28*(1-lp),0);ty=-9;sc=0.88;z=1;blur=5;dk=0.6;pe='none';txo=0;imgp=0;
     } else if(rel===0){                             // current — SEMPRE dominante
       op=1-lp*0.18;ty=-lp*5;sc=1-lp*0.05;z=2;blur=lp*1.8;dk=lp*0.34;pe=(lp<0.55?'auto':'none');
       txo=Math.max(1-lp*1.7,0);imgp=-lp*3;
@@ -5405,7 +5416,7 @@ function updateCinema(){
     el.style.zIndex=String(z);
     el.style.pointerEvents=pe;
     var dkEl=el.querySelector('.cine-dark');if(dkEl)dkEl.style.opacity=String(dk);
-    var txt=el.querySelector('.cine-txt');if(txt)txt.style.opacity=String(Math.min(txo,1));
+    var txt=el.querySelector('.cine-editorial');if(txt)txt.style.opacity=String(Math.min(txo,1));
     var img=el.querySelector('.cine-img');if(img)img.style.transform='translateY('+imgp.toFixed(1)+'%)';
   }
   var active=lp>0.5?Math.min(ci+1,N-1):ci;
