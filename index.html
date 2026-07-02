@@ -21,7 +21,7 @@
 <meta name="author" content="Vértice 3D"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300&family=Inter:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -208,8 +208,9 @@ window._renderPortfolio=renderPortfolio;
   --champagne:#C9A87C;
   --ease:cubic-bezier(.65,0,.35,1);
   --ease2:cubic-bezier(.4,0,.2,1);
-  --serif:'Fraunces',serif;
-  --serif-it:'Cormorant Garamond',serif;
+  --display:'Space Grotesk','Inter',sans-serif;
+  --serif:'Space Grotesk','Inter',sans-serif;
+  --serif-it:'Space Grotesk','Inter',sans-serif;
   --sans:'Inter','DM Sans',sans-serif;
   /* Cantos arredondados — global */
   --r-sm:8px;
@@ -3603,21 +3604,25 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
 .cine-next-nm{font-family:var(--serif);font-size:16px;color:rgba(244,240,232,.82);line-height:1}
 .cine-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(244,240,232,.42);font-family:var(--serif-it);font-style:italic;font-size:19px;padding:0 24px;text-align:center}
 
-/* Mobile: painéis grandes, sempre visíveis */
+/* Mobile: PINNED scrollytelling seguro (adaptado, leve) */
 #galMobile{display:none}
 @media(max-width:900px){
   #portCinema{display:none!important}
-  #galMobile{display:block;padding:4px 0 8px}
-  #portSection{padding-top:92px!important;padding-bottom:20px!important}
-  #portSection .port-head{padding:0 22px}
+  #galMobile{display:block;position:relative}
+  #portSection{padding-top:96px!important;padding-bottom:0!important}
+  #portSection .port-head{padding:0 22px;margin-bottom:20px!important}
 }
-.gal-m-panel{position:relative;height:76svh;margin:0 16px 18px;border-radius:18px;overflow:hidden;background:#15110d;cursor:pointer}
-.gal-m-img{position:absolute;left:0;top:-6%;width:100%;height:112%;object-fit:cover;will-change:transform}
-.gal-m-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,7,6,.72) 0%,rgba(8,7,6,.02) 46%,rgba(8,7,6,.12) 100%)}
-.gal-m-txt{position:absolute;left:22px;right:22px;bottom:24px;z-index:2}
-.gal-m-cat{font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;color:#d8c5a8;margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.galm-stage{position:absolute;top:0;left:0;right:0;height:100svh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.galm-track{position:absolute;inset:0}
+.galm-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;will-change:transform,opacity}
+.galm-card{position:relative;width:calc(100vw - 32px);max-width:560px;height:82svh;border-radius:20px;overflow:hidden;background:#15110d;box-shadow:0 26px 60px rgba(0,0,0,.5);cursor:pointer}
+.galm-dark{position:absolute;inset:0;background:#080706;opacity:0;pointer-events:none}
+.gal-m-img{position:absolute;left:0;top:-5%;width:100%;height:110%;object-fit:cover;will-change:transform}
+.gal-m-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,7,6,.6) 0%,rgba(8,7,6,0) 50%);pointer-events:none}
+.gal-m-txt{position:absolute;left:24px;right:24px;bottom:30px;z-index:2;will-change:opacity}
+.gal-m-cat{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#d8c5a8;margin-bottom:9px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .gal-m-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#0a0908;background:#c9a87c;border-radius:999px;padding:3px 9px;font-weight:500}
-.gal-m-title{font-family:var(--serif);font-weight:300;font-size:26px;color:#F6F1E8;letter-spacing:-.01em;line-height:1.05}
+.gal-m-title{font-family:var(--display,var(--serif));font-weight:500;font-size:29px;color:#F6F1E8;letter-spacing:-.015em;line-height:1.02}
 
 /* Hero — menos cara de vídeo-teste */
 #heroBg video{filter:saturate(.86) brightness(.92) contrast(1.04)}
@@ -3633,12 +3638,19 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
   #portSection{padding-top:100px!important}
 }
 
-/* LGPD mobile — compacto, safe-area, sem cobrir cards */
+/* LGPD mobile — card flutuante ACIMA da barra do navegador (botões clicáveis) */
 @media(max-width:600px){
-  #lgpdBanner{flex-direction:row!important;align-items:center!important;flex-wrap:wrap!important;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))!important;gap:8px!important}
-  .lgpd-text{font-size:10.5px!important;line-height:1.45!important;flex:1 1 100%!important;max-width:none!important}
-  .lgpd-btns{width:auto!important;margin-left:auto!important;gap:8px!important}
-  .lgpd-ok,.lgpd-skip{flex:0 0 auto!important;padding:7px 14px!important;font-size:9.5px!important}
+  #lgpdBanner{
+    left:12px!important;right:12px!important;
+    bottom:calc(env(safe-area-inset-bottom,0px) + 84px)!important;   /* sobe acima da barra do browser */
+    flex-direction:column!important;align-items:stretch!important;flex-wrap:nowrap!important;
+    padding:14px 15px!important;gap:11px!important;
+    border-radius:16px!important;border:1px solid rgba(244,240,232,.12)!important;
+    box-shadow:0 18px 44px rgba(0,0,0,.55)!important;
+  }
+  .lgpd-text{font-size:11px!important;line-height:1.42!important;flex:none!important;max-width:none!important}
+  .lgpd-btns{width:100%!important;margin-left:0!important;gap:9px!important;justify-content:stretch!important}
+  .lgpd-ok,.lgpd-skip{flex:1 1 0!important;text-align:center!important;padding:11px 10px!important;font-size:10px!important}
 }
 
 /* Filtros mobile — chips menores, scroll edge-to-edge sem corte */
@@ -3655,13 +3667,9 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
   #portSection .port-head{margin-bottom:0!important}
 }
 
-/* Portfólio mobile — mais caro, respiro dos filtros, overlay leve */
-@media(max-width:900px){
-  #galMobile{padding-top:14px!important}
-  .gal-m-panel{height:72svh;margin:0 16px 20px}
-  .gal-m-panel:first-child{margin-top:6px}
-  .gal-m-ov{background:linear-gradient(to top,rgba(8,7,6,.62) 0%,rgba(8,7,6,0) 50%)!important}
-  .gal-m-title{font-size:24px}
+/* Portfólio mobile — respiro dos filtros acima do palco */
+@media(max-width:760px){
+  #portSection .port-head{gap:16px!important}
 }
 
 /* Modal mobile — botão fechar menor/elegante */
@@ -3669,6 +3677,31 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
   .pm-close-btn{width:38px!important;height:38px!important;font-size:15px!important;top:12px!important;right:12px!important;background:rgba(0,0,0,.5)!important;border:1px solid rgba(255,255,255,.22)!important}
   .pm-body{padding:18px 20px 26px!important}
 }
+
+/* ════════════════════════════════════════════════
+   TIPOGRAFIA — direção Elarch (arquitetônica, moderna, forte)
+   Display = Space Grotesk; texto = Inter. Menos serif delicada.
+════════════════════════════════════════════════ */
+body{font-family:var(--sans)}
+/* Títulos display — presença forte, tracking apertado */
+.hero-title,.s-title,.cine-title,.gal-m-title,.gal-title,.pm-title,.sobre-statement,.proc-step-title,.srv-item h3,.cine-next-nm,.foot-logo,.nav-logo{font-family:var(--display)!important}
+.hero-title{font-weight:500!important;letter-spacing:-.035em!important}
+.s-title{font-weight:500!important;letter-spacing:-.03em!important}
+.cine-title{font-weight:500!important;letter-spacing:-.025em!important}
+.pm-title{font-weight:500!important;letter-spacing:-.025em!important;text-transform:none!important}
+.sobre-statement{font-weight:400!important;letter-spacing:-.02em!important}
+.proc-step-title,.srv-item h3{font-weight:500!important;letter-spacing:-.015em!important}
+/* Acentos: sem itálico romântico */
+.hero-title .accent,.s-title em,.s-title .it,.sobre-statement em{font-style:normal!important;font-family:var(--display)!important}
+/* Labels / menu / botões — técnico, caixa alta, tracking refinado */
+.nav-links a{font-family:var(--sans)!important;font-weight:500!important;letter-spacing:2.4px!important}
+.nav-cta,.btn-O,.btn-ghost,.cine-open,.gal-open,.orc-contacts a,.foot-priv{font-family:var(--sans)!important;font-weight:600!important}
+.s-eye,.hero-eyebrow{font-family:var(--sans)!important;font-weight:600!important;letter-spacing:4px!important}
+.cine-cat,.gal-m-cat,.cine-index,.filter-row .fBtn{font-family:var(--sans)!important;font-weight:500!important}
+.cine-index{font-weight:600!important}
+.foot-logo,.nav-logo{font-weight:600!important;letter-spacing:5px!important}
+/* Corpo / formulário — Inter limpo */
+.hero-sub,.s-sub,.cine-desc,.gal-desc,.pm-desc,.orc-inp input,.orc-inp select,.orc-inp textarea,.orc-info{font-family:var(--sans)!important}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"Vértice 3D","description":"Estúdio de visualização arquitetônica de alto padrão.","url":"https://gersonleao2490.github.io/v-rtice-3d/","image":"https://gersonleao2490.github.io/v-rtice-3d/og-image.jpg","areaServed":"BR","knowsAbout":["Renderização arquitetônica","Visualização 3D","Vídeo 3D"]}
@@ -3813,9 +3846,13 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
     </div>
   </div>
 
-  <!-- MOBILE: painéis grandes, sempre visíveis -->
+  <!-- MOBILE: pinned scrollytelling (compositor seguro, adaptado) -->
   <div id="galMobile">
-    <article class="gal-m-panel"><div class="gal-m-img cine-ph"></div><div class="gal-m-ov"></div></article>
+    <div class="galm-stage">
+      <div class="galm-track" id="galmTrack">
+        <div class="galm-layer"><div class="galm-card"><div class="gal-m-img cine-ph"></div><div class="gal-m-ov"></div></div></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -5347,10 +5384,11 @@ function buildCineLayer(it,i,N,nextIt){
     +'</div></div></div>';
 }
 function buildGalMPanel(it,i){
-  return '<article class="gal-m-panel" data-i="'+i+'" onclick="openModalIdx('+i+')">'
-    +_galMedia(it,'gal-m-img')+'<div class="gal-m-ov"></div>'
+  return '<div class="galm-layer" data-i="'+i+'" onclick="openModalIdx('+i+')">'
+    +'<div class="galm-card">'+_galMedia(it,'gal-m-img')+'<div class="gal-m-ov"></div><div class="galm-dark"></div>'
     +'<div class="gal-m-txt"><div class="gal-m-cat">'+_galEsc(it.categoria||'Projeto')+_galBadge(it,'gal-m-badge')+'</div>'
-    +'<h3 class="gal-m-title">'+_galEsc(it.nome||'')+'</h3></div></article>';
+    +'<h3 class="gal-m-title">'+_galEsc(it.nome||'')+'</h3></div>'
+    +'</div></div>';
 }
 window._buildGallery=function(){
   var list=_galList();
@@ -5358,20 +5396,23 @@ window._buildGallery=function(){
   window._cineItems=list;
   var d=document.getElementById('cineTrack');
   var m=document.getElementById('galMobile');
+  var mt=document.getElementById('galmTrack');
   var cine=document.getElementById('portCinema');
   var N=list.length;
   if(!N){
     var msg='<div class="cine-empty">Em breve, novos projetos nesta categoria.</div>';
-    if(d)d.innerHTML=msg; if(m)m.innerHTML=msg;
+    if(d)d.innerHTML=msg; if(mt)mt.innerHTML=msg;
     if(cine)cine.style.height='100svh';
+    if(m)m.style.height='';
     var t0=document.getElementById('cineTot');if(t0)t0.textContent='00';
     var n0=document.getElementById('cineNum');if(n0)n0.textContent='00';
     var h0=document.getElementById('cineNextHint');if(h0)h0.textContent='';
     return;
   }
   if(d)d.innerHTML=list.map(function(it,i){return buildCineLayer(it,i,N,list[i+1]);}).join('');
-  if(m)m.innerHTML=list.map(buildGalMPanel).join('');
-  if(cine)cine.style.height=(100+(N-1)*95)+'svh';   // altura proporcional aos projetos
+  if(mt)mt.innerHTML=list.map(buildGalMPanel).join('');
+  if(cine)cine.style.height=(100+(N-1)*95)+'svh';   // altura proporcional (desktop)
+  if(m)m.style.height=(100+(N-1)*82)+'svh';         // altura proporcional (mobile pinned)
   var tot=document.getElementById('cineTot');if(tot)tot.textContent=('0'+N).slice(-2);
   updateCinema();
   updateMobile();
@@ -5424,18 +5465,39 @@ function updateCinema(){
   var hint=document.getElementById('cineNextHint');
   if(hint){var nx=(window._cineItems||[])[active+1];hint.textContent=nx?('Próximo — '+(nx.nome||'')):'';}
 }
+/* MOBILE: mesmo compositor seguro do desktop, adaptado e leve (sem blur).
+   current sempre dominante (>=0.88); next sobe assumindo; previous recua. */
 function updateMobile(){
-  var m=document.getElementById('galMobile');
-  if(!m||!m.offsetParent)return;                    // desktop: mobile oculto
-  var ps=m.querySelectorAll('.gal-m-panel');
-  if(!ps.length||ps[0].classList.contains('cine-empty'))return;
-  var vh=window.innerHeight,vc=vh/2;
-  for(var i=0;i<ps.length;i++){
-    var r=ps[i].getBoundingClientRect();
-    var t=Math.min(Math.abs((r.top+r.height/2)-vc)/vh,1);
-    ps[i].style.transform='scale('+(1-t*0.05).toFixed(3)+')';   // sempre visível (sem fade)
-    var img=ps[i].querySelector('.gal-m-img');
-    if(img){var rel=((r.top+r.height/2)-vc)/vh;if(rel>1)rel=1;if(rel<-1)rel=-1;img.style.transform='translateY('+(rel*4).toFixed(1)+'%)';}
+  var wrap=document.getElementById('galMobile');
+  if(!wrap||!wrap.offsetParent)return;              // desktop: mobile oculto
+  var track=document.getElementById('galmTrack');
+  if(!track)return;
+  var L=track.children,N=L.length;
+  if(!N||L[0].classList.contains('cine-empty'))return;
+  var vh=window.innerHeight;
+  var total=wrap.offsetHeight-vh;
+  var r=wrap.getBoundingClientRect();
+  var stage=track.parentNode;                        // pin manual (sticky quebra c/ overflow-x:hidden)
+  if(r.top>0){stage.style.position='absolute';stage.style.top='0';stage.style.bottom='auto';}
+  else if(r.bottom<vh){stage.style.position='absolute';stage.style.top='auto';stage.style.bottom='0';}
+  else{stage.style.position='fixed';stage.style.top='0';stage.style.bottom='auto';}
+  var scrolled=Math.min(Math.max(-r.top,0),Math.max(total,1));
+  var progress=total>0?(scrolled/total)*(N-1):0;
+  var ci=Math.max(0,Math.min(Math.floor(progress),N-1));
+  var lp=progress-ci;
+  for(var i=0;i<N;i++){
+    var el=L[i],rel=i-ci,op,ty,sc,z,dk,imgp,txo;
+    if(rel<-1||rel>1){op=0;ty=0;sc=0.92;z=0;dk=1;imgp=0;txo=0;}
+    else if(rel===-1){op=Math.max(0.3*(1-lp),0);ty=-6;sc=0.93;z=1;dk=0.55;imgp=0;txo=0;}
+    else if(rel===0){op=1-lp*0.12;ty=-lp*4;sc=1-lp*0.045;z=2;dk=lp*0.3;imgp=-lp*2.5;txo=Math.max(1-lp*1.7,0);}
+    else{var et=Math.max(0,Math.min((lp-0.22)/0.78,1));op=et;ty=(1-et)*72;sc=0.95+et*0.05;z=3;dk=(1-et)*0.08;imgp=(1-et)*2.5;txo=Math.max((lp-0.6)/0.4,0);}
+    el.style.opacity=String(op);
+    el.style.transform='translate3d(0,'+ty+'vh,0) scale('+sc.toFixed(3)+')';
+    el.style.zIndex=String(z);
+    el.style.pointerEvents=((rel===0&&lp<0.5)||(rel===1&&lp>=0.5))?'auto':'none';
+    var dkEl=el.querySelector('.galm-dark');if(dkEl)dkEl.style.opacity=String(dk);
+    var img=el.querySelector('.gal-m-img');if(img)img.style.transform='translateY('+imgp.toFixed(1)+'%)';
+    var txt=el.querySelector('.gal-m-txt');if(txt)txt.style.opacity=String(Math.min(txo,1));
   }
 }
 function initGallery(){
@@ -6872,6 +6934,9 @@ lgpdInit();
     var hide=document.body.classList.contains('modal-open')||centered(document.getElementById('portSection'));
     wa.style.opacity=hide?'0':'';
     wa.style.pointerEvents=hide?'none':'';
+    // LGPD também some sobre o portfólio (reaparece depois) — não cobre os cards pinned
+    var lg=document.getElementById('lgpdBanner');
+    if(lg&&lg.classList.contains('show')){lg.style.transition='opacity .35s ease';lg.style.opacity=hide?'0':'';lg.style.pointerEvents=hide?'none':'';}
   }
   window._updateWaFloat=upd;
   var t=false;
