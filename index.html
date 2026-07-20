@@ -27,6 +27,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore,doc,getDoc,setDoc,collection,getDocs,addDoc,deleteDoc,updateDoc,query,orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getStorage,ref,uploadBytes,uploadBytesResumable,getDownloadURL,deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+import { getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // ══ CONFIGURE AQUI ═══════════════════════════════════════════
 const firebaseConfig = {
@@ -42,7 +43,9 @@ const firebaseConfig = {
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 const storage=getStorage(app);
-window._FB={db,storage,doc,getDoc,setDoc,collection,getDocs,addDoc,deleteDoc,updateDoc,query,orderBy,ref,uploadBytes,uploadBytesResumable,getDownloadURL,deleteObject};
+const auth=getAuth(app);
+window._FB={db,storage,auth,doc,getDoc,setDoc,collection,getDocs,addDoc,deleteDoc,updateDoc,query,orderBy,ref,uploadBytes,uploadBytesResumable,getDownloadURL,deleteObject,
+  signInWithEmailAndPassword,signOut,onAuthStateChanged};
 
 window.addEventListener('DOMContentLoaded',async()=>{
   try{ await loadSiteData(); await loadPortfolio(); }
@@ -4025,7 +4028,7 @@ body{font-family:var(--sans)}
         <span class="adm-hdr-dot"></span>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <button class="adm-logout-btn" id="admLogoutBtn" style="display:none" onclick="confirmDialog('Deseja sair do painel admin?','Sair do admin').then(function(ok){if(ok)closeAdmin();})">Sair</button>
+        <button class="adm-logout-btn" id="admLogoutBtn" style="display:none" onclick="confirmDialog('Deseja sair do painel admin?','Sair do admin').then(function(ok){if(ok)admLogout();})">Sair</button>
         <button class="adm-x" onclick="closeAdmin()">✕</button>
       </div>
     </div>
@@ -4034,8 +4037,9 @@ body{font-family:var(--sans)}
     <div id="admLogin">
       <div class="adm-login">
         <h3>Acesso restrito</h3>
-        <p>Insira a senha de administrador</p>
-        <input type="password" id="admPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkAdmPass()"/>
+        <p>Entre com o e-mail e a senha de administrador</p>
+        <input type="email" id="admEmail" placeholder="seu@email.com" autocomplete="username" style="margin-bottom:10px" onkeydown="if(event.key==='Enter')checkAdmPass()"/>
+        <input type="password" id="admPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkAdmPass()"/>
         <button class="adm-save" onclick="checkAdmPass()">Entrar</button>
         <div class="adm-err" id="admErr"></div>
       </div>
@@ -5179,6 +5183,86 @@ document.querySelectorAll('.orc-opts').forEach(group=>{
   });
 });
 
+/* ══════════════════════════════════════════════════════════════════════
+   AVISO DE NOVO LEAD — e-mail (Web3Forms) + WhatsApp (CallMeBot)
+   ─────────────────────────────────────────────────────────────────────
+   >>> PREENCHA AS 3 CHAVES ABAIXO. <<<
+   Enquanto estiverem vazias o lead CONTINUA sendo salvo normalmente no
+   Firebase e aparece no painel — so nao dispara o aviso.
+
+   1) E-MAIL — Web3Forms (gratis, nao precisa criar conta):
+      Acesse https://web3forms.com , informe o e-mail que deve RECEBER os
+      leads, confirme, e um "Access Key" chega nesse e-mail.
+      Cole a chave em WEB3FORMS_KEY.
+
+   2) WHATSAPP — CallMeBot (gratis, nao precisa criar conta):
+      a) Salve o numero  +34 644 51 95 23  nos seus contatos;
+      b) Mande para ele, pelo WhatsApp, a frase EXATA:
+           I allow callmebot to send me messages
+      c) O bot responde com o seu apikey.
+      Cole o apikey em CALLMEBOT_APIKEY e o SEU numero (com DDI, so
+      digitos, ex: 5541999998888) em CALLMEBOT_PHONE.
+
+   ATENCAO: o site e estatico (GitHub Pages), entao estas chaves ficam
+   visiveis no codigo-fonte. Se um dia comecar a chegar spam, basta gerar
+   chaves novas nos dois servicos e substituir aqui.
+   ══════════════════════════════════════════════════════════════════════ */
+var WEB3FORMS_KEY    = '';   /* ex: '1a2b3c4d-5e6f-7890-abcd-ef1234567890' */
+var CALLMEBOT_PHONE  = '';   /* ex: '5541999998888'  (com DDI, so digitos)  */
+var CALLMEBOT_APIKEY = '';   /* ex: '123456'                                */
+
+function _leadResumo(l){
+  return 'Novo pedido de proposta - Vertice 3D\n'+
+    'Nome: '+(l.nome||'-')+'\n'+
+    'WhatsApp: '+(l.phone||'-')+'\n'+
+    'E-mail: '+(l.email||'-')+'\n'+
+    'Tipo: '+(l.tipo||'-')+'\n'+
+    'Servico: '+(l.servico||'-')+'\n'+
+    'Metragem: '+(l.metragem||'-')+'\n'+
+    'Prazo: '+(l.prazo||'-')+'\n'+
+    'Mensagem: '+(l.obs||'-');
+}
+
+/* Dispara os avisos. NUNCA lanca erro nem bloqueia: o lead ja esta salvo
+   no Firebase, entao falha de notificacao nao pode quebrar o formulario. */
+function _notifyLead(l){
+  /* 1) E-mail */
+  if(WEB3FORMS_KEY){
+    try{
+      fetch('https://api.web3forms.com/submit',{
+        method:'POST',
+        headers:{'Content-Type':'application/json',Accept:'application/json'},
+        body:JSON.stringify({
+          access_key:WEB3FORMS_KEY,
+          subject:'Novo lead - '+(l.nome||'sem nome'),
+          from_name:'Site Vertice 3D',
+          replyto:l.email||'',
+          Nome:l.nome||'-', WhatsApp:l.phone||'-', Email:l.email||'-',
+          Tipo:l.tipo||'-', Servico:l.servico||'-', Metragem:l.metragem||'-',
+          Prazo:l.prazo||'-', Mensagem:l.obs||'-', Data:l.data||''
+        })
+      }).catch(function(){});
+    }catch(e){}
+  }
+  /* 2) WhatsApp — no-cors porque a API do CallMeBot nao envia header CORS.
+        A requisicao sai normalmente; so nao da para ler a resposta. */
+  if(CALLMEBOT_PHONE&&CALLMEBOT_APIKEY){
+    try{
+      /* O texto viaja na query string. A mensagem livre do cliente pode ser
+         longa e estourar o limite de URL — e como e no-cors, a falha seria
+         silenciosa. Cortamos com folga; o e-mail e o painel levam o texto
+         completo. (encodeURIComponent expande acentos/quebras ate 6x.) */
+      var txt=_leadResumo(l);
+      if(txt.length>600)txt=txt.substring(0,600)+'... (texto completo no e-mail e no painel)';
+      var url='https://api.callmebot.com/whatsapp.php'+
+              '?phone='+encodeURIComponent(CALLMEBOT_PHONE)+
+              '&apikey='+encodeURIComponent(CALLMEBOT_APIKEY)+
+              '&text='+encodeURIComponent(txt);
+      fetch(url,{mode:'no-cors'}).catch(function(){});
+    }catch(e){}
+  }
+}
+
 async function submitOrc(){
   function gv(id){var el=document.getElementById(id);return el?el.value.trim():'';}
   var nome=gv('oNome'),phone=gv('oPhone'),email=gv('oEmail');
@@ -5202,6 +5286,7 @@ async function submitOrc(){
   try{
     const {db,collection,addDoc}=window._FB;
     await addDoc(collection(db,'leads'),lead);
+    _notifyLead(lead);   /* aviso e-mail/WhatsApp — nao bloqueia nem quebra o envio */
     if(typeof clearFormAutosave==='function')clearFormAutosave();
     if(msg){msg.style.color='#2e7d32';msg.textContent='✓ Solicitação recebida. Em breve entraremos em contato.';}
     if(span)span.textContent='Enviado ✓';
@@ -5732,27 +5817,75 @@ async function loadAdmExtras(){
 /* ════════════════════════════════════════════════
    ADMIN
 ════════════════════════════════════════════════ */
-// Senha padrão: vertice2025 — altere aqui
-const ADMIN_PASS='vertice2025';
+/* ── Acesso admin via Firebase Authentication ─────────────────────────
+   A senha NAO fica mais no codigo-fonte. O usuario admin e criado em
+   Firebase Console > Authentication > Users, e os dados sao protegidos
+   pelas regras do Firestore/Storage (ver SEGURANCA.md na raiz do repo).
+   Sem login valido, as regras bloqueiam a leitura de /leads. */
+var _admUser=null;
 
-function openAdmin(){document.getElementById('adminPanel').classList.add('open')}
+function _admSync(){
+  var logged=!!_admUser;
+  var lg=document.getElementById('admLogin');     if(lg)lg.style.display=logged?'none':'';
+  var ct=document.getElementById('admContent');   if(ct)ct.style.display=logged?'block':'none';
+  var lb=document.getElementById('admLogoutBtn'); if(lb)lb.style.display=logged?'':'none';
+  if(!logged){var p=document.getElementById('admPass');if(p)p.value='';}
+}
+function _admLoadAll(){
+  try{ loadAdmDashboard(); loadAdmPort(); loadAdmDep(); loadAdmHero(); }catch(e){}
+}
+function openAdmin(){
+  document.getElementById('adminPanel').classList.add('open');
+  if(_admUser)_admLoadAll();
+}
 function closeAdmin(){document.getElementById('adminPanel').classList.remove('open')}
 
 async function checkAdmPass(){
-  const v=document.getElementById('admPass').value;
-  if(v===ADMIN_PASS){
-    document.getElementById('admLogin').style.display='none';
-    document.getElementById('admContent').style.display='block';
-    // Improvement 16 — show logout button
-    var lb=document.getElementById('admLogoutBtn');
-    if(lb)lb.style.display='';
-    // Improvement 13 — load dashboard
-    loadAdmDashboard();
-    loadAdmPort();loadAdmDep();loadAdmHero();
-  }else{
-    document.getElementById('admErr').textContent='Senha incorreta.';
+  var email=((document.getElementById('admEmail')||{}).value||'').trim();
+  var pass=(document.getElementById('admPass')||{}).value||'';
+  var err=document.getElementById('admErr');
+  if(err)err.textContent='';
+  if(!email||!pass){ if(err)err.textContent='Informe e-mail e senha.'; return; }
+  try{
+    var F=window._FB;
+    if(!F||!F.signInWithEmailAndPassword){ if(err)err.textContent='Firebase ainda carregando — tente de novo.'; return; }
+    await F.signInWithEmailAndPassword(F.auth,email,pass);
+    /* onAuthStateChanged (abaixo) revela o painel */
+  }catch(e){
+    var m='Nao foi possivel entrar.';
+    var c=e&&e.code;
+    if(c==='auth/invalid-credential'||c==='auth/wrong-password'||c==='auth/user-not-found')m='E-mail ou senha incorretos.';
+    else if(c==='auth/too-many-requests')m='Muitas tentativas. Aguarde alguns minutos.';
+    else if(c==='auth/invalid-email')m='E-mail invalido.';
+    else if(c==='auth/operation-not-allowed')m='Ative Email/Senha em Firebase Console > Authentication.';
+    else if(c)m='Erro: '+c;
+    if(err)err.textContent=m;
   }
 }
+
+async function admLogout(){
+  try{ var F=window._FB; if(F&&F.signOut) await F.signOut(F.auth); }catch(e){}
+  closeAdmin();
+}
+
+/* Mantem o painel em sincronia com a sessao (inclusive apos recarregar).
+   O modulo Firebase carrega async, entao esperamos window._FB aparecer —
+   mas com limite, para nao deixar um timer girando eternamente se o
+   Firebase estiver bloqueado (adblock/offline). */
+var _admBindTries=0;
+(function bindAuth(){
+  var F=window._FB;
+  if(!F||!F.onAuthStateChanged){
+    if(++_admBindTries>40)return;        /* ~6s e desiste */
+    setTimeout(bindAuth,150); return;
+  }
+  F.onAuthStateChanged(F.auth,function(user){
+    _admUser=user||null;
+    _admSync();
+    var p=document.getElementById('adminPanel');
+    if(_admUser&&p&&p.classList.contains('open'))_admLoadAll();
+  });
+})();
 
 function swTab(t){
   const ts=['hero','sobre','port','dep','stats','contato','leads','tour','extras','processo','clientes','simulador','journal'];
@@ -6600,6 +6733,27 @@ async function delDep(id){
   }catch(e){toast('Erro: '+e.message,'error');}
 }
 
+/* Escapa texto vindo do formulario publico. Sem isto, um lead com HTML no
+   nome executaria script no navegador de quem abre o painel (XSS armazenado). */
+function _escHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function _fmtData(iso){
+  if(!iso)return '-';
+  try{
+    var d=new Date(iso);
+    if(isNaN(d.getTime()))return _escHtml(String(iso).substring(0,10));
+    return d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }catch(e){ return _escHtml(String(iso).substring(0,10)); }
+}
+function _waLink(tel){
+  var d=String(tel||'').replace(/\D/g,'');
+  if(!d)return '';
+  if(d.length<=11)d='55'+d;          /* numero BR sem DDI */
+  return 'https://wa.me/'+d;
+}
 async function loadLeads(){
   const area=document.getElementById('leadsArea');
   area.innerHTML='<p style="font-size:12px;color:rgba(255,255,255,.3)">Carregando...</p>';
@@ -6607,16 +6761,40 @@ async function loadLeads(){
     const {db,collection,getDocs}=window._FB;
     const snap=await getDocs(collection(db,'leads'));
     if(snap.empty){area.innerHTML='<p style="font-size:12px;color:rgba(255,255,255,.3)">Nenhum lead ainda.</p>';return}
-    let html=`<table class="leads-tbl"><thead><tr>
-      <th>Nome</th><th>Telefone</th><th>E-mail</th><th>Tipo</th><th>Serviço</th><th>Prazo</th><th>Data</th>
-    </tr></thead><tbody>`;
-    snap.forEach(d=>{
-      const l=d.data();
-      html+=`<tr><td>${l.nome||'-'}</td><td>${l.phone||l.telefone||'-'}</td><td>${l.email||'-'}</td><td>${l.tipo||'-'}</td><td>${l.servico||'-'}</td><td>${l.prazo||'-'}</td><td>${l.data?l.data.substring(0,10):'-'}</td></tr>`;
+    var rows=[];
+    snap.forEach(function(d){ rows.push(d.data()); });
+    /* mais recentes primeiro — 'data' e ISO 8601, entao ordena bem como string */
+    rows.sort(function(a,b){ return String(b.data||'').localeCompare(String(a.data||'')); });
+    var html='<p style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:8px">'+rows.length+' lead(s) — mais recentes primeiro</p>'+
+      '<table class="leads-tbl"><thead><tr>'+
+      '<th>Data</th><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Tipo</th><th>Servico</th><th>Metragem</th><th>Prazo</th><th>Mensagem</th>'+
+      '</tr></thead><tbody>';
+    rows.forEach(function(l){
+      var telRaw=l.phone||l.telefone||'';
+      var tel=_escHtml(telRaw), link=_waLink(telRaw);
+      var telCell=tel?(link?'<a href="'+link+'" target="_blank" rel="noopener" style="color:#c9a87c">'+tel+'</a>':tel):'-';
+      var mail=_escHtml(l.email||'');
+      var mailCell=mail?'<a href="mailto:'+mail+'" style="color:#c9a87c">'+mail+'</a>':'-';
+      html+='<tr>'+
+        '<td style="white-space:nowrap">'+_fmtData(l.data)+'</td>'+
+        '<td>'+(_escHtml(l.nome)||'-')+'</td>'+
+        '<td style="white-space:nowrap">'+telCell+'</td>'+
+        '<td>'+mailCell+'</td>'+
+        '<td>'+(_escHtml(l.tipo)||'-')+'</td>'+
+        '<td>'+(_escHtml(l.servico)||'-')+'</td>'+
+        '<td>'+(_escHtml(l.metragem)||'-')+'</td>'+
+        '<td>'+(_escHtml(l.prazo)||'-')+'</td>'+
+        '<td style="max-width:300px;white-space:pre-wrap">'+(_escHtml(l.obs)||'-')+'</td>'+
+      '</tr>';
     });
     html+='</tbody></table>';
     area.innerHTML=html;
-  }catch(e){area.innerHTML='<p style="color:#f44;font-size:12px">Erro. Configure Firebase.</p>'}
+  }catch(e){
+    var msg=(e&&e.code==='permission-denied')
+      ? 'Sem permissao para ler os leads. Entre como admin (e confira as regras do Firestore).'
+      : 'Erro ao carregar. Verifique a configuracao do Firebase.';
+    area.innerHTML='<p style="color:#f44;font-size:12px">'+_escHtml(msg)+'</p>';
+  }
 }
 
 /* ── Contador de visitas ────────────────────────── */
