@@ -2517,6 +2517,45 @@ body.lgpd-active #mobileCTA{bottom:72px;}
 .lgpd-ok:hover{background:var(--O2);}
 .lgpd-skip{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);padding:10px 18px;border-radius:var(--r-pill);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;white-space:nowrap;}
 .lgpd-skip:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8);}
+
+/* ── Politica de Privacidade (modal LGPD) ─────────────────────
+   Usa as vars de tema, entao acompanha claro/escuro sozinho. */
+#privModal{
+  position:fixed;inset:0;z-index:9500;display:none;
+  background:rgba(8,7,5,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:24px 16px;
+}
+#privModal.open{display:flex}
+.priv-box{
+  background:var(--BG);color:var(--INK);
+  border:1px solid rgba(128,120,110,.22);border-radius:14px;
+  width:100%;max-width:720px;max-height:86vh;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.35);
+}
+.priv-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:20px 26px;border-bottom:1px solid rgba(128,120,110,.22);flex-shrink:0;
+}
+.priv-head h2{font-family:var(--display);font-size:19px;font-weight:500;letter-spacing:-.01em;color:var(--INK);margin:0}
+.priv-x{background:none;border:none;color:var(--TX);font-size:17px;cursor:pointer;padding:4px 8px;line-height:1}
+.priv-x:hover{color:var(--O)}
+.priv-body{padding:22px 26px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.priv-body h3{font-family:var(--display);font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--INK);margin:22px 0 8px}
+.priv-body p{font-size:13.5px;line-height:1.75;color:var(--TX);margin:0 0 10px}
+.priv-body ul{margin:0 0 12px;padding-left:20px}
+.priv-body li{font-size:13.5px;line-height:1.7;color:var(--TX);margin-bottom:6px}
+.priv-body strong{color:var(--INK);font-weight:600}
+.priv-body a{color:var(--O);text-decoration:underline}
+.priv-upd{font-size:11px!important;letter-spacing:1px;text-transform:uppercase;color:var(--TX2)!important;margin-bottom:18px!important}
+.priv-foot{padding:16px 26px;border-top:1px solid rgba(128,120,110,.22);text-align:right;flex-shrink:0}
+@media(max-width:600px){
+  #privModal{padding:0}
+  .priv-box{max-width:100%;max-height:100%;height:100%;border-radius:0;border:none}
+  .priv-head{padding:16px 18px}
+  .priv-body{padding:18px}
+  .priv-foot{padding:14px 18px}
+}
 @media(max-width:600px){
   #lgpdBanner{flex-direction:column;align-items:flex-start;padding:20px 24px;}
   .lgpd-btns{width:100%;justify-content:flex-end;}
@@ -3762,10 +3801,90 @@ body{font-family:var(--sans)}
 
 <!-- LGPD -->
 <div id="lgpdBanner" role="dialog" aria-label="Aviso de privacidade">
-  <p class="lgpd-text">Usamos cookies para melhorar sua experiência. Ao continuar, você concorda com a <a href="#" onclick="return false">Política de Privacidade</a> (LGPD).</p>
+  <p class="lgpd-text">Usamos cookies para melhorar sua experiência. Ao continuar, você concorda com a <a href="#" onclick="openPriv();return false;">Política de Privacidade</a> (LGPD).</p>
   <div class="lgpd-btns">
     <button class="lgpd-skip" onclick="lgpdClose()">Apenas essenciais</button>
     <button class="lgpd-ok" onclick="lgpdAccept()">Aceitar e continuar</button>
+  </div>
+</div>
+
+<!-- ═══ POLÍTICA DE PRIVACIDADE (LGPD) ═══ -->
+<div id="privModal" role="dialog" aria-modal="true" aria-labelledby="privTitle">
+  <div class="priv-box">
+    <div class="priv-head">
+      <h2 id="privTitle">Política de Privacidade</h2>
+      <button class="priv-x" onclick="closePriv()" aria-label="Fechar">✕</button>
+    </div>
+    <div class="priv-body">
+      <p class="priv-upd">Última atualização: 20 de julho de 2026</p>
+
+      <p>Esta política explica como a <strong>Vértice 3D</strong> trata os dados pessoais
+      coletados neste site, conforme a Lei nº 13.709/2018 (LGPD).</p>
+
+      <h3>1. Quais dados coletamos</h3>
+      <p><strong>Ao solicitar uma proposta</strong>, coletamos os dados que você digita no
+      formulário: nome, WhatsApp, e-mail, tipo de projeto, serviço de interesse, metragem,
+      prazo desejado e a mensagem opcional.</p>
+      <p><strong>Ao assinar a newsletter</strong>, coletamos apenas o e-mail informado.</p>
+      <p><strong>Durante a navegação</strong>, armazenamos no seu próprio navegador
+      (localStorage) preferências como tema claro/escuro, o registro do seu consentimento
+      e um rascunho do formulário, para você não perder o que digitou. Esses dados ficam no
+      seu dispositivo e não são enviados para nós.</p>
+      <p>Não coletamos dados sensíveis nem fazemos perfilamento ou publicidade direcionada.</p>
+
+      <h3>2. Para que usamos</h3>
+      <p>Exclusivamente para responder à sua solicitação de orçamento e manter o contato
+      comercial daí decorrente — e, no caso da newsletter, para enviar novidades do estúdio.
+      Não vendemos nem cedemos seus dados para terceiros com fins comerciais.</p>
+
+      <h3>3. Base legal</h3>
+      <p>O tratamento se apoia no seu <em>consentimento</em> (art. 7º, I) e na
+      <em>execução de procedimentos preliminares a contrato</em> a seu pedido (art. 7º, V),
+      já que o envio do formulário é uma solicitação de proposta.</p>
+
+      <h3>4. Com quem compartilhamos</h3>
+      <p>Utilizamos serviços de terceiros que processam os dados apenas como nossos
+      operadores, para viabilizar o funcionamento do site:</p>
+      <ul>
+        <li><strong>Google Firebase</strong> — hospedagem do banco de dados onde a
+        solicitação fica armazenada.</li>
+        <li><strong>Web3Forms</strong> — envio do e-mail que nos avisa da sua solicitação.</li>
+        <li><strong>CallMeBot</strong> — envio da notificação por WhatsApp da sua solicitação
+        para nossa equipe.</li>
+        <li><strong>GitHub Pages</strong> — hospedagem das páginas do site.</li>
+      </ul>
+      <p>Esses serviços podem processar dados fora do Brasil. Não há qualquer outro
+      compartilhamento além dos acima.</p>
+
+      <h3>5. Por quanto tempo guardamos</h3>
+      <p>Mantemos os dados da solicitação enquanto durar o relacionamento comercial e pelo
+      prazo necessário ao cumprimento de obrigações legais. Você pode pedir a exclusão antes
+      disso, a qualquer momento.</p>
+
+      <h3>6. Seus direitos</h3>
+      <p>Você pode, a qualquer momento e gratuitamente (art. 18): confirmar a existência do
+      tratamento; acessar seus dados; corrigir dados incompletos ou desatualizados; solicitar
+      anonimização, bloqueio ou <strong>eliminação</strong>; pedir a portabilidade; ser
+      informado sobre o compartilhamento; e <strong>revogar o consentimento</strong>.</p>
+      <p>Para exercer qualquer um desses direitos, fale conosco pelo formulário desta página
+      ou pelo WhatsApp disponível no site — respondemos no menor prazo possível.</p>
+
+      <h3>7. Segurança</h3>
+      <p>Os dados ficam em banco protegido por regras de acesso: o envio do formulário é
+      público, mas a leitura das solicitações é restrita a administradores autenticados.</p>
+
+      <h3>8. Cookies</h3>
+      <p>Não usamos cookies de publicidade nem de rastreamento entre sites. O que guardamos é
+      o essencial ao funcionamento, descrito no item 1. Você pode
+      <a href="#" onclick="closePriv();reopenLgpd();return false;">rever sua escolha de cookies</a>
+      a qualquer momento, e limpar tudo apagando os dados do site no navegador.</p>
+
+      <h3>9. Alterações</h3>
+      <p>Podemos atualizar esta política. A data no topo indica a versão vigente.</p>
+    </div>
+    <div class="priv-foot">
+      <button class="lgpd-ok" onclick="closePriv()">Entendi</button>
+    </div>
   </div>
 </div>
 
@@ -4012,7 +4131,7 @@ body{font-family:var(--sans)}
   </div>
   <div class="foot-bottom-min">
     <p class="foot-copy">© <span id="footYear">2025</span> Vértice 3D</p>
-    <a href="#" class="foot-priv" onclick="reopenLgpd();return false;">Privacidade</a>
+    <a href="#" class="foot-priv" onclick="openPriv();return false;">Privacidade</a>
   </div>
 </footer>
 
@@ -7130,6 +7249,25 @@ function reopenLgpd(){
   var b=document.getElementById('lgpdBanner');
   if(b){b.style.display='';b.classList.add('show');document.body.classList.add('lgpd-active');}
 }
+
+/* ── Politica de Privacidade ───────────────────────────────── */
+function openPriv(){
+  var m=document.getElementById('privModal');
+  if(m){m.classList.add('open');var b=m.querySelector('.priv-body');if(b)b.scrollTop=0;}
+}
+function closePriv(){
+  var m=document.getElementById('privModal');
+  if(m)m.classList.remove('open');
+}
+(function(){
+  var m=document.getElementById('privModal');
+  if(!m)return;
+  /* clique no fundo fecha (mas nao o clique dentro da caixa) */
+  m.addEventListener('click',function(e){ if(e.target===m)closePriv(); });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&m.classList.contains('open'))closePriv();
+  });
+})();
 function lgpdClose(){
   var b=document.getElementById('lgpdBanner');
   if(b){b.classList.remove('show');setTimeout(function(){b.style.display='none';},500);}
