@@ -5330,6 +5330,26 @@ var WEB3FORMS_KEY    = '06e728be-e744-4a61-934a-02b32ebd5c9a';   /* envia para v
 var CALLMEBOT_PHONE  = '';   /* ex: '5541999998888'  (com DDI, so digitos)  */
 var CALLMEBOT_APIKEY = '';   /* ex: '123456'                                */
 
+/* Limpa os campos do formulario apos envio bem-sucedido. Antes so o rascunho
+   do localStorage era limpo, entao os dados ficavam na tela ate recarregar. */
+function _limparFormOrc(){
+  ['oNome','oPhone','oEmail','oObs'].forEach(function(id){
+    var el=document.getElementById(id); if(el)el.value='';
+  });
+  ['oTipo','oServ','oMet','oPrazo'].forEach(function(id){
+    var el=document.getElementById(id); if(el)el.selectedIndex=0;
+  });
+}
+
+function _fmtDataBR(iso){
+  try{
+    var d=new Date(iso);
+    if(isNaN(d.getTime()))return String(iso||'');
+    return d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',
+                                     hour:'2-digit',minute:'2-digit'});
+  }catch(e){ return String(iso||''); }
+}
+
 function _leadResumo(l){
   return 'Novo pedido de proposta - Vertice 3D\n'+
     'Nome: '+(l.nome||'-')+'\n'+
@@ -5351,14 +5371,25 @@ function _notifyLead(l){
       fetch('https://api.web3forms.com/submit',{
         method:'POST',
         headers:{'Content-Type':'application/json',Accept:'application/json'},
+        /* Os nomes dos campos abaixo viram os TITULOS dentro do e-mail — por isso
+           todos em portugues acentuado. As duas linhas de abertura ("Hello, A new
+           form has been submitted...") sao fixas do Web3Forms e so podem ser
+           trocadas no plano pago deles; o resto do corpo e todo nosso. */
         body:JSON.stringify({
           access_key:WEB3FORMS_KEY,
-          subject:'Novo lead - '+(l.nome||'sem nome'),
-          from_name:'Site Vertice 3D',
+          subject:'Nova proposta solicitada — '+(l.nome||'sem nome'),
+          from_name:'Site Vértice 3D',
           replyto:l.email||'',
-          Nome:l.nome||'-', WhatsApp:l.phone||'-', Email:l.email||'-',
-          Tipo:l.tipo||'-', Servico:l.servico||'-', Metragem:l.metragem||'-',
-          Prazo:l.prazo||'-', Mensagem:l.obs||'-', Data:l.data||''
+          'Solicitação':'Novo pedido de proposta enviado pelo site.',
+          'Nome':l.nome||'-',
+          'WhatsApp':l.phone||'-',
+          'E-mail':l.email||'-',
+          'Tipo de projeto':l.tipo||'-',
+          'Serviço':l.servico||'-',
+          'Metragem':l.metragem||'-',
+          'Prazo desejado':l.prazo||'-',
+          'Mensagem':l.obs||'-',
+          'Recebido em':_fmtDataBR(l.data)
         })
       }).catch(function(){});
     }catch(e){}
@@ -5407,8 +5438,14 @@ async function submitOrc(){
     await addDoc(collection(db,'leads'),lead);
     _notifyLead(lead);   /* aviso e-mail/WhatsApp — nao bloqueia nem quebra o envio */
     if(typeof clearFormAutosave==='function')clearFormAutosave();
+    _limparFormOrc();    /* limpa os campos na tela (antes so limpava o rascunho) */
     if(msg){msg.style.color='#2e7d32';msg.textContent='✓ Solicitação recebida. Em breve entraremos em contato.';}
     if(span)span.textContent='Enviado ✓';
+    /* devolve o botao depois de alguns segundos, caso queira enviar outra */
+    setTimeout(function(){
+      if(span)span.textContent='Solicitar Proposta';
+      if(btn)btn.disabled=false;
+    },5000);
   }catch(e){
     if(msg){msg.style.color='#c0392b';msg.textContent='Erro ao enviar — fale com a gente pelo WhatsApp.';}
     if(span)span.textContent='Solicitar Proposta';
