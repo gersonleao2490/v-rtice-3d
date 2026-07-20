@@ -1,0 +1,42 @@
+rules_version = '2';
+
+// Vértice 3D — regras do Firestore
+// Admin: vertice.renders3d@gmail.com
+//
+// Por que travar no UID e não apenas em "está autenticado":
+// com o provedor Email/Senha ativo, qualquer pessoa pode criar uma conta
+// usando a apiKey pública do site e ficaria com request.auth != null.
+// Só o UID abaixo é considerado administrador.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.uid == 'Nq9Yg2d1Q4UNGBpJMTfK8odBzFk2';
+    }
+
+    // Conteúdo do site: leitura pública (o site precisa renderizar),
+    // escrita apenas pelo admin no painel.
+    match /config/{docId}      { allow read: if true; allow write: if isAdmin(); }
+    match /portfolio/{docId}   { allow read: if true; allow write: if isAdmin(); }
+    match /depoimentos/{docId} { allow read: if true; allow write: if isAdmin(); }
+
+    // Leads: o visitante SÓ PODE CRIAR (enviar o formulário de proposta).
+    // Ler / editar / apagar é exclusivo do admin — é isto que protege os
+    // dados pessoais (nome, WhatsApp, e-mail) dos clientes.
+    match /leads/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Newsletter: mesma lógica dos leads.
+    match /newsletter/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Qualquer outra coleção fica bloqueada (nada aqui concede acesso).
+    match /{document=**} { allow read, write: if false; }
+  }
+}

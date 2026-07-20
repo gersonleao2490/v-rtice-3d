@@ -20,10 +20,17 @@ usa Firebase Authentication.
 2. Menu **Authentication** → aba **Sign-in method** → ative **Email/Senha**.
 3. Aba **Users** → **Add user** → informe o e-mail e uma senha forte do
    responsável. (Essa senha **não** vai para o código — fica só no Firebase.)
-4. Ainda em **Users**, copie o **User UID** que aparece na linha do usuário
-   criado. É um código tipo `k3Jd8Fh2...`. **Guarde: você vai colar no passo B.**
+4. Ainda em **Users**, copie o **User UID** que aparece na linha do usuário criado.
 
 Pronto. A partir daí o painel (⚙) pede e-mail + senha e valida no Firebase.
+
+> ### ✅ Status desta instalação
+> Já concluído em 20/07/2026:
+> - Conta admin: **vertice.renders3d@gmail.com**
+> - UID: `Nq9Yg2d1Q4UNGBpJMTfK8odBzFk2`
+>
+> Os blocos de regras do passo B abaixo **já estão com esse UID preenchido** —
+> é só copiar e colar, sem editar nada.
 
 > **Recomendado:** em **Authentication → Settings → User actions**, desmarque
 > **"Enable create (sign-up)"**. Isso impede que estranhos criem conta sozinhos.
@@ -42,6 +49,19 @@ Com Email/Senha ativo, qualquer pessoa pode criar uma conta usando a chave
 pública do site e ficaria "autenticada". Por isso a regra **não** pode ser só
 `request.auth != null` — ela precisa exigir **o UID do admin**.
 
+> **Duas formas de aplicar** — escolha uma:
+>
+> **(a) Copiar e colar no Console** (mais simples, não precisa instalar nada) —
+> é o que está descrito abaixo.
+>
+> **(b) Pelo Firebase CLI**, se preferir. As regras já estão versionadas no
+> repositório (`firestore.rules`, `storage.rules`, `firebase.json`):
+> ```bash
+> npm install -g firebase-tools
+> firebase login
+> firebase deploy --only firestore:rules,storage --project vertice3d-be624
+> ```
+
 ### Firestore
 
 Console → **Firestore Database** → aba **Rules** → cole e **Publish**:
@@ -54,7 +74,7 @@ service cloud.firestore {
     // >>> COLE AQUI O UID COPIADO NO PASSO A.4 <<<
     function isAdmin() {
       return request.auth != null
-          && request.auth.uid == 'COLE_AQUI_O_UID_DO_ADMIN';
+          && request.auth.uid == 'Nq9Yg2d1Q4UNGBpJMTfK8odBzFk2';
     }
 
     // Conteúdo do site: qualquer visitante lê (o site precisa disso), só admin escreve
@@ -94,7 +114,7 @@ service firebase.storage {
       allow read: if true;
       // Só o admin envia/apaga arquivo
       allow write: if request.auth != null
-                   && request.auth.uid == 'COLE_AQUI_O_UID_DO_ADMIN';
+                   && request.auth.uid == 'Nq9Yg2d1Q4UNGBpJMTfK8odBzFk2';
     }
   }
 }
