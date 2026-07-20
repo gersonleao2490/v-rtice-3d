@@ -67,7 +67,8 @@ async function loadSiteData(){
     var lt=document.getElementById('navLogoText');
     if(li&&lt){li.src=d.logoUrl;li.classList.add('active');lt.classList.add('hidden');}
   }
-  if(d.whatsapp) document.querySelectorAll('.wa-href').forEach(el=>el.href=`https://wa.me/${d.whatsapp}`);
+  /* so digitos: aceita o numero salvo em qualquer formato (+55 44 98807-4334) */
+  if(d.whatsapp) document.querySelectorAll('.wa-href').forEach(el=>el.href='https://wa.me/'+String(d.whatsapp).replace(/\D/g,''));
   if(d.sobreTexto) document.getElementById('sobreTexto').innerHTML=d.sobreTexto;
   if(d.sobreN){var el=document.getElementById('sobreN');if(el)el.textContent=d.sobreN;}
   if(d.sobreAt){var el=document.getElementById('sobreAt');if(el)el.textContent=d.sobreAt;}
@@ -6084,7 +6085,7 @@ async function saveHero(){
     if(document.getElementById('hl2'))document.getElementById('hl2').textContent=d.heroLine2;
     if(document.getElementById('hl3'))document.getElementById('hl3').textContent=d.heroLine3;
     if(document.getElementById('heroSub'))document.getElementById('heroSub').textContent=d.heroSub;
-    if(d.whatsapp)document.querySelectorAll('.wa-href').forEach(el=>el.href='https://wa.me/'+d.whatsapp);
+    if(d.whatsapp)document.querySelectorAll('.wa-href').forEach(el=>el.href='https://wa.me/'+String(d.whatsapp).replace(/\D/g,''));
     showMsg('mHero','✓ Salvo com sucesso!');
   }catch(e){showMsg('mHero','Erro: '+e.message,'#f44')}
 }
