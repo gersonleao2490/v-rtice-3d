@@ -3718,6 +3718,9 @@ body.dark-mode .srv-badge{color:#c9a87c;border-color:rgba(201,168,124,.4)}
 .gal-m-cat{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#d8c5a8;margin-bottom:9px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .gal-m-badge{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#0a0908;background:#c9a87c;border-radius:999px;padding:3px 9px;font-weight:500}
 .gal-m-title{font-family:var(--display,var(--serif));font-weight:500;font-size:29px;color:#F6F1E8;letter-spacing:-.015em;line-height:1.02}
+/* "Ver projeto" no card mobile — o card inteiro ja abre o projeto ao tocar;
+   isto e o indicador visual da acao (igual ao desktop). */
+.gal-m-open{display:inline-block;margin-top:15px;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#e7d4b4;border-bottom:1px solid rgba(231,212,180,.55);padding-bottom:3px}
 
 /* Hero — menos cara de vídeo-teste */
 #heroBg video{filter:saturate(.86) brightness(.92) contrast(1.04)}
@@ -3790,7 +3793,7 @@ body{font-family:var(--sans)}
 .hero-title .accent,.s-title em,.s-title .it,.sobre-statement em{font-style:normal!important;font-family:var(--display)!important}
 /* Labels / menu / botões — técnico, caixa alta, tracking refinado */
 .nav-links a{font-family:var(--sans)!important;font-weight:500!important;letter-spacing:2.4px!important}
-.nav-cta,.btn-O,.btn-ghost,.cine-open,.gal-open,.orc-contacts a,.foot-priv{font-family:var(--sans)!important;font-weight:600!important}
+.nav-cta,.btn-O,.btn-ghost,.cine-open,.gal-open,.gal-m-open,.orc-contacts a,.foot-priv{font-family:var(--sans)!important;font-weight:600!important}
 .s-eye,.hero-eyebrow{font-family:var(--sans)!important;font-weight:600!important;letter-spacing:4px!important}
 .cine-cat,.gal-m-cat,.cine-index,.filter-row .fBtn{font-family:var(--sans)!important;font-weight:500!important}
 .cine-index{font-weight:600!important}
@@ -5683,7 +5686,8 @@ function buildGalMPanel(it,i){
   return '<div class="galm-layer" data-i="'+i+'" onclick="openModalIdx('+i+')">'
     +'<div class="galm-card">'+_galMedia(it,'gal-m-img')+'<div class="gal-m-ov"></div><div class="galm-dark"></div>'
     +'<div class="gal-m-txt"><div class="gal-m-cat">'+_galEsc(it.categoria||'Projeto')+_galBadge(it,'gal-m-badge')+'</div>'
-    +'<h3 class="gal-m-title">'+_galEsc(it.nome||'')+'</h3></div>'
+    +'<h3 class="gal-m-title">'+_galEsc(it.nome||'')+'</h3>'
+    +'<span class="gal-m-open">Ver projeto →</span></div>'
     +'</div></div>';
 }
 window._buildGallery=function(){
