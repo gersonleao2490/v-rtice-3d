@@ -283,6 +283,11 @@ body::before{
 }
 .ld-svg{width:56px;animation:ldPulse 2s ease-in-out infinite}
 @keyframes ldPulse{0%,100%{opacity:.35;transform:scale(.94)}50%{opacity:1;transform:scale(1)}}
+/* Logo no loader — mesmo pulso de antes. O fundo do loader e var(--BG):
+   creme no tema claro (logo preta) e escuro no tema escuro (logo branca). */
+.ld-logo-img{width:230px;max-width:66vw;animation:ldPulse 2s ease-in-out infinite}
+body:not(.dark-mode) .ld-logo-img{filter:brightness(0)}
+@media(max-width:600px){.ld-logo-img{width:180px}}
 .ld-name{
   font-family:var(--serif);font-size:22px;letter-spacing:14px;font-weight:300;
   color:var(--WH);text-transform:uppercase;
@@ -3916,13 +3921,7 @@ body{font-family:var(--sans)}
 <!-- LOADER -->
 <div id="loader">
   <div class="ld-logo">
-    <svg class="ld-svg" viewBox="0 0 80 80" fill="none">
-      <polygon points="40,4 76,72 4,72" fill="none" stroke="#C9A87C" stroke-width="1"/>
-      <polygon points="40,18 62,60 18,60" fill="none" stroke="rgba(201,168,124,.4)" stroke-width=".8"/>
-      <line x1="40" y1="4" x2="18" y2="60" stroke="rgba(245,242,236,.12)" stroke-width=".6"/>
-      <line x1="40" y1="4" x2="62" y2="60" stroke="rgba(245,242,236,.12)" stroke-width=".6"/>
-    </svg>
-    <div class="ld-name">VÉRTICE 3D</div>
+    <img class="ld-logo-img" src="logo.png?v=1" alt="Vértice 3D" />
     <div class="ld-bar"><div class="ld-fill"></div></div>
     <div class="ld-pct" id="ldPct">0%</div>
   </div>
