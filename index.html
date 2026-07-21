@@ -1264,6 +1264,10 @@ footer{
   color:var(--WH);display:flex;align-items:center;gap:12px;text-transform:uppercase;
 }
 .foot-logo svg{opacity:.85}
+/* Logo do rodape (imagem). Rodape e sempre escuro nos dois temas, entao a logo
+   branca serve sem adaptacao de cor. */
+.foot-logo-img{height:42px;width:auto;object-fit:contain;display:block}
+@media(max-width:768px){.foot-logo-img{height:34px}}
 .foot-desc{
   font-size:14px;color:rgba(245,242,236,.38);line-height:1.95;max-width:320px;font-weight:300;
 }
@@ -4131,11 +4135,7 @@ body{font-family:var(--sans)}
 <footer>
   <div class="foot-min">
     <div class="foot-logo">
-      <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
-        <polygon points="20,2 38,36 2,36" fill="none" stroke="#C9A87C" stroke-width="1.2"/>
-        <polygon points="20,10 31,30 9,30" fill="none" stroke="rgba(201,168,124,.5)" stroke-width=".8"/>
-      </svg>
-      VÉRTICE 3D
+      <img class="foot-logo-img" src="logo.png?v=1" alt="Vértice 3D" />
     </div>
     <div class="foot-contact">
       <p id="fEmail">contato@vertice3d.com.br</p>
