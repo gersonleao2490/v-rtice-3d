@@ -2968,11 +2968,14 @@ html.dark-mode,html.dark-mode body{
   background:var(--INK);
   padding:14px 32px;
   padding-bottom:max(14px,env(safe-area-inset-bottom));
-  display:flex;align-items:center;gap:14px;
+  /* display:none enquanto oculto: no mobile o translateY(100%) nao escondia de
+     forma confiavel (vazava atras da barra do navegador). Como nenhum botao
+     aciona o comparador hoje, a barra fica fora da renderizacao por completo. */
+  display:none;align-items:center;gap:14px;
   transform:translateY(100%);transition:transform .4s var(--ease);
   box-shadow:0 -4px 32px rgba(0,0,0,.3);
 }
-#cmpBar.visible{transform:translateY(0);}
+#cmpBar.visible{transform:translateY(0);display:flex;}
 body.cmp-active #mobileCTA{bottom:64px;}
 body.cmp-active.lgpd-active #mobileCTA{bottom:134px;}
 .cmp-slots{display:flex;gap:10px;flex:1;min-width:0;align-items:center;}
