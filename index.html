@@ -76,6 +76,7 @@ async function loadSiteData(){
   if(d.email) document.getElementById('fEmail').textContent=d.email;
   if(d.instagram) document.getElementById('fIG').textContent=d.instagram;
   if(d.instagramUrl) document.querySelectorAll('.soc-ig').forEach(function(el){el.href=d.instagramUrl;});
+  if(d.tiktokUrl) document.querySelectorAll('.soc-tt').forEach(function(el){el.href=d.tiktokUrl;});
   if(d.youtubeUrl) document.querySelectorAll('.soc-yt').forEach(function(el){el.href=d.youtubeUrl;});
   // Tour 360° — tem prioridade total sobre imagem estática
   if(d.tour360Url){
@@ -3951,7 +3952,8 @@ body{font-family:var(--sans)}
     <li class="fm-item"><a href="#orc" onclick="toggleMenu()">Contato</a></li>
   </ul>
   <div class="fm-social">
-    <a href="#" class="soc-ig" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.instagram.com/vertice_renders" class="soc-ig" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.tiktok.com/@vertice_renders3d" class="soc-tt" target="_blank" rel="noopener">TikTok</a>
     <a href="#" class="wa-href" target="_blank" rel="noopener">WhatsApp</a>
   </div>
 </div>
@@ -4081,7 +4083,8 @@ body{font-family:var(--sans)}
       <p class="s-sub rv rv-d2">Conte sobre o projeto. Retornamos com uma proposta dedicada.</p>
       <div class="orc-contacts rv rv-d3">
         <a class="wa-href" href="#" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="soc-ig" href="#" target="_blank" rel="noopener">Instagram</a>
+        <a class="soc-ig" href="https://www.instagram.com/vertice_renders" target="_blank" rel="noopener">Instagram</a>
+        <a class="soc-tt" href="https://www.tiktok.com/@vertice_renders3d" target="_blank" rel="noopener">TikTok</a>
       </div>
     </div>
     <form class="orc-form rv rv-d1" onsubmit="submitOrc();return false;">
@@ -4126,7 +4129,8 @@ body{font-family:var(--sans)}
     </div>
     <div class="foot-contact">
       <p id="fEmail">contato@vertice3d.com.br</p>
-      <a id="fIG" class="soc-ig" href="#" target="_blank" rel="noopener">@vertice3d</a>
+      <a id="fIG" class="soc-ig" href="https://www.instagram.com/vertice_renders" target="_blank" rel="noopener">@vertice_renders</a>
+      <a class="soc-tt" href="https://www.tiktok.com/@vertice_renders3d" target="_blank" rel="noopener">TikTok</a>
       <a class="wa-href" href="#" target="_blank" rel="noopener">WhatsApp</a>
     </div>
   </div>
@@ -4408,6 +4412,7 @@ body{font-family:var(--sans)}
           <div class="adm-f"><label>E-mail</label><input id="aCEmail" placeholder="contato@vertice3d.com.br"/></div>
           <div class="adm-f"><label>Instagram — handle (@)</label><input id="aCIG" placeholder="@vertice3d"/></div>
           <div class="adm-f"><label>Instagram — link completo</label><input id="aCIGUrl" placeholder="https://instagram.com/vertice3d"/></div>
+          <div class="adm-f"><label>TikTok — link completo</label><input id="aCTT" placeholder="https://tiktok.com/@vertice3d"/></div>
           <div class="adm-f"><label>YouTube — link</label><input id="aCYT" placeholder="https://youtube.com/@vertice3d"/></div>
           <div class="adm-f"><label>Cidade</label><input id="aCCid" placeholder="São Paulo, SP"/></div>
           <div class="adm-f" style="grid-column:span 2"><label>Coordenadas (exibidas no rodapé)</label><input id="aCCoords" placeholder="23°33'S 46°38'O — Brasil"/></div>
@@ -6336,6 +6341,7 @@ async function loadAdmContato(){
     if(d.cidade){var el=document.getElementById('aCCid');if(el)el.value=d.cidade;}
     if(d.coords){var el=document.getElementById('aCCoords');if(el)el.value=d.coords;}
     if(d.instagramUrl){var el=document.getElementById('aCIGUrl');if(el)el.value=d.instagramUrl;}
+    if(d.tiktokUrl){var el=document.getElementById('aCTT');if(el)el.value=d.tiktokUrl;}
     if(d.youtubeUrl){var el=document.getElementById('aCYT');if(el)el.value=d.youtubeUrl;}
   }catch(e){console.error('loadAdmContato:',e);}
 }
@@ -6590,11 +6596,13 @@ async function saveContato(){
     const {db,doc,setDoc}=window._FB;
     var wa2=document.getElementById('aCWa');
     var igUrlEl=document.getElementById('aCIGUrl');
+    var ttEl=document.getElementById('aCTT');
     var ytEl=document.getElementById('aCYT');
     const d={
       email:document.getElementById('aCEmail').value,
       instagram:document.getElementById('aCIG').value,
       instagramUrl:igUrlEl?igUrlEl.value:'',
+      tiktokUrl:ttEl?ttEl.value:'',
       youtubeUrl:ytEl?ytEl.value:'',
       cidade:document.getElementById('aCCid').value,
       coords:document.getElementById('aCCoords').value,
@@ -6606,6 +6614,7 @@ async function saveContato(){
     if(d.instagram)document.getElementById('fIG').textContent=d.instagram;
     // Atualiza links sociais no footer
     document.querySelectorAll('.soc-ig').forEach(function(el){if(d.instagramUrl)el.href=d.instagramUrl;});
+    document.querySelectorAll('.soc-tt').forEach(function(el){if(d.tiktokUrl)el.href=d.tiktokUrl;});
     document.querySelectorAll('.soc-yt').forEach(function(el){if(d.youtubeUrl)el.href=d.youtubeUrl;});
     if(d.cidade)document.getElementById('fCidade').textContent=d.cidade;
     if(d.coords)document.getElementById('fCoords').textContent=d.coords;
