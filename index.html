@@ -1775,10 +1775,20 @@ footer{
 .orc-opt{border-radius:var(--r-pill) !important}
 
 /* ── LOGO — suporte a imagem customizada ────────────────── */
-#navLogoImg{height:36px;width:auto;object-fit:contain;display:none}
+#navLogoImg{height:34px;width:auto;object-fit:contain;display:none;transition:filter .35s}
 #navLogoImg.active{display:block}
-#navLogoText.hidden{display:none}
+#navLogoText.hidden{display:none!important}   /* !important: vence o style inline display:flex */
 .nav-logo{gap:10px}
+/* A logo e branca: fica branca sobre o hero escuro e vira preta quando o fundo
+   do nav fica claro (tema claro rolado no desktop, ou no mobile). Mesma logica
+   de contraste do texto do logo. */
+@media(min-width:769px){
+  body:not(.dark-mode) #nav.scrolled #navLogoImg{filter:brightness(0)}
+}
+@media(max-width:768px){
+  #navLogoImg{height:28px}
+  body:not(.dark-mode) #navLogoImg{filter:brightness(0)}
+}
 
 /* ── FILTROS PORTFÓLIO ────────────────────────────────────── */
 .fBtn{color:rgba(26,23,20,.42);border-bottom:1px solid transparent}
@@ -3918,15 +3928,15 @@ body{font-family:var(--sans)}
 <nav id="nav">
   <a class="nav-logo" href="#hero">
     <!-- Logo padrão (SVG + texto) — substituível via admin -->
-    <span id="navLogoText" style="display:flex;align-items:center;gap:12px">
+    <span id="navLogoText" class="hidden" style="display:flex;align-items:center;gap:12px">
       <svg viewBox="0 0 40 40" fill="none">
         <polygon points="20,2 38,36 2,36" fill="none" stroke="#C9A87C" stroke-width="1.2"/>
         <polygon points="20,10 31,30 9,30" fill="none" stroke="rgba(201,168,124,.5)" stroke-width=".8"/>
       </svg>
       VÉRTICE 3D
     </span>
-    <!-- Logo customizada (imagem) — ativada quando admin envia -->
-    <img id="navLogoImg" src="" alt="Vértice 3D" />
+    <!-- Logo da Vertice (imagem). O admin pode substituir enviando outra pelo painel. -->
+    <img id="navLogoImg" class="active" src="logo.png?v=1" alt="Vértice 3D" />
   </a>
   <ul class="nav-links">
     <li><a href="#portSection">Portfólio</a></li>
