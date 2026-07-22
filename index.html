@@ -5572,8 +5572,12 @@ function openModal(nome,cat,desc,img,video,galeria){
   var modal=document.getElementById('projModal');
   modal.style.display='flex';
   requestAnimationFrame(function(){requestAnimationFrame(function(){modal.classList.add('open');});});
+  // Salva a posicao do scroll: body.modal-open usa position:fixed, que zera o scroll.
+  // Guardamos aqui e restauramos no closeModal para voltar ao ponto onde o usuario estava.
+  window._pmScrollY=window.scrollY||document.documentElement.scrollTop||0;
   document.body.style.overflow='hidden';
   document.body.classList.add('modal-open');
+  document.body.style.top=(-window._pmScrollY)+'px';   // mantem a posicao visual enquanto fixo
   // dica de zoom: aparece por ~2.6s (so em imagem, nao em video)
   var _h=document.getElementById('pmZoomHint');
   if(_h){
@@ -5595,8 +5599,11 @@ function closeModal(){
   modal.classList.remove('open');
   // Aguarda a transição reversa do clip-path antes de esconder
   setTimeout(()=>{modal.style.display='none'},900);
-  document.body.style.overflow='';
+  // Remove o position:fixed ANTES de restaurar o scroll (senao a pagina nao tem altura p/ rolar)
   document.body.classList.remove('modal-open');
+  document.body.style.overflow='';
+  document.body.style.top='';
+  window.scrollTo(0, window._pmScrollY||0);   // volta ao ponto onde o usuario estava
   if(window._zoomReset)window._zoomReset();
   if(window._updateWaFloat)window._updateWaFloat();
 }
