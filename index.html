@@ -3454,6 +3454,21 @@ section{scroll-margin-top:88px}
 .pm-img-full{position:relative!important;flex:1 1 auto!important;min-height:0!important;width:auto!important;height:auto!important;background:#0a0806!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;clip-path:none!important;transform:none!important;cursor:default!important}
 .pm-img-full::after{display:none!important}
 .pm-media{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+/* ── Zoom da imagem no modal (PC: clique/scroll · Mobile: pinca/duplo-toque; arrastar move) ── */
+.pm-img-full{touch-action:none}                       /* captura pinca/arraste (sem o zoom nativo do navegador) */
+img.pm-media{transform-origin:center center;transition:transform .18s ease-out;cursor:zoom-in;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+img.pm-media.zoomed{cursor:grab}
+img.pm-media.grabbing{transition:none;cursor:grabbing}
+video.pm-media{cursor:default}
+.pm-zoom-hint{
+  position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:4;pointer-events:none;
+  font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(245,242,236,.85);
+  background:rgba(10,8,6,.55);padding:7px 15px;border-radius:999px;backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);opacity:0;transition:opacity .45s;white-space:nowrap;
+}
+.pm-img-full:hover .pm-zoom-hint{opacity:1}
+.pm-zoom-hint.show{opacity:1}
+.pm-zoom-hint.done{display:none!important}
 .pm-body{flex:0 0 auto!important;padding:22px 30px 28px!important;max-width:none!important;margin:0!important;width:100%;text-align:left;opacity:1!important;transform:none!important}
 .pm-tag{color:var(--vx-accent)!important;margin-bottom:8px!important;font-size:10px;letter-spacing:4px}
 .pm-title{font-family:var(--serif)!important;font-weight:300!important;font-size:clamp(24px,3vw,38px)!important;line-height:1.05!important;color:#F4F0E8!important;margin-bottom:10px!important;letter-spacing:-.01em!important}
@@ -4576,6 +4591,7 @@ body{font-family:var(--sans)}
         <span id="modalGalCount"></span>
         <button class="mgal-btn" onclick="showModalGalImg(_modalGalIdx+1)">→</button>
       </div>
+      <div class="pm-zoom-hint" id="pmZoomHint">🔍 Toque/clique para ampliar</div>
     </div>
     <button class="pm-close-btn" onclick="closeModal()">✕</button>
     <div class="pm-body">
@@ -5492,6 +5508,7 @@ function _pmSetMedia(html){
   if(!imgEl)return;
   imgEl.querySelectorAll('img.pm-media,video.pm-media').forEach(function(n){n.remove();});
   imgEl.insertAdjacentHTML('afterbegin',html);
+  if(window._zoomReset)window._zoomReset();   // zera o zoom a cada nova imagem
 }
 function openModal(nome,cat,desc,img,video,galeria){
   document.getElementById('mTitle').textContent=nome;
@@ -5519,6 +5536,13 @@ function openModal(nome,cat,desc,img,video,galeria){
   requestAnimationFrame(function(){requestAnimationFrame(function(){modal.classList.add('open');});});
   document.body.style.overflow='hidden';
   document.body.classList.add('modal-open');
+  // dica de zoom: aparece por ~2.6s (so em imagem, nao em video)
+  var _h=document.getElementById('pmZoomHint');
+  if(_h){
+    _h.classList.remove('done');
+    if(!video){ _h.classList.add('show'); clearTimeout(window._pmHintT); window._pmHintT=setTimeout(function(){_h.classList.remove('show');},2600); }
+    else _h.classList.add('done');
+  }
   if(window._updateWaFloat)window._updateWaFloat();
 }
 function showModalGalImg(idx){
@@ -5535,8 +5559,94 @@ function closeModal(){
   setTimeout(()=>{modal.style.display='none'},900);
   document.body.style.overflow='';
   document.body.classList.remove('modal-open');
+  if(window._zoomReset)window._zoomReset();
   if(window._updateWaFloat)window._updateWaFloat();
 }
+
+/* ════════════════════════════════════════════════
+   ZOOM DA IMAGEM DO MODAL — PC (clique/scroll) e Mobile (pinca/duplo-toque)
+   Arrastar move quando ampliado. Mouse e touch unificados via Pointer Events.
+════════════════════════════════════════════════ */
+(function(){
+  var stage=document.getElementById('mImgEl');
+  if(!stage)return;
+  var scale=1,tx=0,ty=0,MIN=1,MAX=5;
+  var pointers=new Map(), pinch=null, pan=null, moved=false, lastTap=0;
+
+  function curImg(){ return stage.querySelector('img.pm-media'); }
+  function rect(){ return stage.getBoundingClientRect(); }
+  function midInfo(){
+    var a=[]; pointers.forEach(function(p){a.push(p);});
+    return {dist:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),mx:(a[0].x+a[1].x)/2,my:(a[0].y+a[1].y)/2};
+  }
+  function clamp(){
+    if(scale<=1){tx=0;ty=0;return;}
+    var img=curImg(); if(!img)return; var r=rect();
+    var maxX=Math.max(0,(img.clientWidth*scale-r.width)/2), maxY=Math.max(0,(img.clientHeight*scale-r.height)/2);
+    tx=Math.max(-maxX,Math.min(maxX,tx)); ty=Math.max(-maxY,Math.min(maxY,ty));
+  }
+  function apply(){
+    var img=curImg(); if(!img)return;
+    img.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px) scale('+scale.toFixed(3)+')';
+    img.classList.toggle('zoomed',scale>1.01);
+    if(scale>1.01){var h=document.getElementById('pmZoomHint');if(h)h.classList.add('done');}
+  }
+  window._zoomReset=function(){ scale=1;tx=0;ty=0; var img=curImg(); if(img){img.classList.remove('grabbing','zoomed');img.style.transform='';} };
+  function zoomTo(cx,cy,ns){
+    ns=Math.max(MIN,Math.min(MAX,ns)); var r=rect();
+    var px=cx-(r.left+r.width/2), py=cy-(r.top+r.height/2), k=ns/scale;
+    tx=px-(px-tx)*k; ty=py-(py-ty)*k; scale=ns; clamp(); apply();
+  }
+  function toggleZoom(cx,cy){ if(scale>1.01)_zoomReset(); else zoomTo(cx,cy,2.6); }
+  function isNav(t){ return t&&t.closest&&t.closest('#modalGalNav'); }
+
+  stage.addEventListener('pointerdown',function(e){
+    if(isNav(e.target)||!curImg())return;
+    try{stage.setPointerCapture(e.pointerId);}catch(_){}
+    pointers.set(e.pointerId,{x:e.clientX,y:e.clientY}); moved=false;
+    if(pointers.size===2){
+      pan=null; var mi=midInfo(), r=rect();
+      pinch={dist:mi.dist,scale:scale,ax:(mi.mx-(r.left+r.width/2)-tx)/scale,ay:(mi.my-(r.top+r.height/2)-ty)/scale};
+    } else if(pointers.size===1){
+      pan={x:e.clientX,y:e.clientY,tx:tx,ty:ty,type:e.pointerType};
+      var img=curImg(); if(img&&scale>1.01)img.classList.add('grabbing');
+    }
+  });
+  stage.addEventListener('pointermove',function(e){
+    if(!pointers.has(e.pointerId))return;
+    pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pinch&&pointers.size>=2){
+      var mi=midInfo(), r=rect(), ns=Math.max(MIN,Math.min(MAX,pinch.scale*mi.dist/pinch.dist));
+      scale=ns; tx=(mi.mx-(r.left+r.width/2))-pinch.ax*ns; ty=(mi.my-(r.top+r.height/2))-pinch.ay*ns; clamp(); apply(); moved=true;
+    } else if(pan&&pointers.size===1&&scale>1.01){
+      tx=pan.tx+(e.clientX-pan.x); ty=pan.ty+(e.clientY-pan.y); clamp(); apply();
+      if(Math.abs(e.clientX-pan.x)+Math.abs(e.clientY-pan.y)>6)moved=true;
+    } else if(pan&&Math.abs(e.clientX-pan.x)+Math.abs(e.clientY-pan.y)>6){ moved=true; }
+  });
+  function endPointer(e){
+    if(!pointers.has(e.pointerId))return;
+    pointers.delete(e.pointerId);
+    var img=curImg(); if(img)img.classList.remove('grabbing');
+    if(pointers.size<2)pinch=null;
+    if(pointers.size===1){
+      // continua o arraste com o dedo que restou (apos soltar um da pinca)
+      var only; pointers.forEach(function(p){only=p;});
+      pan={x:only.x,y:only.y,tx:tx,ty:ty,type:'touch'}; moved=true;
+    } else if(pointers.size===0){
+      if(!moved&&pan){
+        if(pan.type==='mouse'){ toggleZoom(e.clientX,e.clientY); }
+        else { var now=Date.now(); if(now-lastTap<300){toggleZoom(e.clientX,e.clientY);lastTap=0;} else lastTap=now; }
+      }
+      pan=null; if(scale<1)_zoomReset();
+    }
+  }
+  stage.addEventListener('pointerup',endPointer);
+  stage.addEventListener('pointercancel',endPointer);
+  stage.addEventListener('wheel',function(e){
+    if(!curImg()||isNav(e.target))return;
+    e.preventDefault(); zoomTo(e.clientX,e.clientY,scale*(e.deltaY<0?1.18:1/1.18));
+  },{passive:false});
+})();
 
 /* ════════════════════════════════════════════════
    MODO APRESENTAÇÃO
