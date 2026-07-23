@@ -6,12 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Vértice 3D — Visualização Arquitetônica de Alto Padrão</title>
 <meta name="description" content="Estúdio de visualização arquitetônica de alto padrão. Renders e vídeos 3D que revelam o projeto antes da obra."/>
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="apple-touch-icon" href="favicon.svg"/>
 <!-- SEO & Social -->
 <link rel="canonical" href="https://gersonleao2490.github.io/v-rtice-3d/"/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="Vértice 3D — Visualização Arquitetônica de Alto Padrão"/>
 <meta property="og:description" content="Renders e vídeos 3D de alto padrão para arquitetura contemporânea."/>
 <meta property="og:image" content="https://gersonleao2490.github.io/v-rtice-3d/og-image.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:image" content="https://gersonleao2490.github.io/v-rtice-3d/og-image.jpg"/>
 <meta property="og:url" content="https://gersonleao2490.github.io/v-rtice-3d/"/>
 <meta property="og:locale" content="pt_BR"/>
 <meta name="twitter:card" content="summary_large_image"/>
@@ -329,7 +335,7 @@ body:not(.dark-mode) .ld-logo-img{filter:brightness(0)}
   transition:all .4s var(--ease);box-shadow:0 6px 20px rgba(232,64,0,.18);
 }
 .nav-cta:hover{background:var(--O2);border-color:var(--O2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(232,64,0,.28)}
-#ham{display:none;flex-direction:column;gap:5px;padding:4px;background:none;border:none}
+#ham{display:none;flex-direction:column;gap:5px;padding:11px;background:none;border:none;cursor:pointer}   /* padding maior = alvo de toque ~44px */
 #ham span{display:block;width:22px;height:1px;background:var(--INK);transition:var(--ease) .4s}
 
 /* Modo claro sobre o hero escuro ─────────────────────────────
@@ -3550,7 +3556,7 @@ video.pm-media{cursor:default}
 
 /* ---- 5. Filtros do portfólio — chips arredondados ---- */
 .filter-row{gap:10px!important;align-items:center}
-.fBtn{border:1px solid rgba(26,23,20,.16)!important;border-bottom:1px solid rgba(26,23,20,.16)!important;border-radius:999px!important;padding:9px 18px!important;margin-right:0!important;color:rgba(26,23,20,.55)!important;background:transparent!important;font-size:10.5px!important;letter-spacing:2px!important;transition:all .3s}
+.fBtn{border:1px solid rgba(26,23,20,.16)!important;border-bottom:1px solid rgba(26,23,20,.16)!important;border-radius:999px!important;padding:0 18px!important;min-height:40px!important;display:inline-flex!important;align-items:center!important;margin-right:0!important;color:rgba(26,23,20,.55)!important;background:transparent!important;font-size:10.5px!important;letter-spacing:2px!important;transition:all .3s}
 .fBtn.on,.fBtn:hover{border-color:var(--vx-accent)!important;color:#1A1714!important;background:rgba(156,122,77,.1)!important}
 body.dark-mode .fBtn{border-color:rgba(244,240,232,.18)!important;color:rgba(244,240,232,.6)!important}
 body.dark-mode .fBtn.on,body.dark-mode .fBtn:hover{border-color:#c9a87c!important;color:#F4F0E8!important;background:rgba(201,168,124,.14)!important}
@@ -4010,12 +4016,12 @@ body{font-family:var(--sans)}
   <svg class="dm-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
   <svg class="dm-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="position:absolute"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
 </button>
-<button id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+<button id="ham" onclick="toggleMenu()" aria-label="Abrir menu" aria-expanded="false" aria-controls="fMenu"><span></span><span></span><span></span></button>
 </nav>
 
 <!-- FULLSCREEN MENU -->
 <div id="fMenu">
-  <button id="fClose" onclick="toggleMenu()">✕</button>
+  <button id="fClose" onclick="toggleMenu()" aria-label="Fechar menu">✕</button>
   <ul class="fm-list">
     <li class="fm-item"><a href="#portSection" onclick="toggleMenu()">Portfólio</a></li>
     <li class="fm-item"><a href="#servicos" onclick="toggleMenu()">Serviços</a></li>
@@ -4160,27 +4166,27 @@ body{font-family:var(--sans)}
     </div>
     <form class="orc-form rv rv-d1" onsubmit="submitOrc();return false;">
       <div class="orc-row">
-        <div class="orc-inp"><label>Nome</label><input type="text" id="oNome" name="name" autocomplete="name" placeholder="Seu nome" style="font-size:16px"/></div>
-        <div class="orc-inp"><label>WhatsApp</label><input type="tel" id="oPhone" name="tel" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" style="font-size:16px"/></div>
+        <div class="orc-inp"><label for="oNome">Nome</label><input type="text" id="oNome" name="name" autocomplete="name" placeholder="Seu nome" style="font-size:16px"/></div>
+        <div class="orc-inp"><label for="oPhone">WhatsApp</label><input type="tel" id="oPhone" name="tel" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" style="font-size:16px"/></div>
       </div>
-      <div class="orc-inp"><label>E-mail</label><input type="email" id="oEmail" name="email" autocomplete="email" inputmode="email" placeholder="voce@email.com" style="font-size:16px"/></div>
+      <div class="orc-inp"><label for="oEmail">E-mail</label><input type="email" id="oEmail" name="email" autocomplete="email" inputmode="email" placeholder="voce@email.com" style="font-size:16px"/></div>
       <div class="orc-row">
-        <div class="orc-inp"><label>Tipo de projeto</label>
+        <div class="orc-inp"><label for="oTipo">Tipo de projeto</label>
           <select id="oTipo"><option value="">Selecione</option><option>Residencial</option><option>Comercial</option><option>Interiores</option></select>
         </div>
-        <div class="orc-inp"><label>Serviço</label>
+        <div class="orc-inp"><label for="oServ">Serviço</label>
           <select id="oServ"><option value="">Selecione</option><option>Renderização</option><option>Vídeo 3D</option><option>Tour 360°</option></select>
         </div>
       </div>
       <div class="orc-row">
-        <div class="orc-inp"><label>Metragem</label>
+        <div class="orc-inp"><label for="oMet">Metragem</label>
           <select id="oMet"><option value="">Selecione</option><option>Até 100m²</option><option>100 a 300m²</option><option>300 a 1.000m²</option><option>Acima de 1.000m²</option></select>
         </div>
-        <div class="orc-inp"><label>Prazo desejado</label>
+        <div class="orc-inp"><label for="oPrazo">Prazo desejado</label>
           <select id="oPrazo"><option value="">Selecione</option><option>Sem pressa</option><option>Padrão</option><option>Urgente</option></select>
         </div>
       </div>
-      <div class="orc-inp"><label>Mensagem (opcional)</label><textarea id="oObs" rows="3" placeholder="Detalhes do projeto, referências, prazos..." style="font-size:16px"></textarea></div>
+      <div class="orc-inp"><label for="oObs">Mensagem (opcional)</label><textarea id="oObs" rows="3" placeholder="Detalhes do projeto, referências, prazos..." style="font-size:16px"></textarea></div>
       <button type="submit" class="btn-O" id="orcSubmitBtn"><span>Solicitar Proposta</span></button>
       <p class="orc-info">Seus dados são tratados com sigilo e usados apenas para contato sobre o projeto.</p>
       <div id="orcMsg"></div>
@@ -4343,7 +4349,7 @@ body{font-family:var(--sans)}
           </div>
           <div style="background:rgba(255,255,255,.03);border-radius:8px;padding:20px;text-align:center;min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px">
             <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2)">Preview da Logo</p>
-            <img id="logoAdmPreview" src="" style="max-height:48px;max-width:100%;display:none"/>
+            <img id="logoAdmPreview" alt="Pré-visualização da logo" style="max-height:48px;max-width:100%;display:none"/>
             <p id="logoAdmPreviewText" style="font-size:11px;color:rgba(255,255,255,.18);font-style:italic">Nenhuma logo enviada</p>
           </div>
         </div>
@@ -4620,13 +4626,13 @@ body{font-family:var(--sans)}
 </div><!-- /adminPanel -->
 
 <!-- MODAL PROJETO -->
-<div id="projModal" onclick="if(event.target===this)closeModal()">
+<div id="projModal" role="dialog" aria-modal="true" aria-labelledby="mTitle" onclick="if(event.target===this)closeModal()">
   <div class="pm-inner">
     <div class="pm-img-full" id="mImgEl" style="background:var(--BK3)">
       <div id="modalGalNav">
-        <button class="mgal-btn" onclick="showModalGalImg(_modalGalIdx-1)">←</button>
+        <button class="mgal-btn" onclick="showModalGalImg(_modalGalIdx-1)" aria-label="Imagem anterior">←</button>
         <span id="modalGalCount"></span>
-        <button class="mgal-btn" onclick="showModalGalImg(_modalGalIdx+1)">→</button>
+        <button class="mgal-btn" onclick="showModalGalImg(_modalGalIdx+1)" aria-label="Próxima imagem">→</button>
       </div>
       <div class="pm-zoom-hint" id="pmZoomHint">🔍 Toque/clique para ampliar</div>
     </div>
@@ -4638,14 +4644,14 @@ body{font-family:var(--sans)}
     </div>
   </div>
   <!-- fora do .pm-inner (que tem transform) para o position:fixed valer em relacao a tela -->
-  <button class="pm-close-btn" onclick="closeModal()">✕</button>
+  <button class="pm-close-btn" onclick="closeModal()" aria-label="Fechar">✕</button>
 </div>
 
 <!-- TOUR 360° MODAL IMERSIVO -->
-<div id="tourModal" onclick="if(event.target===this)closeTourModal()">
+<div id="tourModal" role="dialog" aria-modal="true" aria-label="Tour virtual 360°" onclick="if(event.target===this)closeTourModal()">
   <div id="tourModal-top">
     <div class="tm-badge">Tour Virtual 360°</div>
-    <button id="tourModalClose" onclick="closeTourModal()">✕</button>
+    <button id="tourModalClose" onclick="closeTourModal()" aria-label="Fechar tour">✕</button>
   </div>
   <div id="tourModalPan"></div>
   <div id="tourModal-bottom">
@@ -4920,7 +4926,7 @@ var _navRaf=false;window.addEventListener('scroll',function(){if(_navRaf)return;
    já rolada (restauração de scroll, bfcache, link /#portfolio) deixava o #nav sem
    .scrolled sobre uma seção clara — e o logo creme ficava invisível. */
 nav.classList.toggle('scrolled',scrollY>60);
-function toggleMenu(){document.getElementById('fMenu').classList.toggle('open')}
+function toggleMenu(){var m=document.getElementById('fMenu');var aberto=m.classList.toggle('open');var h=document.getElementById('ham');if(h)h.setAttribute('aria-expanded',aberto?'true':'false');}
 
 /* ════════════════════════════════════════════════
    THREE.JS HERO
@@ -5541,6 +5547,16 @@ function openModalIdx(idx){
   else if(item.imagem)gal=[item.imagem];
   openModal(item.nome,item.categoria||'',item.descricao||'',item.imagem||'',item.video||'',gal);
 }
+/* Ativacao por teclado dos cards do portfolio (role=button + tabindex=0). */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  var t=e.target;
+  if(t&&t.classList&&(t.classList.contains('cine-layer')||t.classList.contains('galm-layer'))){
+    e.preventDefault();
+    var i=parseInt(t.getAttribute('data-i'),10);
+    if(!isNaN(i))openModalIdx(i);
+  }
+});
 function _pmSetMedia(html){
   var imgEl=document.getElementById('mImgEl');
   if(!imgEl)return;
@@ -5825,7 +5841,7 @@ function buildCineLayer(it,i,N,nextIt){
       +_galMedia(nextIt,'cine-next-img')
       +'<div class="cine-next-tx"><span class="cine-next-lb">Próximo</span><span class="cine-next-nm">'+_galEsc(nextIt.nome||'')+'</span></div></div>';
   }
-  return '<div class="cine-layer" data-i="'+i+'" onclick="openModalIdx('+i+')">'
+  return '<div class="cine-layer" data-i="'+i+'" role="button" tabindex="0" aria-label="Ver projeto '+_galEsc(it.nome||'')+'" onclick="openModalIdx('+i+')">'
     +'<div class="cine-inner">'
     +'<div class="cine-card">'+_galMedia(it,'cine-img')+'<div class="cine-ov"></div><div class="cine-dark"></div></div>'
     +'<div class="cine-editorial">'
@@ -5838,7 +5854,7 @@ function buildCineLayer(it,i,N,nextIt){
     +'</div></div></div>';
 }
 function buildGalMPanel(it,i){
-  return '<div class="galm-layer" data-i="'+i+'" onclick="openModalIdx('+i+')">'
+  return '<div class="galm-layer" data-i="'+i+'" role="button" tabindex="0" aria-label="Ver projeto '+_galEsc(it.nome||'')+'" onclick="openModalIdx('+i+')">'
     +'<div class="galm-card">'+_galMedia(it,'gal-m-img')+'<div class="gal-m-ov"></div><div class="galm-dark"></div>'
     +'<div class="gal-m-txt"><div class="gal-m-cat">'+_galEsc(it.categoria||'Projeto')+_galBadge(it,'gal-m-badge')+'</div>'
     +'<h3 class="gal-m-title">'+_galEsc(it.nome||'')+'</h3>'
@@ -7864,7 +7880,7 @@ async function nlSubmit(e){
   <div class="art-hero" id="artHero">
     <div class="art-hero-content">
       <div class="art-eyebrow" id="artEyebrow">Vértice 3D — Conteúdo</div>
-      <h1 class="art-title" id="artTitle"></h1>
+      <h2 class="art-title" id="artTitle"></h2>
       <div class="art-meta">
         <span id="artDate"></span>
         <span id="artReadTime"></span>
