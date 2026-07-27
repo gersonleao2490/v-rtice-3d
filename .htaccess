@@ -1,0 +1,22 @@
+# Vértice 3D — Hospedagem Locaweb (Apache)
+# Força HTTPS: quem entrar por http:// é redirecionado pro https:// (cadeado).
+# >>> Só suba este arquivo DEPOIS que o SSL Let's Encrypt estiver ATIVO. <<<
+# Se subir antes do certificado ficar pronto, o site entra em loop de redirect
+# para um https ainda quebrado.
+
+RewriteEngine On
+
+# http -> https
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Página de entrada
+DirectoryIndex index.html
+
+# Cache leve dos assets (logo, favicon, imagem de compartilhamento)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/png "access plus 7 days"
+  ExpiresByType image/jpeg "access plus 7 days"
+  ExpiresByType image/svg+xml "access plus 7 days"
+</IfModule>
